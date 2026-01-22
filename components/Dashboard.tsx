@@ -4,7 +4,7 @@ import { PregnancyCalculations, WeeklyInfo, UserSettings } from '../types';
 import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, COMORBIDITY_GUIDELINES, MATERNAL_VACCINES, DAILY_TIPS, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS } from '../constants';
 import { getPregnancyAdvice } from '../services/geminiService';
 import { Button } from './Button';
-import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key } from 'lucide-react';
+import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2 } from 'lucide-react';
 
 interface Props {
   calculations: PregnancyCalculations;
@@ -362,7 +362,10 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
                   
                   {riskProfile.actions.length > 0 && (
                       <div className="bg-white/60 dark:bg-black/20 p-4 rounded-xl">
-                          <p className="text-xs font-bold uppercase opacity-70 mb-2 text-gray-800 dark:text-white">Medical Recommendations (FOGSI/WHO):</p>
+                          <div className="flex items-center gap-2 mb-2">
+                              <CheckCircle2 size={16} className="text-green-600 dark:text-green-400" />
+                              <p className="text-xs font-bold uppercase opacity-70 text-gray-800 dark:text-white">Medical Recommendations (India/FOGSI):</p>
+                          </div>
                           <ul className="list-disc list-inside space-y-1 text-sm text-gray-800 dark:text-gray-200 font-medium">
                               {riskProfile.actions.map((action, i) => (
                                   <li key={i}>{action}</li>
@@ -372,7 +375,7 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
                   )}
                   
                   <p className="text-xs italic opacity-80 mt-2 text-gray-600 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700 pt-2">
-                      Disclaimer: This assessment is based on standard guidelines. Please discuss this risk profile with your gynecologist for a personalized care plan.
+                      Disclaimer: This assessment is based on FOGSI (India) & WHO standard guidelines. Please discuss this risk profile with your gynecologist for a personalized care plan.
                   </p>
               </div>
           </div>
@@ -518,10 +521,10 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
             {/* AI Advisor - Context Aware */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-6 shadow-lg text-white">
                 <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
-                    <Sparkles size={20} /> Ask Dr. Bloom AI
+                    <Sparkles size={20} /> Dr. Bloom (Indian Medical AI)
                 </h3>
                 <p className="text-sm opacity-80 mb-4">
-                    Expert medical answers based on Indian Obs & Gynae Standards.
+                    Trained on FOGSI, WHO & IAP Standards. Ask about diet, symptoms, or scans.
                 </p>
                 
                 <div className="flex gap-2 mb-4">

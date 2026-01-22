@@ -481,7 +481,7 @@ export default function App() {
     <div className="flex h-screen w-full overflow-hidden bg-bloom-light dark:bg-deep-bg transition-colors duration-300">
       
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-deep-card border-r border-gray-200 dark:border-indigo-950 shrink-0 h-full">
+      <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-deep-card border-r border-gray-200 dark:border-deep-border shrink-0 h-full">
          <div className="p-6">
              <h1 className={`text-2xl font-bold bg-clip-text text-transparent ${bgGradient}`}>
                 {isPlanning ? "Bloom Plan" : isPostpartum ? (settings.babyGender === 'boy' ? "Bloom Baby" : "Bloom Baby") : "Bloom Bump"}
@@ -514,10 +514,10 @@ export default function App() {
             ))}
          </nav>
 
-         <div className="p-4 border-t border-gray-200 dark:border-indigo-950 mt-auto">
+         <div className="p-4 border-t border-gray-200 dark:border-deep-border mt-auto">
             <div 
               onClick={() => setActiveTab(TabView.PROFILE)}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-indigo-950/50 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-indigo-900 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-slate-800/50 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
             >
                 <div className={`w-8 h-8 rounded-full ${badgeColor} flex items-center justify-center font-bold`}>
                     {settings.name.charAt(0).toUpperCase()}
@@ -540,7 +540,7 @@ export default function App() {
       </aside>
 
       {/* Mobile Nav - Fixed Bottom */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-deep-card border-t border-gray-200 dark:border-indigo-950 z-50 flex flex-col safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-deep-card border-t border-gray-200 dark:border-deep-border z-50 flex flex-col safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
          <div className="flex items-center gap-1 overflow-x-auto px-2 py-2 w-full no-scrollbar">
             {[
               ...navItems,
@@ -560,20 +560,20 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-         <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-gray-200 dark:border-indigo-950 bg-white/50 dark:bg-deep-card/50 backdrop-blur-md sticky top-0 z-40 shrink-0">
+         <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-gray-200 dark:border-deep-border bg-white/50 dark:bg-deep-card/50 backdrop-blur-md sticky top-0 z-40 shrink-0">
             <div className="flex items-center gap-2">
                 <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-white capitalize truncate">
                     {activeTab === TabView.VACCINATIONS ? 'Vaccinations' : activeTab.replace('-', ' ')}
                 </h2>
                 {profiles.length > 1 && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-indigo-900 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-indigo-700 hidden md:inline-block">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-slate-700 hidden md:inline-block">
                         Active: {settings.babyName || "Profile 1"}
                     </span>
                 )}
             </div>
             <button 
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 rounded-full bg-white dark:bg-indigo-900/50 border border-gray-200 dark:border-indigo-800 text-gray-600 dark:text-yellow-400 transition-colors shadow-sm"
+              className="p-2 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-600 dark:text-yellow-400 transition-colors shadow-sm"
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>

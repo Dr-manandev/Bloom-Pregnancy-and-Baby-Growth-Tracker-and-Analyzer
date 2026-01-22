@@ -648,7 +648,9 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
               <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                   <Activity className="text-purple-600" /> Cycle Health Analysis
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Based on Indian (FOGSI) & WHO Guidelines</p>
+              <p className="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full inline-block mt-2">
+                  Verified against Indian (FOGSI) & WHO Guidelines
+              </p>
           </div>
           <div className="p-6">
               <div className={`p-4 rounded-xl border flex flex-col md:flex-row gap-4 items-start ${

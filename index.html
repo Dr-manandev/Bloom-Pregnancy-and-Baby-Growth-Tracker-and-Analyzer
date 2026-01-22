@@ -6,6 +6,12 @@
     <title>Bloom - Intelligent Pregnancy Tracker</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#db2777" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS v3.4 CDN (Stable) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -22,35 +28,31 @@
                 accentDark: '#4c1d95', // violet-900
               },
               deep: {
-                bg: '#1e1b4b', // indigo-950
-                card: '#312e81', // indigo-900
-                text: '#e0e7ff', // indigo-100
+                bg: '#020617', // Slate 950 (Rich dark background)
+                card: '#1e293b', // Slate 800 (Card surface)
+                text: '#f1f5f9', // Slate 100 (Primary text)
+                muted: '#94a3b8', // Slate 400 (Secondary text)
+                border: '#334155' // Slate 700 (Borders)
               }
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
             },
-          },
-        },
-      };
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-out',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
     </script>
-    <style>
-      /* Custom scrollbar for webkit */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #db2777; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #be185d; 
-      }
-    </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
@@ -66,7 +68,7 @@
 }
 </script>
 </head>
-  <body class="bg-bloom-light dark:bg-deep-bg text-gray-800 dark:text-deep-text transition-colors duration-300 min-h-screen overscroll-none">
+  <body class="bg-bloom-light dark:bg-deep-bg text-gray-800 dark:text-deep-text transition-colors duration-300 min-h-screen overscroll-none selection:bg-pink-200 dark:selection:bg-pink-900">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
     <script>
