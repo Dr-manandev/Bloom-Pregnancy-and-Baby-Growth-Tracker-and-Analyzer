@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { UserSettings, PregnancyCalculations, TabView, ProfileMeta } from './types';
+import { UserSettings, PregnancyCalculations, TabView, ProfileMeta, Medicine } from './types';
 import { Onboarding } from './components/Onboarding';
 import { Dashboard } from './components/Dashboard';
 import { PostpartumDashboard } from './components/PostpartumDashboard';
@@ -30,7 +30,8 @@ const PROFILE_SPECIFIC_KEYS = [
   'bloom_baby_growth',
   'bloom_tsh_logs', 'bloom_pp_tsh_logs',
   'bloom_hb_logs', 'bloom_pp_hb_logs',
-  'bloom_hba1c_logs', 'bloom_pp_hba1c_logs'
+  'bloom_hba1c_logs', 'bloom_pp_hba1c_logs',
+  'bloom_medicines', 'bloom_pp_medicines' // Added Medicine Keys
 ];
 
 export default function App() {
@@ -108,6 +109,50 @@ export default function App() {
       }
     }
   }, []);
+
+  // Request Notification Permission on Mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Global Medicine Notification Checker
+  useEffect(() => {
+    if (!settings) return;
+
+    const checkMedicines = () => {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const isPostpartum = settings.status === 'postpartum';
+        const key = isPostpartum ? 'bloom_pp_medicines' : 'bloom_medicines';
+        const stored = localStorage.getItem(key);
+        
+        if (stored) {
+          const medicines: Medicine[] = JSON.parse(stored);
+          const now = new Date();
+          const currentHours = now.getHours();
+          const currentMinutes = now.getMinutes();
+
+          medicines.forEach(med => {
+            if (!med.taken && med.time) {
+              const [medHours, medMinutes] = med.time.split(':').map(Number);
+              // Trigger if times match exactly
+              if (medHours === currentHours && medMinutes === currentMinutes) {
+                new Notification('Bloom: Medicine Reminder', {
+                  body: `It's time to take your ${med.name} (${med.dosage})`,
+                  icon: '/icon-192x192.png' // Assumes standard PWA icon path or fallback
+                });
+              }
+            }
+          });
+        }
+      }
+    };
+
+    // Check every minute
+    const interval = setInterval(checkMedicines, 60000);
+    return () => clearInterval(interval);
+  }, [settings]);
 
   useEffect(() => {
     if (darkMode) {

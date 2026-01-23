@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Medicine } from '../types';
 import { Pill, Plus, Trash2, Check, ShieldAlert } from 'lucide-react';
 import { Button } from './Button';
@@ -11,18 +12,61 @@ interface Props {
 
 export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum = false }) => {
   const [activeTab, setActiveTab] = useState<'my-meds' | 'safety'>('my-meds');
-  // Different default meds for postpartum vs pregnancy
-  const [medicines, setMedicines] = useState<Medicine[]>(
-      isPostpartum ? [
-        { id: '1', name: 'Calcium', dosage: '500mg', frequency: 'BD', time: '09:00', taken: false },
-        { id: '2', name: 'Iron', dosage: '100mg', frequency: 'OD', time: '20:00', taken: false }
-      ] : [
-        { id: '1', name: 'Folic Acid', dosage: '5mg', frequency: 'Daily', time: '09:00', taken: false },
-        { id: '2', name: 'Iron Supplement', dosage: '100mg', frequency: 'Daily', time: '20:00', taken: false }
-      ]
-  );
-
+  
+  // Initialize with empty array or default, will be overwritten by useEffect load
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
+  
   const [newMed, setNewMed] = useState({ name: '', time: '' });
+
+  // Persistence Key based on mode
+  const STORAGE_KEY = isPostpartum ? 'bloom_pp_medicines' : 'bloom_medicines';
+  const DATE_KEY = STORAGE_KEY + '_date';
+
+  // Load from Storage on Mount or Mode Change
+  useEffect(() => {
+    const loadMedicines = () => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const lastDate = localStorage.getItem(DATE_KEY);
+        const today = new Date().toISOString().split('T')[0];
+
+        if (saved) {
+            let parsed = JSON.parse(saved);
+            
+            // Check if it's a new day, if so reset 'taken' status
+            if (lastDate !== today) {
+                parsed = parsed.map((m: Medicine) => ({ ...m, taken: false }));
+                // Update storage immediately with reset values
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                localStorage.setItem(DATE_KEY, today);
+            }
+            setMedicines(parsed);
+        } else {
+            // Default Medicines if nothing saved
+            const defaults: Medicine[] = isPostpartum ? [
+                { id: '1', name: 'Calcium', dosage: '500mg', frequency: 'BD', time: '09:00', taken: false },
+                { id: '2', name: 'Iron', dosage: '100mg', frequency: 'OD', time: '20:00', taken: false }
+            ] : [
+                { id: '1', name: 'Folic Acid', dosage: '5mg', frequency: 'Daily', time: '09:00', taken: false },
+                { id: '2', name: 'Iron Supplement', dosage: '100mg', frequency: 'Daily', time: '20:00', taken: false }
+            ];
+            setMedicines(defaults);
+            // Save defaults immediately
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
+            localStorage.setItem(DATE_KEY, today);
+        }
+    };
+    loadMedicines();
+  }, [isPostpartum]);
+
+  // Save to Storage whenever medicines change
+  useEffect(() => {
+      // Avoid saving empty array on initial render before load
+      if (medicines.length > 0) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(medicines));
+          // Always update date key to today when saving
+          localStorage.setItem(DATE_KEY, new Date().toISOString().split('T')[0]);
+      }
+  }, [medicines, STORAGE_KEY]);
 
   const toggleTaken = (id: string) => {
     setMedicines(prev => prev.map(m => m.id === id ? { ...m, taken: !m.taken } : m));

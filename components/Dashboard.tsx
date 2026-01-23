@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { PregnancyCalculations, WeeklyInfo, UserSettings } from '../types';
+import { PregnancyCalculations, WeeklyInfo, UserSettings, Medicine } from '../types';
 import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, COMORBIDITY_GUIDELINES, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY } from '../constants';
 import { getPregnancyAdvice } from '../services/geminiService';
 import { Button } from './Button';
-import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb } from 'lucide-react';
+import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb, Pill } from 'lucide-react';
 
 interface Props {
   calculations: PregnancyCalculations;
@@ -14,11 +14,26 @@ interface Props {
 export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
   // Use local state for navigation, initialize with actual current week
   const [selectedWeek, setSelectedWeek] = useState(calculations.currentWeek);
+  const [todaysMedicines, setTodaysMedicines] = useState<Medicine[]>([]);
   
   // Reset selected week if calculations change (e.g. profile update)
   useEffect(() => {
     setSelectedWeek(calculations.currentWeek);
   }, [calculations.currentWeek]);
+
+  // Load Medicines for Dashboard Alert
+  useEffect(() => {
+      const isPostpartum = settings.status === 'postpartum';
+      const key = isPostpartum ? 'bloom_pp_medicines' : 'bloom_medicines';
+      const stored = localStorage.getItem(key);
+      if (stored) {
+          const parsed: Medicine[] = JSON.parse(stored);
+          // Filter for medicines not taken
+          setTodaysMedicines(parsed.filter(m => !m.taken));
+      } else {
+          setTodaysMedicines([]);
+      }
+  }, [settings.status]); // Re-run when status changes or component mounts
 
   // Derived calculations for the SELECTED week (for display purposes)
   const displayTrimester = selectedWeek <= 13 ? 1 : selectedWeek <= 27 ? 2 : 3;
@@ -339,6 +354,31 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
              </div>
         </div>
       </div>
+
+      {/* --- MEDICINE ALERT WIDGET --- */}
+      {todaysMedicines.length > 0 && selectedWeek === calculations.currentWeek && (
+          <div className="bg-teal-50 dark:bg-teal-900/10 p-4 rounded-3xl border border-teal-100 dark:border-teal-900/30 flex flex-col md:flex-row gap-4 items-start md:items-center">
+              <div className="bg-teal-100 dark:bg-teal-800/30 p-3 rounded-full text-teal-600 dark:text-teal-400 shrink-0">
+                  <Pill className="w-6 h-6 animate-pulse" />
+              </div>
+              <div className="flex-1">
+                  <h3 className="font-bold text-teal-800 dark:text-teal-200 text-sm uppercase">Medicine Due Today</h3>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                      {todaysMedicines.map((med) => (
+                          <div key={med.id} className="bg-white dark:bg-black/20 px-3 py-1 rounded-lg text-xs font-bold text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800">
+                              {med.name} <span className="opacity-70">({med.time})</span>
+                          </div>
+                      ))}
+                  </div>
+              </div>
+              <button 
+                onClick={() => document.getElementById('tab-medicines')?.click()}
+                className="text-xs font-bold bg-teal-600 text-white px-4 py-2 rounded-xl shadow-md hover:bg-teal-700 transition-colors whitespace-nowrap"
+              >
+                  Go to Meds
+              </button>
+          </div>
+      )}
 
       {/* --- CLINICAL RISK PROFILE CARD (FOGSI) --- */}
       {(riskProfile.level !== 'Low' || riskProfile.actions.length > 0) && selectedWeek === calculations.currentWeek && (
