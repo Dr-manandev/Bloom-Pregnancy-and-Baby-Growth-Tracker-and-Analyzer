@@ -562,26 +562,39 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
               <h4 className="font-bold text-gray-800 dark:text-white mb-4 flex gap-2 items-center">
                   <FlaskConical size={18} className="text-teal-600" /> {title}
               </h4>
+              
+              {/* Quick Fill Button */}
+              {logs.length > 0 && (
+                <button 
+                    onClick={() => setNewLab({ ...newLab, [field]: logs[0].value.toString() })}
+                    className="mb-4 text-xs flex items-center gap-1 text-teal-600 bg-teal-50 dark:bg-teal-900/20 px-2 py-1 rounded hover:bg-teal-100"
+                >
+                    <Zap size={12} /> Quick Fill: {logs[0].value}
+                </button>
+              )}
+
               <p className="text-xs text-gray-500 mb-2 font-medium bg-gray-50 dark:bg-indigo-900/20 p-2 rounded">
                   Guide: {guideline.label}
               </p>
-              <div className="flex gap-2 mb-4">
+              
+              <div className="flex flex-col gap-2 mb-4">
                   <input 
                       type="number" 
                       placeholder={`Value (${unit})`} 
-                      className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-indigo-700 bg-white dark:bg-indigo-950/50 text-gray-900 dark:text-white"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-indigo-700 bg-white dark:bg-indigo-950/50 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
                       value={newLab[field]}
                       onChange={(e) => setNewLab({...newLab, [field]: e.target.value})}
                   />
-                  <Button onClick={() => addLabLog(field)}>Add</Button>
+                  <Button onClick={() => addLabLog(field)} className="w-full">Add Log</Button>
               </div>
+              
               <div className="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
                   {logs.map(log => {
                       const status = getLabStatus(field, log.value);
                       return (
                           <div key={log.id} className="p-2 bg-gray-50 dark:bg-indigo-900/10 rounded-lg flex justify-between items-center">
                               <div>
-                                  <span className="font-bold dark:text-white">{log.value} <span className="text-xs font-normal text-gray-500">{unit}</span></span>
+                                  <span className="font-bold text-gray-800 dark:text-white">{log.value} <span className="text-xs font-normal text-gray-500">{unit}</span></span>
                                   <div className="text-[10px] text-gray-400">{new Date(log.date).toLocaleDateString()}</div>
                               </div>
                               <span className={`text-xs font-bold ${status.color}`}>{status.label}</span>
@@ -790,7 +803,7 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
                         </div>
                      </div>
                      
-                     <div className="grid md:grid-cols-2 gap-6">
+                     <div className="grid md:grid-cols-1 gap-6">
                         {renderLabInput("Thyroid (TSH)", "tsh", tshLogs, "mIU/L", settings.status === 'pregnant' ? LAB_THRESHOLDS.tsh.pregnant_t1 : LAB_THRESHOLDS.tsh.general)}
                         {renderLabInput("Hemoglobin (Hb)", "hb", hbLogs, "g/dL", LAB_THRESHOLDS.hemoglobin.postpartum)}
                         {renderLabInput("HbA1c", "hba1c", hba1cLogs, "%", LAB_THRESHOLDS.hba1c.general)}
@@ -936,7 +949,7 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-1 gap-6">
                         {renderLabInput("Thyroid (TSH)", "tsh", tshLogs, "mIU/L", calculations.trimester === 1 ? LAB_THRESHOLDS.tsh.pregnant_t1 : LAB_THRESHOLDS.tsh.pregnant_t2_t3)}
                         {renderLabInput("Hemoglobin (Hb)", "hb", hbLogs, "g/dL", LAB_THRESHOLDS.hemoglobin.pregnant)}
                         {renderLabInput("HbA1c", "hba1c", hba1cLogs, "%", LAB_THRESHOLDS.hba1c.pregnant)}

@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { UserSettings } from '../types';
-import { PRE_CONCEPTION_CHECKLIST, PRE_CONCEPTION_COMORBIDITY_GUIDELINES, OBSTETRIC_HISTORY_RISKS } from '../constants';
+import { PRE_CONCEPTION_CHECKLIST, PRE_CONCEPTION_COMORBIDITY_GUIDELINES, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY, DID_YOU_KNOW_DATA } from '../constants';
 import { Button } from './Button';
-import { Calendar, Droplet, Heart, CheckCircle2, Circle, AlertCircle, TrendingUp, Info, Plus, RotateCcw, X, Trash2, ChevronLeft, ChevronRight, Edit2, ShieldAlert, Check, Save, Star, Shield, Thermometer, TestTube2, Baby, ArrowRight, Gift, FileText, Activity } from 'lucide-react';
+import { Calendar, Droplet, Heart, CheckCircle2, Circle, AlertCircle, TrendingUp, Info, Plus, RotateCcw, X, Trash2, ChevronLeft, ChevronRight, Edit2, ShieldAlert, Check, Save, Star, Shield, Thermometer, TestTube2, Baby, ArrowRight, Gift, FileText, Activity, Sparkles, Lightbulb, BookOpen } from 'lucide-react';
 
 interface Props {
   settings: UserSettings;
@@ -30,6 +30,11 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
   
   // Calendar State
   const [calendarDate, setCalendarDate] = useState(new Date());
+
+  // Daily Tip & Fact Logic
+  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+  const dailyTip = TIP_LIBRARY.planning[dayOfYear % TIP_LIBRARY.planning.length];
+  const didYouKnow = DID_YOU_KNOW_DATA.planning[dayOfYear % DID_YOU_KNOW_DATA.planning.length];
 
   // Helper: Parse YYYY-MM-DD to local midnight Date object
   const parseLocalYMD = (dateString: string) => {
@@ -397,7 +402,7 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
       const fertileStart = ovulationDay - 5;
       const fertileEnd = ovulationDay + 2;
 
-      // Only relevant if we are PAST ovulation (Luteal Phase) and BEFORE next period (or just missed)
+      // Only relevant if we are PAST ovulation (Luteal Phase)
       // Check 1 week post ovulation onwards
       if (currentCycleDays > ovulationDay + 7) {
           
@@ -556,11 +561,125 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
                          (obs?.abortionsT2 || 0) >= 1;
 
   return (
-    <div className="space-y-8 animate-fade-in pb-10">
+    <div className="space-y-8 animate-fade-in pb-28 md:pb-10 w-full">
       
-      {/* Missed Period Alert & Mode Switcher */}
+      {/* Modal for Period Start Confirmation */}
+      {showConfirmStart && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-2xl max-w-sm w-full border border-pink-200 dark:border-pink-900">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Log Period Start?</h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
+                      This will mark <strong>Today</strong> as the start of your new cycle. Any conception alerts for the previous cycle will be cleared.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                      <Button onClick={handleLogPeriodToday} className="w-full py-3 justify-center text-lg bg-rose-600 hover:bg-rose-700 text-white shadow-rose-500/30">
+                          Yes, Period Started
+                      </Button>
+                      <Button onClick={() => setShowConfirmStart(false)} variant="secondary" className="w-full py-3 justify-center">
+                          Cancel
+                      </Button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Modal for Pregnancy Confirmation */}
+      {showPregnancyModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-2xl max-w-sm w-full border border-pink-200 dark:border-pink-900">
+                  <div className="text-center mb-4">
+                      <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-2 text-pink-600">
+                          <Baby size={32} />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Congratulations!</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">
+                          Switching to Pregnancy Mode will unlock weekly baby growth tracking and trimester-specific guides.
+                      </p>
+                  </div>
+                  
+                  <div className="flex flex-col gap-3">
+                      <Button onClick={confirmPregnancySwitch} className="w-full py-3 justify-center text-lg bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg">
+                          Start Pregnancy Journey
+                      </Button>
+                      <Button onClick={() => setShowPregnancyModal(false)} variant="secondary" className="w-full py-3 justify-center">
+                          Not yet
+                      </Button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* 2WW / Conception Potential Alert (RENDER FIRST) */}
+      {conceptionStatus && (
+          <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-3xl p-6 text-white shadow-xl mb-8">
+              <div className="flex flex-col md:flex-row items-start gap-4">
+                  <div className="p-3 bg-white/20 rounded-full shrink-0">
+                      <Sparkles size={32} />
+                  </div>
+                  <div className="flex-1">
+                      <h3 className="text-xl font-bold">Two-Week Wait: Conception Potential Detected</h3>
+                      <p className="opacity-90 text-sm mt-1">
+                          We detected activity during your fertile window. You are currently in the <strong>Luteal Phase</strong> (DPO {conceptionStatus.daysPostOvulation}).
+                      </p>
+                      
+                      <div className="bg-white/10 rounded-xl p-4 mt-3 text-xs space-y-2 border border-white/20">
+                          <p className="font-bold uppercase opacity-80 flex items-center gap-2"><Shield size={12}/> Implantation Care Guidelines (FOGSI India):</p>
+                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 opacity-90">
+                              <li className="flex items-start gap-2">
+                                  <CheckCircle2 size={14} className="mt-0.5 text-green-300"/> 
+                                  <span><strong>Diet:</strong> Eat warm, home-cooked meals. Avoid raw papaya, pineapple, and excessive caffeine.</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                  <CheckCircle2 size={14} className="mt-0.5 text-green-300"/> 
+                                  <span><strong>Meds:</strong> STOP painkillers like Ibuprofen/Combiflam (affects implantation). Paracetamol is safe.</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                  <CheckCircle2 size={14} className="mt-0.5 text-green-300"/> 
+                                  <span><strong>Supplements:</strong> Ensure you are taking Folic Acid (5mg/400mcg) daily.</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                  <CheckCircle2 size={14} className="mt-0.5 text-green-300"/> 
+                                  <span><strong>Lifestyle:</strong> Avoid high-impact cardio or heavy lifting. Walking/Yoga is safe.</span>
+                              </li>
+                          </ul>
+                      </div>
+
+                      {/* NEW: Testing Guidelines Section */}
+                      <div className="bg-black/20 rounded-xl p-4 mt-3 text-xs space-y-3 border border-white/10">
+                           <p className="font-bold uppercase opacity-90 flex items-center gap-2 text-yellow-300">
+                              <TestTube2 size={14}/> Confirmation & Viability Testing (Indian Standards):
+                           </p>
+                           <div className="grid md:grid-cols-2 gap-3 opacity-90">
+                              <div>
+                                  <strong className="text-white block mb-1">1. Home UPT (Urine Test):</strong>
+                                  Test with <u>First Morning Urine</u> for accuracy. A faint line is considered positive. (e.g. Prega News/i-can).
+                              </div>
+                              <div>
+                                  <strong className="text-white block mb-1">2. Serum Beta hCG (Blood Test):</strong>
+                                  The Gold Standard. Can detect pregnancy as early as 8-10 days post ovulation.
+                              </div>
+                              <div className="md:col-span-2 bg-white/5 p-2 rounded mt-1">
+                                  <strong className="text-white">3. Viability Check (Doubling Test):</strong> <br/>
+                                  To confirm healthy growth, repeat Beta hCG after 48 hours. In a viable pregnancy, the value should approximately <u>double (increase by &gt;66%)</u>.
+                              </div>
+                           </div>
+                      </div>
+
+                      <div className="mt-4 flex flex-wrap items-center gap-3">
+                          <div className="flex items-center gap-2 text-sm font-bold bg-white/20 px-4 py-2 rounded-xl">
+                              <TestTube2 size={18} />
+                              Recommended Test Date: {conceptionStatus.testDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                          </div>
+                          <span className="text-xs opacity-75 italic">Wait for missed period to avoid false negatives.</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Missed Period Alert & Mode Switcher (RENDER BELOW CONCEPTION) */}
       {daysLate > 0 && (
-          <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-3xl p-6 text-white shadow-xl animate-pulse-slow">
+          <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-3xl p-6 text-white shadow-xl">
               <div className="flex flex-col md:flex-row items-start gap-4">
                   <div className="p-3 bg-white/20 rounded-full shrink-0">
                       <Baby size={32} />
@@ -642,48 +761,13 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
          </div>
       </div>
 
-      {/* --- CLINICAL CYCLE ANALYSIS CARD --- */}
-      <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 dark:border-indigo-800 bg-gray-50 dark:bg-indigo-900/30">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                  <Activity className="text-purple-600" /> Cycle Health Analysis
-              </h3>
-              <p className="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full inline-block mt-2">
-                  Verified against Indian (FOGSI) & WHO Guidelines
-              </p>
-          </div>
-          <div className="p-6">
-              <div className={`p-4 rounded-xl border flex flex-col md:flex-row gap-4 items-start ${
-                  cycleAnalysis.color === 'red' ? 'bg-red-50 border-red-200 text-red-800' :
-                  cycleAnalysis.color === 'orange' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
-                  cycleAnalysis.color === 'green' ? 'bg-green-50 border-green-200 text-green-800' :
-                  'bg-gray-50 border-gray-200 text-gray-800'
-              }`}>
-                  <div className={`p-2 rounded-full shrink-0 ${
-                      cycleAnalysis.color === 'red' ? 'bg-red-200' : 
-                      cycleAnalysis.color === 'orange' ? 'bg-yellow-200' : 
-                      cycleAnalysis.color === 'green' ? 'bg-green-200' : 'bg-gray-200'
-                  }`}>
-                      <Info size={24} />
-                  </div>
-                  <div className="flex-1">
-                      <h4 className="font-bold text-lg mb-1">{cycleAnalysis.status}</h4>
-                      <p className="text-sm leading-relaxed mb-3">{cycleAnalysis.advice}</p>
-                      
-                      {cycleAnalysis.causes.length > 0 && (
-                          <div className="bg-white/50 dark:bg-black/10 rounded-lg p-3">
-                              <p className="text-xs font-bold uppercase tracking-wide mb-1 opacity-80">Probable Causes (Consult Doctor):</p>
-                              <ul className="text-sm list-disc list-inside">
-                                  {cycleAnalysis.causes.map((c, i) => <li key={i}>{c}</li>)}
-                              </ul>
-                          </div>
-                      )}
-                      <p className="text-xs font-bold text-red-600 dark:text-red-400 mt-2 border-t border-gray-200 dark:border-gray-700 pt-2">
-                          Disclaimer: This is an algorithmic analysis. If your cycle is consistently irregular, short (&lt;21 days), or long (&gt;35 days), please consult a gynecologist for proper diagnosis.
-                      </p>
-                  </div>
-              </div>
-          </div>
+      {/* Calendar View - PRIORITIZED */}
+      <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800 p-6">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+              <Calendar size={20} className="text-pink-600" /> Cycle Calendar
+          </h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 -mt-2">Tap a date to log activity/intercourse</p>
+          {renderCalendar()}
       </div>
 
       {/* Period History & Prediction */}
@@ -806,13 +890,48 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
           </div>
       </div>
 
-      {/* Calendar View */}
-      <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800 p-6">
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-              <Calendar size={20} className="text-pink-600" /> Cycle Calendar
-          </h3>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 -mt-2">Tap a date to log activity/intercourse</p>
-          {renderCalendar()}
+      {/* --- CLINICAL CYCLE ANALYSIS CARD --- */}
+      <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800 overflow-hidden">
+          <div className="p-6 border-b border-gray-100 dark:border-indigo-800 bg-gray-50 dark:bg-indigo-900/30">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                  <Activity className="text-purple-600" /> Cycle Health Analysis
+              </h3>
+              <p className="text-xs font-bold bg-purple-100 text-purple-700 px-3 py-1 rounded-full inline-block mt-2">
+                  Verified against Indian (FOGSI) & WHO Guidelines
+              </p>
+          </div>
+          <div className="p-6">
+              <div className={`p-4 rounded-xl border flex flex-col md:flex-row gap-4 items-start ${
+                  cycleAnalysis.color === 'red' ? 'bg-red-50 border-red-200 text-red-800' :
+                  cycleAnalysis.color === 'orange' ? 'bg-yellow-50 border-yellow-200 text-yellow-800' :
+                  cycleAnalysis.color === 'green' ? 'bg-green-50 border-green-200 text-green-800' :
+                  'bg-gray-50 border-gray-200 text-gray-800'
+              }`}>
+                  <div className={`p-2 rounded-full shrink-0 ${
+                      cycleAnalysis.color === 'red' ? 'bg-red-200' : 
+                      cycleAnalysis.color === 'orange' ? 'bg-yellow-200' : 
+                      cycleAnalysis.color === 'green' ? 'bg-green-200' : 'bg-gray-200'
+                  }`}>
+                      <Info size={24} />
+                  </div>
+                  <div className="flex-1">
+                      <h4 className="font-bold text-lg mb-1">{cycleAnalysis.status}</h4>
+                      <p className="text-sm leading-relaxed mb-3">{cycleAnalysis.advice}</p>
+                      
+                      {cycleAnalysis.causes.length > 0 && (
+                          <div className="bg-white/50 dark:bg-black/10 rounded-lg p-3">
+                              <p className="text-xs font-bold uppercase tracking-wide mb-1 opacity-80">Probable Causes (Consult Doctor):</p>
+                              <ul className="text-sm list-disc list-inside">
+                                  {cycleAnalysis.causes.map((c, i) => <li key={i}>{c}</li>)}
+                              </ul>
+                          </div>
+                      )}
+                      <p className="text-xs font-bold text-red-600 dark:text-red-400 mt-2 border-t border-gray-200 dark:border-gray-700 pt-2">
+                          Disclaimer: This is an algorithmic analysis. If your cycle is consistently irregular, short (&lt;21 days), or long (&gt;35 days), please consult a gynecologist for proper diagnosis.
+                      </p>
+                  </div>
+              </div>
+          </div>
       </div>
 
       {/* --- COMORBIDITY & RISK ALERT SECTION --- */}
@@ -914,6 +1033,29 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
           </div>
 
           <div className="space-y-6">
+              {/* Daily Tip (Planning) */}
+              <div className="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30">
+                   <h4 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                       <Lightbulb size={20} /> Daily Insight (Planning)
+                   </h4>
+                   <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed">
+                       {dailyTip}
+                   </p>
+              </div>
+
+              {/* Did You Know */}
+              <div className="bg-teal-50 dark:bg-teal-900/10 p-6 rounded-3xl border border-teal-100 dark:border-teal-900/30">
+                   <h4 className="font-bold text-teal-800 dark:text-teal-300 mb-2 flex items-center gap-2">
+                       <BookOpen size={20} /> Did You Know?
+                   </h4>
+                   <p className="text-sm font-bold text-teal-700 dark:text-teal-400 mb-1">
+                       {didYouKnow.title}
+                   </p>
+                   <p className="text-xs text-teal-600 dark:text-teal-500 leading-relaxed">
+                       {didYouKnow.text}
+                   </p>
+              </div>
+
               {/* BMI Card */}
               <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800">
                   <h3 className="font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
@@ -934,29 +1076,6 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
                       <Info size={14} className="inline mr-1 mb-0.5" />
                       {bmi ? bmiStatus.advice : "Update weight/height in Profile to see analysis."}
                   </p>
-              </div>
-
-              {/* Folic Acid Reminder */}
-              <div className="bg-yellow-50 dark:bg-yellow-900/10 p-6 rounded-3xl border border-yellow-100 dark:border-yellow-900/30">
-                  <div className="flex items-start gap-3">
-                      <AlertCircle className="text-yellow-600 shrink-0 mt-1" />
-                      <div>
-                          <h4 className="font-bold text-yellow-800 dark:text-yellow-200">Daily Folic Acid</h4>
-                          <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                              {settings.obstetricHistory?.lastBabyCongenitalDefect 
-                                ? "Critical! Take 5mg daily due to history of defects." 
-                                : "Take 400mcg daily 3 months before trying."}
-                          </p>
-                      </div>
-                  </div>
-              </div>
-
-              {/* Tips */}
-              <div className="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30">
-                   <h4 className="font-bold text-blue-800 dark:text-blue-300 mb-2">Did you know?</h4>
-                   <p className="text-sm text-blue-700 dark:text-blue-400">
-                       Sperm quality is highest when intercourse happens every <strong>alternate day</strong> during the fertile window, rather than daily.
-                   </p>
               </div>
           </div>
       </div>

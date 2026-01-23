@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { UserSettings } from '../types';
 import { Button } from './Button';
-import { Baby, Clock, Heart, Shield, Activity, TrendingUp, Play, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star } from 'lucide-react';
-import { BABY_MILESTONES } from '../constants';
+import { Baby, Clock, Heart, Shield, Activity, TrendingUp, Play, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen } from 'lucide-react';
+import { BABY_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA } from '../constants';
 
 interface Props {
   settings: UserSettings;
@@ -19,6 +19,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
 
   // Milestones State
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
+
+  // Daily Tip & Fact Logic
+  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+  const dailyTip = TIP_LIBRARY.postpartum[dayOfYear % TIP_LIBRARY.postpartum.length];
+  const didYouKnow = DID_YOU_KNOW_DATA.postpartum[dayOfYear % DID_YOU_KNOW_DATA.postpartum.length];
 
   useEffect(() => {
     if (settings.birthDate) {
@@ -101,6 +106,30 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
          </div>
       </div>
 
+      {/* Daily Tips & Facts (Postpartum Specific) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30">
+               <h4 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                   <Lightbulb size={20} /> Daily Recovery Tip
+               </h4>
+               <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed">
+                   {dailyTip}
+               </p>
+          </div>
+
+          <div className="bg-purple-50 dark:bg-purple-900/10 p-6 rounded-3xl border border-purple-100 dark:border-purple-900/30">
+               <h4 className="font-bold text-purple-800 dark:text-purple-300 mb-2 flex items-center gap-2">
+                   <BookOpen size={20} /> Did You Know?
+               </h4>
+               <p className="text-sm font-bold text-purple-700 dark:text-purple-400 mb-1">
+                   {didYouKnow.title}
+               </p>
+               <p className="text-xs text-purple-600 dark:text-purple-500 leading-relaxed">
+                   {didYouKnow.text}
+               </p>
+          </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
          
          {/* Breastfeeding Timer */}
@@ -149,11 +178,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
          <div className="space-y-6">
             <div className="bg-green-50 dark:bg-green-900/10 p-6 rounded-3xl border border-green-100 dark:border-green-900/30">
                 <h3 className="font-bold text-green-800 dark:text-green-300 flex items-center gap-2 mb-2">
-                    <Activity size={20} /> Mom's Recovery
+                    <Activity size={20} /> Mom's Vitals Check
                 </h3>
                 <ul className="space-y-2 text-sm text-green-700 dark:text-green-400">
                     <li>• <strong>Hydration:</strong> Critical for milk supply. Drink 3-4L water.</li>
-                    <li>• <strong>Rest:</strong> Sleep when the baby sleeps.</li>
+                    <li>• <strong>Rest:</strong> Sleep when the baby sleeps (easier said than done!).</li>
                     <li>• <strong>Iron/Calcium:</strong> Continue supplements for 3-6 months.</li>
                     <li>• <strong>Lochia:</strong> Bleeding may last 4-6 weeks. Watch for clots.</li>
                 </ul>

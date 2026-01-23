@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { PregnancyCalculations, WeeklyInfo, UserSettings } from '../types';
-import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, COMORBIDITY_GUIDELINES, MATERNAL_VACCINES, DAILY_TIPS, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS } from '../constants';
+import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, COMORBIDITY_GUIDELINES, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY } from '../constants';
 import { getPregnancyAdvice } from '../services/geminiService';
 import { Button } from './Button';
-import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2 } from 'lucide-react';
+import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb } from 'lucide-react';
 
 interface Props {
   calculations: PregnancyCalculations;
@@ -203,7 +203,9 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
   const isFuture = selectedWeek > calculations.currentWeek;
   const isPast = selectedWeek < calculations.currentWeek;
 
-  const currentTip = DAILY_TIPS[selectedWeek.toString()] || DAILY_TIPS["default"];
+  // NEW: Dynamic Daily Tip Logic
+  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+  const currentTip = TIP_LIBRARY.pregnancy[dayOfYear % TIP_LIBRARY.pregnancy.length];
 
   return (
     <div className="space-y-8 animate-fade-in pb-10">
@@ -563,9 +565,9 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
         <div className="space-y-6">
             <div className="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30">
                 <h4 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
-                    <Activity size={18} /> Daily Tip
+                    <Lightbulb size={18} /> Daily Tip
                 </h4>
-                <p className="text-sm text-blue-700 dark:text-blue-400">
+                <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed">
                     {currentTip}
                 </p>
             </div>

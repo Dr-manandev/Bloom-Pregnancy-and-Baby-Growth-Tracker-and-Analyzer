@@ -130,6 +130,132 @@ export const PRE_CONCEPTION_COMORBIDITY_GUIDELINES: Record<string, { title: stri
     }
 };
 
+// --- DAILY TIPS & DID YOU KNOW LIBRARY (INDIAN CONTEXT) ---
+// Indexed by day of year roughly, or random access. 
+// Covers Planning, Pregnancy, Postpartum.
+
+export const TIP_LIBRARY = {
+    planning: [
+        "Folic Acid isn't just for moms. Men should take Zinc and Vitamin C to improve sperm quality.",
+        "A TSH level above 2.5 mIU/L can make it harder to conceive. Get a thyroid profile done if you have irregular periods.",
+        "Egg white cervical mucus (slippery, stretchy) indicates peak fertility. It helps sperm swim to the egg.",
+        "Avoid using lubricants not labeled 'fertility-friendly' as they can inhibit sperm movement.",
+        "If you are overweight (BMI > 25), losing just 5% of body weight can restart ovulation in PCOS cases.",
+        "Dental health matters! Gum disease (Gingivitis) is linked to higher risk of preterm birth later.",
+        "Rubella immunity is vital. If your IgG is negative, get the MMR vaccine and wait 1 month before trying.",
+        "Caffeine limit: 200mg/day (approx 2 small cups of chai/coffee). Excess caffeine can delay conception.",
+        "Stop Retinol/Vitamin A creams now. They are teratogenic (cause birth defects). Switch to Glycolic Acid.",
+        "Thalassemia screening is a must for Indian couples. If both are minors, the baby has a 25% risk of major.",
+        "Stress raises cortisol, which can disrupt the pituitary gland and delay ovulation. Try Yoga Nidra.",
+        "Avoid hot baths or saunas during the fertile window. High scrotal temp reduces sperm count.",
+        "Having sex every day isn't necessary. Every alternate day during the fertile window is optimal for sperm count.",
+        "Vitamin D deficiency is rampant in India. Low levels are linked to lower IVF success and fertility.",
+        "Start a prenatal multivitamin now, not after the positive test. The neural tube closes by week 6.",
+        "Track your Basal Body Temperature (BBT). A spike of 0.5°F confirms ovulation has occurred.",
+        "Avoid painkillers like Ibuprofen/Combiflam during the Two Week Wait; they can interfere with implantation.",
+        "Eating a heavy breakfast helps regulate hormones in PCOS patients.",
+        "Men should avoid keeping laptops on their laps to prevent heat damage to sperm.",
+        "Hydration improves cervical mucus quality. Drink 3L water daily.",
+        "Check your immunity for Chickenpox (Varicella) before conceiving.",
+        "Normal Hb for conception should ideally be > 12 g/dL to prevent anemia during pregnancy.",
+        "Inositol supplements (Myo-Inositol) are proven to help egg quality in PCOS.",
+        "Avoid raw papaya and pineapple in the Two Week Wait (traditional precaution against uterine contractions).",
+        "Keep your phone away from the bedside while sleeping to improve sleep quality (melatonin helps eggs).",
+        "Smoking (even passive) damages egg DNA and speeds up ovarian aging.",
+        "Protein intake is key. Indian vegetarian diets are often low in protein. Add Paneer, Dal, Soya, or Greek Yogurt.",
+        "Lying down for 15 mins after intercourse may help sperm retention (though not medically strictly proven, it helps).",
+        "Check for Vitamin B12 deficiency if you are strictly vegetarian/vegan.",
+        "If you have irregular cycles (<21 or >35 days), don't rely on apps alone. Use ovulation kits (LH strips)."
+    ],
+    pregnancy: [
+        "Left lateral sleeping improves blood flow to the placenta and baby. Use a pillow between legs.",
+        "Iron and Calcium supplements should be taken at different times. Calcium blocks Iron absorption.",
+        "Take Iron pills with Lemon water (Vitamin C) for 3x better absorption.",
+        "Tea/Coffee/Milk contain tannins/calcium that block Iron. Gap of 2 hours required.",
+        "Fetal movements: You should feel at least 10 movements in 2 hours after a meal (after 28 weeks).",
+        "Swelling in feet is normal, but swelling in face/hands with headache is a sign of Preeclampsia.",
+        "Bleeding gums are common due to hormonal changes. Use a soft brush and warm saline gargles.",
+        "Avoid lying flat on your back after 20 weeks to prevent Vena Cava compression (dizziness).",
+        "Itching on palms and soles? Could be Cholestasis (Liver issue). Tell your doctor immediately.",
+        "Heartburn? Eat small, frequent meals and avoid lying down immediately after eating.",
+        "Leg cramps at night? You might need Magnesium or Calcium. Stretch your toes upwards.",
+        "Coconut water is great for amniotic fluid levels and electrolytes.",
+        "Avoid heavy lifting or high-impact cardio. Walking 30 mins daily is the best exercise.",
+        "GTT (Glucose Tolerance Test) at 24-28 weeks is mandatory in India due to high Asian risk of diabetes.",
+        "Tetanus (TT/Td) and Flu shots are safe and necessary. Tdap is given at 27-36 weeks.",
+        "Constipation is common due to Progesterone. Eat heavy fiber (Oats, Daliya) and drink water.",
+        "Braxton Hicks contractions are painless tightening. Real labor pains get stronger and regular.",
+        "If your water breaks, it may not be a gush. It can be a slow trickle. Go to the hospital.",
+        "Do not eat for 2 people. You only need ~300 extra calories (1 roti + 1 bowl dal) in T2/T3.",
+        "Travel is usually safe until 36 weeks. Wear seatbelt below the belly, not across it.",
+        "Hair dyes? Wait until the second trimester and use ammonia-free options.",
+        "Skin pigmentation (Linea Nigra/Melasma) is normal and usually fades after delivery.",
+        "Avoid hot tubs or very hot showers. Raising core body temp >102°F is dangerous for the baby.",
+        "Keep your 'Mamta Card' or medical file handy at all times.",
+        "Pelvic floor exercises (Kegels) now will help in easier delivery and faster recovery.",
+        "Avoid raw sprouts and unpasteurized juices to prevent food-borne infections.",
+        "Shortness of breath is normal as uterus pushes diaphragm. Stand straight and raise arms to breathe.",
+        "Vaginal discharge increases in pregnancy. If it smells bad or causes itching, check for infection.",
+        "Stem Cell Banking decision should be made by the 7th month.",
+        "Pack your hospital bag by Week 36. Don't forget newborn clothes and sanitary pads."
+    ],
+    postpartum: [
+        "Breastfeeding burns ~500 calories/day. Eat nutrient-dense foods, not just 'Ghee' laden foods.",
+        "Lochia (bleeding) can last 4-6 weeks. It changes from Red -> Pink -> White.",
+        "Exclusive breastfeeding for 6 months means NO water, honey, or ghutti for the baby.",
+        "Baby's stomach is size of a cherry at birth. They need frequent, small feeds.",
+        "Postpartum Blues (crying, mood swings) are normal for 2 weeks. If it lasts longer, it's PPD.",
+        "Massage for mom is great, but avoid abdominal massage if you had a C-Section until healed.",
+        "Wait 6 weeks (and doctor's clearance) before resuming vigorous exercise.",
+        "Calcium and Iron supplements should continue for at least 3-6 months postpartum.",
+        "Ajwain water and Jeera water are excellent traditional galactogogues (milk boosters).",
+        "Don't ignore back pain. Your core is weak. Lift the baby by bending knees, not waist.",
+        "Hair loss 3-4 months postpartum is normal (Telogen Effluvium). It will grow back.",
+        "Contraception is needed even if breastfeeding. You can get pregnant before your first period returns.",
+        "Vaccinations: The 6-week immunization is painful. Fever is normal. Give paracetamol as prescribed.",
+        "Tummy time is essential for baby's neck strength. Start with 1-2 mins daily.",
+        "Avoid using 'Kajal' in baby's eyes. It can cause lead poisoning or blocked tear ducts.",
+        "Mustard oil massage is traditional but ensure it's not adulterated. Coconut oil is safer for sensitive skin.",
+        "Baby Acne is normal due to maternal hormones. Do not scrub. It goes away.",
+        "Cluster feeding (baby wanting to eat constantly) is normal during growth spurts (3w, 6w, 3m).",
+        "Drink water every time you sit to nurse. Hydration keeps supply up.",
+        "C-Section scar care: Keep it dry. Report any oozing, redness, or fever immediately.",
+        "Formula fed babies need sterilized bottles. Discard leftover milk after 1 hour.",
+        "Gripe water is generally not recommended by pediatricians today. Try burping and cycling legs.",
+        "Baby's poop color changes. Mustard yellow (BF) is normal. White, Red, or Black needs a doctor.",
+        "Don't shake the baby. Neck muscles are weak and it can cause brain injury.",
+        "Sunlight exposure for baby (indirect, early morning) helps reduce mild jaundice.",
+        "Umbilical cord stump falls off in 1-2 weeks. Keep it clean and dry. No oil/powder on it.",
+        "Swaddling helps baby sleep but stop once they show signs of rolling over.",
+        "Use saline drops for baby's blocked nose. Do not use Vicks/rub on infants < 2 years.",
+        "Trust your instinct. If baby seems lethargic or refuses feed, seek help."
+    ]
+};
+
+export const DID_YOU_KNOW_DATA = {
+    planning: [
+        { title: "Sperm Lifecycle", text: "Sperm takes about 64-72 days to generate. Lifestyle changes men make today impact sperm 3 months from now." },
+        { title: "Egg Quality", text: "Females are born with all their eggs. They age as you age. CoQ10 supplements can help mitochondrial energy in older eggs." },
+        { title: "Lubricant Myth", text: "Saliva and standard lube can kill sperm. Use oil (Canola/Baby oil) or specialized fertility lubricants." },
+        { title: "The 20% Rule", text: "Even perfectly healthy young couples only have a ~20% chance of conceiving each month. Patience is key." },
+        { title: "Cervical Position", text: "During ovulation, your cervix moves higher, becomes softer (like lips), and opens slightly." }
+    ],
+    pregnancy: [
+        { title: "Amniotic Fluid", text: "By the second half of pregnancy, most amniotic fluid is actually the baby's sterile urine!" },
+        { title: "Blood Volume", text: "Your blood volume increases by 50% during pregnancy to supply the placenta. This causes the 'glow' (and bleeding gums)." },
+        { title: "Fingerprints", text: "Your baby develops unique fingerprints by week 13-17." },
+        { title: "Hearing", text: "Babies can hear outside sounds by week 24. They will recognize Mom's and Dad's voices at birth." },
+        { title: "Relaxin Hormone", text: "Your body produces 'Relaxin' to loosen joints for birth. This also makes you clumsy and prone to sprains." }
+    ],
+    postpartum: [
+        { title: "Newborn Stomach", text: "On Day 1, baby's stomach is the size of a marble (5-7ml). That's why they need Colostrum, not volume." },
+        { title: "Vision", text: "Newborns can only see 8-12 inches away—perfect distance to your face while feeding." },
+        { title: "Recognition", text: "Babies recognize their mother by scent within days of birth, before they can clearly see her." },
+        { title: "Sleep Cycles", text: "Newborn sleep cycles are only 45-50 mins (adults are 90 mins). This is why they wake up so often." },
+        { title: "Growth Spurts", text: "Babies often 'cluster feed' (eat constantly) before a growth spurt to increase mom's milk supply." }
+    ]
+};
+
 // --- VACCINATION SCHEDULES ---
 
 export const MATERNAL_VACCINES: Vaccine[] = [
