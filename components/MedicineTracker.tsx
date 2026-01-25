@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Medicine } from '../types';
+import { Medicine, AppMode } from '../types';
 import { Pill, Plus, Trash2, Check, ShieldAlert } from 'lucide-react';
 import { Button } from './Button';
 import { MedicineSafety } from './MedicineSafety';
@@ -8,9 +8,11 @@ import { MedicineSafety } from './MedicineSafety';
 interface Props {
   currentWeek?: number;
   isPostpartum?: boolean;
+  mode?: AppMode; // New prop to determine specific list
+  comorbidities?: string[];
 }
 
-export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum = false }) => {
+export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum = false, mode = 'pregnant', comorbidities }) => {
   const [activeTab, setActiveTab] = useState<'my-meds' | 'safety'>('my-meds');
   
   // Initialize with empty array or default, will be overwritten by useEffect load
@@ -178,7 +180,7 @@ export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum
           </div>
          </>
        ) : (
-         <MedicineSafety currentWeek={currentWeek} isPostpartum={isPostpartum} />
+         <MedicineSafety currentWeek={currentWeek} isPostpartum={isPostpartum} mode={mode} comorbidities={comorbidities} />
        )}
     </div>
   );

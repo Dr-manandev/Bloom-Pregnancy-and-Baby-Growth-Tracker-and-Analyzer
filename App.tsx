@@ -497,7 +497,15 @@ export default function App() {
       
       case TabView.TIMELINE: return <Timeline key={`time_${profileKey}`} calculations={calcSafe} settings={settings} />;
       case TabView.REPORTS: return <ReportAnalyzer key={`rep_${profileKey}`} />;
-      case TabView.MEDICINES: return <MedicineTracker key={`med_${profileKey}`} currentWeek={calcSafe.currentWeek} isPostpartum={isPostpartum} />;
+      case TabView.MEDICINES: 
+        // Pass Mode Explicitly
+        return <MedicineTracker 
+            key={`med_${profileKey}`} 
+            currentWeek={calcSafe.currentWeek} 
+            isPostpartum={isPostpartum} 
+            mode={settings.status}
+            comorbidities={settings.comorbidities} // Add this
+        />;
       case TabView.DIET: return <DietPlan key={`diet_${profileKey}`} settings={settings} calculations={calcSafe} />;
       case TabView.VACCINATIONS: 
         return <VaccinationTracker 

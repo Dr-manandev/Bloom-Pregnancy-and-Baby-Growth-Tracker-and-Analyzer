@@ -131,9 +131,6 @@ export const PRE_CONCEPTION_COMORBIDITY_GUIDELINES: Record<string, { title: stri
 };
 
 // --- DAILY TIPS & DID YOU KNOW LIBRARY (INDIAN CONTEXT) ---
-// Indexed by day of year roughly, or random access. 
-// Covers Planning, Pregnancy, Postpartum.
-
 export const TIP_LIBRARY = {
     planning: [
         "Folic Acid isn't just for moms. Men should take Zinc and Vitamin C to improve sperm quality.",
@@ -156,7 +153,7 @@ export const TIP_LIBRARY = {
         "Eating a heavy breakfast helps regulate hormones in PCOS patients.",
         "Men should avoid keeping laptops on their laps to prevent heat damage to sperm.",
         "Hydration improves cervical mucus quality. Drink 3L water daily.",
-        "Check your immunity for Chickenpox (Varicella) before conceiving.",
+        "Check for Vitamin B12 deficiency if you are strictly vegetarian/vegan.",
         "Normal Hb for conception should ideally be > 12 g/dL to prevent anemia during pregnancy.",
         "Inositol supplements (Myo-Inositol) are proven to help egg quality in PCOS.",
         "Avoid raw papaya and pineapple in the Two Week Wait (traditional precaution against uterine contractions).",
@@ -257,455 +254,147 @@ export const DID_YOU_KNOW_DATA = {
 };
 
 // --- VACCINATION SCHEDULES ---
-
 export const MATERNAL_VACCINES: Vaccine[] = [
-  {
-    id: "mat_tt1",
-    name: "TT-1 / Td-1 (Tetanus)",
-    description: "First dose. Administer as soon as pregnancy is confirmed.",
-    dueWeekStart: 4,
-    dueWeekEnd: 12,
-    mandatory: true,
-    type: 'maternal'
-  },
-  {
-    id: "mat_tt2",
-    name: "TT-2 / Td-2",
-    description: "4 weeks after TT-1. Protection against Tetanus.",
-    dueWeekStart: 12,
-    dueWeekEnd: 16,
-    mandatory: true,
-    type: 'maternal'
-  },
-  {
-    id: "mat_flu",
-    name: "Influenza (Flu Shot)",
-    description: "Recommended if pregnancy overlaps with flu season (Oct-Jan). Safe in any trimester.",
-    dueWeekStart: 4,
-    dueWeekEnd: 40,
-    mandatory: false,
-    type: 'maternal'
-  },
-  {
-    id: "mat_tdap",
-    name: "Tdap (Tetanus, Diphtheria, Pertussis)",
-    description: "CRITICAL: Provides Whooping Cough immunity to the newborn. Replaces one TT dose.",
-    dueWeekStart: 27,
-    dueWeekEnd: 36,
-    mandatory: true,
-    type: 'maternal'
-  }
+  { id: "mat_tt1", name: "TT-1 / Td-1 (Tetanus)", description: "First dose. Administer as soon as pregnancy is confirmed.", dueWeekStart: 4, dueWeekEnd: 12, mandatory: true, type: 'maternal' },
+  { id: "mat_tt2", name: "TT-2 / Td-2", description: "4 weeks after TT-1. Protection against Tetanus.", dueWeekStart: 12, dueWeekEnd: 16, mandatory: true, type: 'maternal' },
+  { id: "mat_flu", name: "Influenza (Flu Shot)", description: "Recommended if pregnancy overlaps with flu season (Oct-Jan). Safe in any trimester.", dueWeekStart: 4, dueWeekEnd: 40, mandatory: false, type: 'maternal' },
+  { id: "mat_tdap", name: "Tdap (Tetanus, Diphtheria, Pertussis)", description: "CRITICAL: Provides Whooping Cough immunity to the newborn. Replaces one TT dose.", dueWeekStart: 27, dueWeekEnd: 36, mandatory: true, type: 'maternal' }
 ];
 
 export const BABY_VACCINES: Vaccine[] = [
-  {
-    id: "baby_birth_bcg",
-    name: "BCG (Tuberculosis)",
-    description: "At Birth. Left Upper Arm.",
-    dueWeekStart: 0,
-    dueWeekEnd: 1, // 1st week
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_birth_opv0",
-    name: "OPV-0 (Polio)",
-    description: "At Birth. Oral Drops.",
-    dueWeekStart: 0,
-    dueWeekEnd: 1,
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_birth_hepb0",
-    name: "Hep-B 0 (Hepatitis B)",
-    description: "At Birth (within 24 hrs). Thigh.",
-    dueWeekStart: 0,
-    dueWeekEnd: 1,
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_6w_combo",
-    name: "6 Weeks Immunization",
-    description: "DTwP-1, IPV-1, Hep-B-1, Hib-1, Rotavirus-1, PCV-1.",
-    dueWeekStart: 6,
-    dueWeekEnd: 7,
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_10w_combo",
-    name: "10 Weeks Immunization",
-    description: "DTwP-2, IPV-2, Hib-2, Rotavirus-2, PCV-2.",
-    dueWeekStart: 10,
-    dueWeekEnd: 11,
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_14w_combo",
-    name: "14 Weeks Immunization",
-    description: "DTwP-3, IPV-3, Hep-B-2, Hib-3, Rotavirus-3, PCV-3.",
-    dueWeekStart: 14,
-    dueWeekEnd: 15,
-    mandatory: true,
-    type: 'baby'
-  },
-  {
-    id: "baby_6m_flu",
-    name: "Influenza Dose 1",
-    description: "6 Months completed.",
-    dueWeekStart: 26, // approx 6 months
-    dueWeekEnd: 28,
-    mandatory: false,
-    type: 'baby'
-  }
+  { id: "baby_birth_bcg", name: "BCG (Tuberculosis)", description: "At Birth. Left Upper Arm.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
+  { id: "baby_birth_opv0", name: "OPV-0 (Polio)", description: "At Birth. Oral Drops.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
+  { id: "baby_birth_hepb0", name: "Hep-B 0 (Hepatitis B)", description: "At Birth (within 24 hrs). Thigh.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
+  { id: "baby_6w_combo", name: "6 Weeks Immunization", description: "DTwP-1, IPV-1, Hep-B-1, Hib-1, Rotavirus-1, PCV-1.", dueWeekStart: 6, dueWeekEnd: 7, mandatory: true, type: 'baby' },
+  { id: "baby_10w_combo", name: "10 Weeks Immunization", description: "DTwP-2, IPV-2, Hib-2, Rotavirus-2, PCV-2.", dueWeekStart: 10, dueWeekEnd: 11, mandatory: true, type: 'baby' },
+  { id: "baby_14w_combo", name: "14 Weeks Immunization", description: "DTwP-3, IPV-3, Hep-B-2, Hib-3, Rotavirus-3, PCV-3.", dueWeekStart: 14, dueWeekEnd: 15, mandatory: true, type: 'baby' },
+  { id: "baby_6m_flu", name: "Influenza Dose 1", description: "6 Months completed.", dueWeekStart: 26, dueWeekEnd: 28, mandatory: false, type: 'baby' }
 ];
 
 export const SCAN_SCHEDULE: ScanSchedule[] = [
-  {
-    weekStart: 6,
-    weekEnd: 9,
-    name: "Viability / Dating Scan",
-    description: "Confirms pregnancy, number of embryos, and heartbeat.",
-    mandatory: true
-  },
-  {
-    weekStart: 11,
-    weekEnd: 13,
-    name: "NT Scan (Nuchal Translucency)",
-    description: "Screens for chromosomal abnormalities (Down syndrome).",
-    mandatory: true
-  },
-  {
-    weekStart: 18,
-    weekEnd: 22,
-    name: "Anomaly Scan (Level II)",
-    description: "Detailed scan to check structural development of the baby.",
-    mandatory: true
-  },
-  {
-    weekStart: 24,
-    weekEnd: 28,
-    name: "Glucose Tolerance Test (GTT)",
-    description: "Screening for Gestational Diabetes.",
-    mandatory: true
-  },
-  {
-    weekStart: 28,
-    weekEnd: 32,
-    name: "Growth Scan / Color Doppler",
-    description: "Checks baby's growth, amniotic fluid, and blood flow.",
-    mandatory: false
-  },
-  {
-    weekStart: 36,
-    weekEnd: 40,
-    name: "Term Scan",
-    description: "Checks position of baby and fluid levels before labor.",
-    mandatory: false
-  }
+  { weekStart: 6, weekEnd: 9, name: "Viability / Dating Scan", description: "Confirms pregnancy, number of embryos, and heartbeat.", mandatory: true },
+  { weekStart: 11, weekEnd: 13, name: "NT Scan (Nuchal Translucency)", description: "Screens for chromosomal abnormalities (Down syndrome).", mandatory: true },
+  { weekStart: 18, weekEnd: 22, name: "Anomaly Scan (Level II)", description: "Detailed scan to check structural development of the baby.", mandatory: true },
+  { weekStart: 24, weekEnd: 28, name: "Glucose Tolerance Test (GTT)", description: "Screening for Gestational Diabetes.", mandatory: true },
+  { weekStart: 28, weekEnd: 32, name: "Growth Scan / Color Doppler", description: "Checks baby's growth, amniotic fluid, and blood flow.", mandatory: false },
+  { weekStart: 36, weekEnd: 40, name: "Term Scan", description: "Checks position of baby and fluid levels before labor.", mandatory: false }
 ];
 
 export const LAB_SCHEDULE: LabTest[] = [
-  // First Trimester Profile (Booking Visit)
-  {
-    id: "lab_booking_profile",
-    name: "Antenatal Profile (Booking Visit)",
-    category: "Routine",
-    description: "CBC, Blood Group & Rh, TSH, VDRL, HIV, HbsAg, HCV, Urine Routine/Microscopy. Testing for Thalassemia (HPLC) if not done previously.",
-    weekStart: 4,
-    weekEnd: 12,
-    mandatory: true
-  },
-  {
-    id: "lab_dual_marker",
-    name: "Dual Marker Test (Double Marker)",
-    category: "Screening",
-    description: "Maternal serum biochemistry test for chromosomal abnormalities (Down Syndrome). Usually done with NT Scan.",
-    weekStart: 11,
-    weekEnd: 13,
-    mandatory: true
-  },
-  // Second Trimester
-  {
-    id: "lab_quad_marker",
-    name: "Quadruple Marker",
-    category: "Screening",
-    description: "Screening for Down Syndrome if Dual Marker was missed or indicated high risk.",
-    weekStart: 15,
-    weekEnd: 20,
-    mandatory: false
-  },
-  {
-    id: "lab_gtt",
-    name: "Glucose Tolerance Test (75g)",
-    category: "Routine",
-    description: "DIPSI Guidelines: 75g oral glucose load, non-fasting. Single value test after 2 hours. Mandatory for all Indian women due to high ethnicity risk.",
-    weekStart: 24,
-    weekEnd: 28,
-    mandatory: true
-  },
-  {
-    id: "lab_cbc_urine_t2",
-    name: "CBC & Urine Routine",
-    category: "Routine",
-    description: "Re-check Hemoglobin for anemia (dilutional) and asymptomatic bacteriuria (UTI prevention).",
-    weekStart: 24,
-    weekEnd: 28,
-    mandatory: true
-  },
-  // Third Trimester
-  {
-    id: "lab_cbc_urine_t3",
-    name: "Pre-Delivery Profile",
-    category: "Routine",
-    description: "CBC, Urine Routine, Coagulation Profile (PT/INR), Viral Markers repeat (if needed).",
-    weekStart: 36,
-    weekEnd: 38,
-    mandatory: true
-  },
-  // Condition Specific
-  {
-    id: "lab_tsh_monthly",
-    name: "Thyroid Profile (TSH)",
-    category: "Special",
-    description: "Monitor TSH levels every 4-6 weeks to adjust Thyroxine dosage. Vital for fetal brain development.",
-    weekStart: 4,
-    weekEnd: 40,
-    mandatory: true,
-    condition: "thyroid"
-  },
-  {
-    id: "lab_ict",
-    name: "Indirect Coombs Test (ICT)",
-    category: "Special",
-    description: "For Rh Negative mothers (e.g. A-ve, O-ve). Checks for antibody formation against Rh+ baby.",
-    weekStart: 28,
-    weekEnd: 28,
-    mandatory: true,
-    condition: "rh_negative"
-  },
-  {
-      id: "lab_anemia_hb",
-      name: "Hemoglobin Check (Monthly)",
-      category: "Special",
-      description: "Frequent monitoring for Anemic mothers. Target Hb > 11 g/dL.",
-      weekStart: 12,
-      weekEnd: 36,
-      mandatory: true,
-      condition: "anemia"
-  }
+  { id: "lab_booking_profile", name: "Antenatal Profile (Booking Visit)", category: "Routine", description: "CBC, Blood Group & Rh, TSH, VDRL, HIV, HbsAg, HCV, Urine Routine/Microscopy. Testing for Thalassemia (HPLC) if not done previously.", weekStart: 4, weekEnd: 12, mandatory: true },
+  { id: "lab_dual_marker", name: "Dual Marker Test (Double Marker)", category: "Screening", description: "Maternal serum biochemistry test for chromosomal abnormalities (Down Syndrome). Usually done with NT Scan.", weekStart: 11, weekEnd: 13, mandatory: true },
+  { id: "lab_quad_marker", name: "Quadruple Marker", category: "Screening", description: "Screening for Down Syndrome if Dual Marker was missed or indicated high risk.", weekStart: 15, weekEnd: 20, mandatory: false },
+  { id: "lab_gtt", name: "Glucose Tolerance Test (75g)", category: "Routine", description: "DIPSI Guidelines: 75g oral glucose load, non-fasting. Single value test after 2 hours. Mandatory for all Indian women due to high ethnicity risk.", weekStart: 24, weekEnd: 28, mandatory: true },
+  { id: "lab_cbc_urine_t2", name: "CBC & Urine Routine", category: "Routine", description: "Re-check Hemoglobin for anemia (dilutional) and asymptomatic bacteriuria (UTI prevention).", weekStart: 24, weekEnd: 28, mandatory: true },
+  { id: "lab_cbc_urine_t3", name: "Pre-Delivery Profile", category: "Routine", description: "CBC, Urine Routine, Coagulation Profile (PT/INR), Viral Markers repeat (if needed).", weekStart: 36, weekEnd: 38, mandatory: true },
+  { id: "lab_tsh_monthly", name: "Thyroid Profile (TSH)", category: "Special", description: "Monitor TSH levels every 4-6 weeks to adjust Thyroxine dosage. Vital for fetal brain development.", weekStart: 4, weekEnd: 40, mandatory: true, condition: "thyroid" },
+  { id: "lab_ict", name: "Indirect Coombs Test (ICT)", category: "Special", description: "For Rh Negative mothers (e.g. A-ve, O-ve). Checks for antibody formation against Rh+ baby.", weekStart: 28, weekEnd: 28, mandatory: true, condition: "rh_negative" },
+  { id: "lab_anemia_hb", name: "Hemoglobin Check (Monthly)", category: "Special", description: "Frequent monitoring for Anemic mothers. Target Hb > 11 g/dL.", weekStart: 12, weekEnd: 36, mandatory: true, condition: "anemia" }
 ];
 
 export const BABY_MILESTONES = [
-  {
-    ageRange: "0-3 Months",
-    items: [
-      { id: "m_smile", label: "Social Smile (Smiles at people)", age: "6-8 Weeks" },
-      { id: "m_neck", label: "Neck Holding (Holds head steady)", age: "3 Months" },
-      { id: "m_eye", label: "Follows objects with eyes", age: "2 Months" },
-      { id: "m_coo", label: "Coos and gurgles", age: "2-3 Months" }
-    ]
-  },
-  {
-    ageRange: "4-6 Months",
-    items: [
-      { id: "m_roll", label: "Rolls over (Tummy to back)", age: "4-6 Months" },
-      { id: "m_laugh", label: "Laughs out loud", age: "4 Months" },
-      { id: "m_reach", label: "Reaches for objects (Grasp)", age: "5 Months" },
-      { id: "m_sit_sup", label: "Sits with support", age: "6 Months" }
-    ]
-  },
-  {
-    ageRange: "7-9 Months",
-    items: [
-      { id: "m_sit_no_sup", label: "Sits without support", age: "8 Months" },
-      { id: "m_crawl", label: "Crawling (Creeping)", age: "9 Months" },
-      { id: "m_pincer", label: "Pincer Grasp (Thumb-Index finger)", age: "9 Months" },
-      { id: "m_babble", label: "Babbles (Ma-ma, Da-da nonspecific)", age: "8-9 Months" }
-    ]
-  },
-  {
-    ageRange: "10-12 Months",
-    items: [
-      { id: "m_stand_sup", label: "Stands with support", age: "10 Months" },
-      { id: "m_wave", label: "Waves Bye-Bye", age: "10-12 Months" },
-      { id: "m_cruise", label: "Cruising (Walks holding furniture)", age: "11 Months" },
-      { id: "m_talk", label: "Says Mama/Dada specifically", age: "12 Months" },
-      { id: "m_stand", label: "Stands alone momentarily", age: "12 Months" }
-    ]
-  }
+  { ageRange: "0-3 Months", items: [{ id: "m_smile", label: "Social Smile (Smiles at people)", age: "6-8 Weeks" }, { id: "m_neck", label: "Neck Holding (Holds head steady)", age: "3 Months" }, { id: "m_eye", label: "Follows objects with eyes", age: "2 Months" }, { id: "m_coo", label: "Coos and gurgles", age: "2-3 Months" }] },
+  { ageRange: "4-6 Months", items: [{ id: "m_roll", label: "Rolls over (Tummy to back)", age: "4-6 Months" }, { id: "m_laugh", label: "Laughs out loud", age: "4 Months" }, { id: "m_reach", label: "Reaches for objects (Grasp)", age: "5 Months" }, { id: "m_sit_sup", label: "Sits with support", age: "6 Months" }] },
+  { ageRange: "7-9 Months", items: [{ id: "m_sit_no_sup", label: "Sits without support", age: "8 Months" }, { id: "m_crawl", label: "Crawling (Creeping)", age: "9 Months" }, { id: "m_pincer", label: "Pincer Grasp (Thumb-Index finger)", age: "9 Months" }, { id: "m_babble", label: "Babbles (Ma-ma, Da-da nonspecific)", age: "8-9 Months" }] },
+  { ageRange: "10-12 Months", items: [{ id: "m_stand_sup", label: "Stands with support", age: "10 Months" }, { id: "m_wave", label: "Waves Bye-Bye", age: "10-12 Months" }, { id: "m_cruise", label: "Cruising (Walks holding furniture)", age: "11 Months" }, { id: "m_talk", label: "Says Mama/Dada specifically", age: "12 Months" }, { id: "m_stand", label: "Stands alone momentarily", age: "12 Months" }] }
 ];
 
 export const COMORBIDITY_GUIDELINES: Record<string, ComorbidityGuide> = {
-  anemia: {
-    id: 'anemia',
-    name: 'Anemia (Low Hemoglobin)',
-    tests: ['Complete Blood Count (CBC)', 'Serum Ferritin', 'Iron Studies'],
-    frequency: 'Monthly (Target Hb > 11 g/dL)',
-    monitoring: [
-      'Take Iron supplements with Vitamin C (Lemon water/Orange juice) for absorption.',
-      'Avoid taking Iron with Calcium/Milk/Tea/Coffee.',
-      'Diet: Spinach, Beetroot, Jaggery, Red Meat.'
-    ],
-    alertSigns: ['Extreme fatigue', 'Palpitations (Heart racing)', 'Shortness of breath', 'Dizziness']
-  },
-  hypertension: {
-    id: 'hypertension',
-    name: 'Hypertension / High BP',
-    tests: ['Urine Albumin/Protein', 'Kidney Function Test (KFT)', 'Liver Function Test (LFT)'],
-    frequency: 'Home BP Monitoring: Daily | Lab Tests: Monthly',
-    monitoring: [
-      'Maintain BP < 140/90 mmHg.',
-      'Rest on your left side to improve blood flow.',
-      'Low salt diet (< 5g/day).'
-    ],
-    alertSigns: ['Severe headache', 'Blurred vision/Spots before eyes', 'Sudden swelling of face/hands', 'Upper abdominal pain']
-  },
-  thyroid: {
-    id: 'thyroid',
-    name: 'Hypothyroidism',
-    tests: ['TSH', 'Free T4'],
-    frequency: 'Every 4-6 Weeks',
-    monitoring: [
-      'Take Thyroxine empty stomach early morning.',
-      'Wait 45-60 mins before eating or taking other meds (especially Calcium/Iron).',
-      'Target TSH: 1st Trim < 2.5, 2nd/3rd Trim < 3.0.'
-    ],
-    alertSigns: ['Excessive weight gain', 'Extreme lethargy', 'Cold intolerance', 'Constipation']
-  },
-  diabetes: {
-    id: 'diabetes',
-    name: 'Diabetes / GDM',
-    tests: ['Fasting Blood Sugar', 'PP Blood Sugar (2hr)', 'HbA1c', 'Fetal Growth Scans'],
-    frequency: 'Sugar Logs: Daily (Fasting & PP) | HbA1c: Trimesterly',
-    monitoring: [
-      'Targets: Fasting < 95 mg/dL, 1hr PP < 140 mg/dL, 2hr PP < 120 mg/dL.',
-      'Strict diet control: Low carb, high protein.',
-      'Post-meal walks (15 mins).'
-    ],
-    alertSigns: ['Reduced fetal movement', 'Excessive thirst/urination', 'Dizziness (Hypoglycemia)', 'Large baby size on scan']
-  }
+  anemia: { id: 'anemia', name: 'Anemia (Low Hemoglobin)', tests: ['Complete Blood Count (CBC)', 'Serum Ferritin', 'Iron Studies'], frequency: 'Monthly (Target Hb > 11 g/dL)', monitoring: ['Take Iron supplements with Vitamin C.', 'Avoid Iron with Calcium/Milk.'], alertSigns: ['Extreme fatigue', 'Palpitations', 'Shortness of breath', 'Dizziness'] },
+  hypertension: { id: 'hypertension', name: 'Hypertension / High BP', tests: ['Urine Albumin/Protein', 'Kidney Function Test (KFT)', 'Liver Function Test (LFT)'], frequency: 'Home BP Monitoring: Daily | Lab Tests: Monthly', monitoring: ['Maintain BP < 140/90 mmHg.', 'Rest on your left side.', 'Low salt diet (< 5g/day).'], alertSigns: ['Severe headache', 'Blurred vision/Spots before eyes', 'Sudden swelling', 'Upper abdominal pain'] },
+  thyroid: { id: 'thyroid', name: 'Hypothyroidism', tests: ['TSH', 'Free T4'], frequency: 'Every 4-6 Weeks', monitoring: ['Take Thyroxine empty stomach early morning.', 'Wait 45-60 mins before eating.', 'Target TSH: 1st Trim < 2.5, 2nd/3rd Trim < 3.0.'], alertSigns: ['Excessive weight gain', 'Extreme lethargy', 'Cold intolerance', 'Constipation'] },
+  diabetes: { id: 'diabetes', name: 'Diabetes / GDM', tests: ['Fasting Blood Sugar', 'PP Blood Sugar (2hr)', 'HbA1c', 'Fetal Growth Scans'], frequency: 'Sugar Logs: Daily (Fasting & PP) | HbA1c: Trimesterly', monitoring: ['Targets: Fasting < 95, 1hr PP < 140, 2hr PP < 120.', 'Strict diet control.', 'Post-meal walks.'], alertSigns: ['Reduced fetal movement', 'Excessive thirst/urination', 'Dizziness (Hypoglycemia)', 'Large baby size'] }
 };
 
-// --- HEALTH STANDARDS (INDIAN / FOGSI) ---
+export const WEIGHT_GAIN_GUIDELINES = { underweight: { min: 13, max: 18, label: "Underweight (BMI < 18.5)" }, normal: { min: 11, max: 16, label: "Normal (BMI 18.5 - 24.9)" }, overweight: { min: 7, max: 11, label: "Overweight (BMI 25 - 29.9)" }, obese: { min: 5, max: 9, label: "Obese (BMI > 30)" } };
+export const BP_THRESHOLDS = { normal: { sys: 120, dia: 80, label: "Normal", color: "text-green-600" }, elevated: { sys: 130, dia: 85, label: "Elevated", color: "text-yellow-600" }, high: { sys: 140, dia: 90, label: "Hypertension (Consult Doctor)", color: "text-red-600" } };
+export const GLUCOSE_THRESHOLDS = { fasting: { max: 95, label: "Normal Fasting < 95 mg/dL" }, post_prandial: { max: 120, label: "Normal 2hr PP < 120 mg/dL" }, random: { max: 140, label: "Normal Random < 140 mg/dL" } };
+export const LAB_THRESHOLDS = { tsh: { pregnant_t1: { min: 0.1, max: 2.5, label: "Trimester 1 Target: 0.1 - 2.5 mIU/L" }, pregnant_t2_t3: { min: 0.2, max: 3.0, label: "Trimester 2/3 Target: 0.2 - 3.0 mIU/L" }, general: { min: 0.4, max: 4.0, label: "Normal Range: 0.4 - 4.0 mIU/L" } }, hemoglobin: { pregnant: { min: 11, label: "Target > 11 g/dL (Anemia if < 11)" }, postpartum: { min: 10, label: "Target > 10 g/dL" }, general: { min: 12, label: "Target > 12 g/dL" }, severe: 7 }, hba1c: { pregnant: { max: 6.0, label: "Target < 6.0% (Strict Control)" }, general: { max: 5.7, label: "Normal < 5.7% (Pre-diabetes 5.7-6.4)" } } };
 
-// Weight Gain Guidelines based on BMI (IOM adapted for India)
-// Values in Kg for full term (40 weeks)
-export const WEIGHT_GAIN_GUIDELINES = {
-    underweight: { min: 13, max: 18, label: "Underweight (BMI < 18.5)" },
-    normal: { min: 11, max: 16, label: "Normal (BMI 18.5 - 24.9)" }, // FOGSI often suggests 10-12kg, but IOM 11-16 is standard reference
-    overweight: { min: 7, max: 11, label: "Overweight (BMI 25 - 29.9)" },
-    obese: { min: 5, max: 9, label: "Obese (BMI > 30)" }
-};
-
-export const BP_THRESHOLDS = {
-    normal: { sys: 120, dia: 80, label: "Normal", color: "text-green-600" },
-    elevated: { sys: 130, dia: 85, label: "Elevated", color: "text-yellow-600" },
-    high: { sys: 140, dia: 90, label: "Hypertension (Consult Doctor)", color: "text-red-600" }
-};
-
-export const GLUCOSE_THRESHOLDS = {
-    fasting: { max: 95, label: "Normal Fasting < 95 mg/dL" },
-    post_prandial: { max: 120, label: "Normal 2hr PP < 120 mg/dL" },
-    random: { max: 140, label: "Normal Random < 140 mg/dL" }
-};
-
-// --- NEW VITALS THRESHOLDS (FOGSI / WHO) ---
-export const LAB_THRESHOLDS = {
-    tsh: {
-        pregnant_t1: { min: 0.1, max: 2.5, label: "Trimester 1 Target: 0.1 - 2.5 mIU/L" },
-        pregnant_t2_t3: { min: 0.2, max: 3.0, label: "Trimester 2/3 Target: 0.2 - 3.0 mIU/L" },
-        general: { min: 0.4, max: 4.0, label: "Normal Range: 0.4 - 4.0 mIU/L" }
-    },
-    hemoglobin: {
-        pregnant: { min: 11, label: "Target > 11 g/dL (Anemia if < 11)" },
-        postpartum: { min: 10, label: "Target > 10 g/dL" },
-        general: { min: 12, label: "Target > 12 g/dL" },
-        severe: 7 // Severe anemia threshold
-    },
-    hba1c: {
-        pregnant: { max: 6.0, label: "Target < 6.0% (Strict Control)" },
-        general: { max: 5.7, label: "Normal < 5.7% (Pre-diabetes 5.7-6.4)" }
-    }
-};
-
-export const FALLBACK_WEEKLY_INFO: WeeklyInfo = {
-  week: 0,
-  babySize: "Unknown",
-  babyWeight: "-",
-  babyLength: "-",
-  description: "Information for this week is loading or unavailable.",
-  symptoms: [],
-  toDo: [],
-  notToDo: []
-};
-
+export const FALLBACK_WEEKLY_INFO: WeeklyInfo = { week: 0, babySize: "Unknown", babyWeight: "-", babyLength: "-", description: "Information for this week is loading or unavailable.", symptoms: [], toDo: [], notToDo: [] };
 export const WEEKLY_DATA: Record<number, WeeklyInfo> = {
-  1: {
-    week: 1,
-    babySize: "Poppy Seed",
-    babyWeight: "< 1g",
-    babyLength: "< 1mm",
-    description: "You are not actually pregnant yet! This week is your period.",
-    symptoms: ["Cramps", "Fatigue", "Mood Swings"],
-    toDo: ["Start taking Folic Acid (400mcg)", "Avoid Alcohol and Smoking"],
-    notToDo: ["X-Rays without protection", "Self-medication"]
-  },
-  2: {
-    week: 2,
-    babySize: "Poppy Seed",
-    babyWeight: "< 1g",
-    babyLength: "< 1mm",
-    description: "Ovulation happens around the end of this week. This is your fertile window.",
-    symptoms: ["Increased Libido", "Cervical Mucus Changes"],
-    toDo: ["Time intercourse", "Maintain healthy diet"],
-    notToDo: ["Stress", "High Caffeine"]
-  },
-  // We can add more weeks, but fallback covers the rest if missing for this compilation fix.
-  40: {
-    week: 40,
-    babySize: "Watermelon",
-    babyWeight: "3.5 kg",
-    babyLength: "51 cm",
-    description: "Your baby is fully grown and ready to meet you!",
-    symptoms: ["Contractions", "Back pain", "Water breaking"],
-    toDo: ["Pack hospital bag", "Track movements"],
-    notToDo: ["Heavy lifting", "Travel far from hospital"]
-  }
+  1: { week: 1, babySize: "Poppy Seed", babyWeight: "< 1g", babyLength: "< 1mm", description: "You are not actually pregnant yet! This week is your period.", symptoms: ["Cramps", "Fatigue", "Mood Swings"], toDo: ["Start taking Folic Acid (400mcg)", "Avoid Alcohol and Smoking"], notToDo: ["X-Rays without protection", "Self-medication"] },
+  2: { week: 2, babySize: "Poppy Seed", babyWeight: "< 1g", babyLength: "< 1mm", description: "Ovulation happens around the end of this week. This is your fertile window.", symptoms: ["Increased Libido", "Cervical Mucus Changes"], toDo: ["Time intercourse", "Maintain healthy diet"], notToDo: ["Stress", "High Caffeine"] },
+  40: { week: 40, babySize: "Watermelon", babyWeight: "3.5 kg", babyLength: "51 cm", description: "Your baby is fully grown and ready to meet you!", symptoms: ["Contractions", "Back pain", "Water breaking"], toDo: ["Pack hospital bag", "Track movements"], notToDo: ["Heavy lifting", "Travel far from hospital"] }
 };
+export const DAILY_TIPS: Record<string, string> = { "default": "Stay hydrated and rest well.", "1": "Start taking prenatal vitamins now.", "2": "Track your ovulation signs.", "40": "Relax and practice breathing exercises." };
 
-export const DAILY_TIPS: Record<string, string> = {
-  "default": "Stay hydrated and rest well.",
-  "1": "Start taking prenatal vitamins now.",
-  "2": "Track your ovulation signs.",
-  "40": "Relax and practice breathing exercises."
-};
-
+// --- COMPREHENSIVE MEDICINE DATABASE (FOGSI / IAP / FDA STANDARDS) ---
+// Key 0: Planning, 1-3: Trimesters, 4: Postpartum/Lactation
 export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
-  1: [
-      { category: "Pain", safe: ["Paracetamol"], caution: [], avoid: ["Ibuprofen", "Aspirin"], note: "Consult doctor for any pain." },
-      { category: "Cold", safe: ["Saline Drops", "Steam"], caution: ["Antihistamines"], avoid: ["Pseudoephedrine"], note: "Home remedies prefered." }
+  0: [ // Planning / Pre-Conception
+      { category: "Vitamins & Supplements", safe: ["Folic Acid 5mg/400mcg (Folvite)", "Vitamin D3 (Uprise-D3/Calcirol)", "Vitamin B12 (Methylcobalamin)", "Zinc", "CoQ10 (Ubiquinol)", "Omega-3 (Fish Oil)", "Vitamin E (Evion)", "Calcium Citrate", "Inositol (Myo-Inositol - PCOS)"], caution: ["Vitamin C > 1000mg"], avoid: ["Vitamin A (Retinol > 10,000 IU)", "Unverified Herbal Supplements"], note: "Folic Acid is mandatory 3 months prior to conception." },
+      { category: "Diabetes / Blood Sugar", safe: ["Insulin (Human/Analog)", "Metformin (Glycomet/Gluconorm) - Safe for PCOS"], caution: ["Glibenclamide", "Glimepiride"], avoid: ["SGLT2 Inhibitors (Dapagliflozin)", "GLP-1 Agonists (Semaglutide)", "Pioglitazone"], note: "Switch to Insulin or Metformin before conceiving." },
+      { category: "Hypertension / BP", safe: ["Labetalol (Labebet)", "Methyldopa (Aldomet)", "Nifedipine (Nicardia)"], caution: ["Amlodipine"], avoid: ["ACE Inhibitors (Enalapril/Ramipril)", "ARBs (Telmisartan/Losartan)", "Diuretics (Lasix) - Avoid if possible"], note: "ACE Inhibitors cause fetal kidney damage. Switch immediately." },
+      { category: "Thyroid Management", safe: ["Levothyroxine (Thyronorm/Eltroxin)"], caution: ["Propylthiouracil (PTU) - Used for Hyperthyroid"], avoid: ["Radioactive Iodine"], note: "TSH Target < 2.5 mIU/L for conception." },
+      { category: "Pain & Fever", safe: ["Paracetamol (Dolo/Calpol/Crocin)"], caution: ["Ibuprofen (Advil/Brufen) - May delay ovulation", "Diclofenac", "Aspirin (Low Dose 75mg is safe if prescribed)"], avoid: ["Tramadol", "Strong Opioids", "Cox-2 Inhibitors (Etoricoxib)"], note: "Avoid NSAIDs during fertile window." },
+      { category: "Acidity & GI", safe: ["Antacids (Digene/Gelusil)", "Pantoprazole (Pan-D)", "Omeprazole", "Ranitidine (Rantac)", "Psyllium Husk (Isabgol)"], caution: ["Loperamide (Imodium)"], avoid: ["Castor Oil"], note: "Treat H.Pylori if present." },
+      { category: "Allergy & Cold", safe: ["Cetirizine (Cetzine)", "Loratadine", "Saline Nasal Drops (Nasivion S)", "Steam Inhalation", "Montelukast"], caution: ["Diphenhydramine (Benadryl)"], avoid: ["Pseudoephedrine (Sudafed)", "Phenylephrine (oral)"], note: "Control allergies to reduce inflammation." },
+      { category: "Infections / Antibiotics", safe: ["Amoxicillin (Mox)", "Azithromycin (Azithral)", "Cephalexin", "Nitrofurantoin (UTI)"], caution: ["Ciprofloxacin"], avoid: ["Tetracycline (Doxycycline)", "Fluoroquinolones (Ofloxacin)"], note: "Finish full course if prescribed." },
+      { category: "Skin & Beauty", safe: ["Glycolic Acid", "Vitamin C Serum", "Benzoyl Peroxide (Low %)", "Azelaic Acid"], caution: ["Salicylic Acid (>2%)"], avoid: ["Isotretinoin (Accutane)", "Retinoids (Retin-A/Tretinoin)", "Hydroquinone"], note: "STOP Retinoids/Accutane 1-3 months before trying." },
+      { category: "Psychiatry / Mood", safe: ["Sertraline", "Fluoxetine (Prozac)"], caution: ["Benzodiazepines (Alprazolam)"], avoid: ["Lithium", "Valproate (Epival/Valparin)"], note: "Consult psychiatrist for safe alternatives." }
   ],
-  2: [
-      { category: "Pain", safe: ["Paracetamol"], caution: [], avoid: ["Ibuprofen"], note: "Consult doctor." }
+  1: [ // First Trimester (0-13 Weeks) - CRITICAL ORGANOGENESIS
+      { category: "Nausea & Vomiting", safe: ["Doxylamine + B6 (Doxinate/Pregidoxin)", "Ginger", "Ondansetron (Ondem/Vomitest) - after 10w"], caution: ["Metoclopramide (Perinorm)"], avoid: ["Domperidone"], note: "Doxinate is the gold standard for morning sickness (NVP)." },
+      { category: "Pain & Fever", safe: ["Paracetamol (Dolo/Crocin)"], caution: [], avoid: ["Ibuprofen", "Aspirin (High Dose)", "Diclofenac", "Combiflam", "Mefenamic Acid (Meftal)"], note: "Strictly avoid NSAIDs in T1 (Miscarriage risk)." },
+      { category: "Diabetes (GDM)", safe: ["Insulin (Actrapid/Lantus)", "Metformin (Glycomet) - if benefit > risk"], caution: [], avoid: ["Oral Hypoglycemics (Glimepiride/Gliclazide)"], note: "Insulin does not cross the placenta. It is the safest." },
+      { category: "Hypertension", safe: ["Labetalol", "Methyldopa"], caution: [], avoid: ["Telmisartan", "Enalapril", "Losartan", "Atenolol (IUGR risk)"], note: "Uncontrolled BP is dangerous." },
+      { category: "Thyroid", safe: ["Levothyroxine (Thyronorm)"], caution: [], avoid: [], note: "Increase dose by 25-50% usually required in T1." },
+      { category: "Acidity & Gas", safe: ["Antacids (Digene/Gelusil)", "Sucralfate", "Omeprazole (Omez)"], caution: ["Pantoprazole (Pan-40) - Use only if needed", "Ranitidine"], avoid: ["Sodium Bicarbonate (Soda/Eno - high salt)"], note: "Lifestyle changes first." },
+      { category: "Allergy & Cold", safe: ["Saline Drops (Nasivion S)", "Steam", "Chlorpheniramine (CPM)"], caution: ["Cetirizine (Cetzine)", "Cough Syrups with Alcohol"], avoid: ["Phenylephrine", "Pseudoephedrine (Decongestants)", "Codeine Syrups"], note: "Avoid decongestants in T1." },
+      { category: "Antibiotics", safe: ["Amoxicillin (Mox)", "Cephalexin (Phexin)", "Erythromycin", "Azithromycin"], caution: ["Metronidazole (Flagyl) - Avoid high dose in T1"], avoid: ["Tetracycline", "Doxycycline", "Ciprofloxacin", "Norfloxacin"], note: "Treat UTIs immediately (Nitrofurantoin/Cephalexin)." },
+      { category: "Hormonal Support", safe: ["Progesterone (Susten/Duphaston/Microgest)", "HCG Injections"], caution: [], avoid: ["Estrogen containing pills"], note: "Only take hormonal support if prescribed for threatened abortion." },
+      { category: "Vitamins", safe: ["Folic Acid (Folvite)", "Vitamin B6", "Vitamin D3"], caution: ["Iron (Can worsen nausea in T1)"], avoid: ["Vitamin A (Retinol)", "Cod Liver Oil"], note: "Start Iron only after 12 weeks usually." }
   ],
-  3: [
-      { category: "Pain", safe: ["Paracetamol"], caution: [], avoid: ["Ibuprofen"], note: "NSAIDs can affect fetal heart." }
+  2: [ // Second Trimester (14-27 Weeks)
+      { category: "Vitamins & Minerals", safe: ["Iron (Ferrous Ascorbate/Fumarate)", "Calcium (Shellcal/Cipcal)", "Vitamin D3", "Omega-3 (DHA)", "Protein Powder (Protinex Mama)"], caution: [], avoid: [], note: "Calcium and Iron must be taken at different times (min 2hr gap)." },
+      { category: "Pain & Fever", safe: ["Paracetamol"], caution: ["Ibuprofen (Single dose if prescribed - only in T2)"], avoid: ["Aspirin (High dose)", "Tramadol"], note: "Safest period for necessary dental work." },
+      { category: "Diabetes (GDM)", safe: ["Insulin"], caution: ["Metformin"], avoid: ["Sulfonylureas"], note: "GTT test is done at 24-28 weeks." },
+      { category: "Hypertension", safe: ["Labetalol", "Methyldopa", "Nifedipine Retard"], caution: [], avoid: ["ACE Inhibitors", "ARBs"], note: "Monitor BP for Preeclampsia signs." },
+      { category: "Acidity & Gas", safe: ["Omeprazole", "Pantoprazole", "Digene", "Eno (Occasional)"], caution: [], avoid: [], note: "Heartburn peaks as uterus rises." },
+      { category: "Antibiotics", safe: ["Amoxicillin", "Azithromycin", "Cephalosporins", "Clindamycin"], caution: ["Metronidazole"], avoid: ["Tetracyclines (Stains baby teeth)", "Aminoglycosides (Gentamicin)"], note: "Treat vaginal infections." },
+      { category: "Constipation", safe: ["Psyllium Husk (Isabgol)", "Lactulose (Duphalac)", "PEG (Pegmove)"], caution: ["Liquid Paraffin"], avoid: ["Castor Oil", "Strong Purgatives (Dulcolax - cramps)"], note: "Increase water intake." },
+      { category: "Deworming", safe: ["Albendazole (400mg single dose) - WHO recommends in T2/T3 for endemic areas"], caution: [], avoid: ["In T1"], note: "Treats hookworm anemia." },
+      { category: "Cough & Cold", safe: ["Cetirizine", "Guaifenesin (Expectorant)", "Vicks VapoRub (Topical)"], caution: ["Dextromethorphan"], avoid: [], note: "Steam inhalation is best." }
   ],
-  4: [ // Postpartum
-      { category: "Pain", safe: ["Paracetamol", "Ibuprofen"], caution: ["Aspirin"], avoid: [], note: "Most meds enter breastmilk in small amounts." }
+  3: [ // Third Trimester (28-40 Weeks)
+      { category: "Pain & Fever", safe: ["Paracetamol"], caution: [], avoid: ["Ibuprofen", "Diclofenac", "Aspirin", "Naproxen", "Indomethacin"], note: "CRITICAL: NSAIDs in T3 cause premature closure of Ductus Arteriosus (Heart defect) and low amniotic fluid." },
+      { category: "Diabetes (GDM)", safe: ["Insulin"], caution: [], avoid: ["Oral agents"], note: "Strict sugar control to prevent macrosomia (large baby)." },
+      { category: "Hypertension", safe: ["Labetalol", "Nifedipine"], caution: [], avoid: ["Diuretics (can reduce amniotic fluid)"], note: "Watch for swelling/headache." },
+      { category: "Acidity & Gas", safe: ["Ranitidine", "Pantoprazole", "Gelusil"], caution: [], avoid: [], note: "Uterus pressure increases acidity." },
+      { category: "Infection/Cough", safe: ["Azithromycin", "Amoxicillin"], caution: [], avoid: ["Sulfa drugs (Cotrimoxazole) - Avoid near term (Jaundice risk)", "Tetracyclines"], note: "Treat GBS if positive." },
+      { category: "Labor & Induction", safe: ["Evening Primrose Oil (Oral - only if advised)"], caution: ["Castor Oil (Can cause distress/meconium)"], avoid: ["Herbal concoctions for labor"], note: "Do not self-induce without doctor supervision." },
+      { category: "Supplements", safe: ["Iron", "Calcium", "Vitamin D", "Magnesium (for cramps)"], caution: [], avoid: [], note: "Continue supplements to build reserves for birth." },
+      { category: "Itching/Cholestasis", safe: ["Ursodeoxycholic Acid (Udiliv)", "Calamine Lotion", "Emollients"], caution: ["Antihistamines"], avoid: [], note: "Report itching of palms/soles immediately (Obstetric Cholestasis)." },
+      { category: "Sleep", safe: ["Warm Milk", "Magnesium"], caution: ["Diphenhydramine"], avoid: ["Benzodiazepines (Alprazolam) - Floppy Baby Syndrome"], note: "Avoid sleeping pills near term." }
+  ],
+  4: [ // Postpartum / Lactation (Breastfeeding)
+      { category: "Pain & Recovery", safe: ["Paracetamol", "Ibuprofen (Safe for BF)", "Diclofenac (Voveran)", "Aceclofenac"], caution: ["Tramadol (Monitor baby for sedation)", "Codeine"], avoid: ["Aspirin (Reye's Syndrome risk for baby)"], note: "Pain relief is vital for let-down reflex." },
+      { category: "Antibiotics", safe: ["Amoxicillin", "Augmentin", "Cephalexin", "Erythromycin"], caution: ["Ciprofloxacin (Safe in short courses)", "Metronidazole (Pump & dump if high dose)"], avoid: ["Chloramphenicol"], note: "Most antibiotics pass in small amounts but are safe." },
+      { category: "Lactation Aid", safe: ["Fenugreek", "Shatavari (Kalpa)", "Domperidone (Prescription only)", "Metoclopramide"], caution: [], avoid: ["Bromocriptine (Stops milk)"], note: "Hydration is the best galactogogue." },
+      { category: "Postpartum Depression", safe: ["Sertraline (Preferred)", "Paroxetine"], caution: ["Fluoxetine (Long half-life)"], avoid: ["Doxepin"], note: "Treating PPD is safer for baby than untreated depression." },
+      { category: "Diabetes", safe: ["Insulin", "Metformin", "Glibenclamide"], caution: [], avoid: [], note: "Monitor sugars as requirements drop rapidly after birth." },
+      { category: "Hypertension", safe: ["Enalapril (Safe in lactation)", "Captopril", "Nifedipine", "Labetalol"], caution: ["Atenolol", "Diuretics (Can reduce milk)"], avoid: [], note: "Switch from Methyldopa (Depression risk)." },
+      { category: "Cold & Allergy", safe: ["Loratadine", "Cetirizine", "Saline sprays"], caution: ["Diphenhydramine (Can reduce milk supply)"], avoid: ["Pseudoephedrine (Dries up milk)", "Phenylephrine"], note: "Avoid decongestants if supply is low." },
+      { category: "Contraception", safe: ["Progestin-only Pill (Mini-pill / Cerazette)", "Copper IUD (Multiload)", "Condoms", "Depo-Provera", "Lactational Amenorrhea"], caution: [], avoid: ["Combined Oral Pills (Estrogen reduces milk supply)"], note: "Safe to start Mini-pill 6 weeks postpartum." },
+      { category: "Vitamins", safe: ["Calcium", "Iron", "Postnatal Multivitamins"], caution: [], avoid: [], note: "Continue for 3-6 months to replenish stores." },
+      { category: "Gut Health", safe: ["Lactulose", "Stool Softeners"], caution: ["Senna"], avoid: [], note: "Important for perineal healing." }
   ]
 };
 
 export const ALWAYS_CONTRAINDICATED = [
-  { name: "Thalidomide", reason: "Causes severe birth defects." },
-  { name: "Isotretinoin", reason: "Causes severe birth defects." },
-  { name: "Warfarin", reason: "Blood thinner that causes defects." },
-  { name: "Valproic Acid", reason: "Neural tube defects." },
-  { name: "Methotrexate", reason: "Causes miscarriage." }
+  { name: "Thalidomide", reason: "Causes severe birth defects (Phocomelia)." },
+  { name: "Isotretinoin (Accutane)", reason: "Severe brain and heart defects. Stop 1 month before conceiving." },
+  { name: "Warfarin", reason: "Blood thinner that causes skeletal defects. Switch to Heparin." },
+  { name: "Valproic Acid", reason: "Neural tube defects (Spina Bifida)." },
+  { name: "Methotrexate", reason: "Causes miscarriage and severe anomalies." },
+  { name: "ACE Inhibitors (Enalapril/Ramipril)", reason: "Causes fetal kidney failure and death (2nd/3rd Trim)." },
+  { name: "Tetracyclines", reason: "Discolors baby's teeth and affects bone growth." },
+  { name: "Misoprostol", reason: "Induces abortion/labor." },
+  { name: "Lithium", reason: "Cardiac defects (Ebstein's anomaly)." },
+  { name: "Phenytoin", reason: "Cleft palate and heart defects." },
+  { name: "Radioactive Iodine", reason: "Destroys fetal thyroid." },
+  { name: "Danazol", reason: "Virilization of female fetus." }
 ];
 
 const DEFAULT_DIET: TrimesterDiet = {
