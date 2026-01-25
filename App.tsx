@@ -13,6 +13,7 @@ import { DietPlan } from './components/DietPlan';
 import { VaccinationTracker } from './components/VaccinationTracker';
 import { ToolsHub } from './components/ToolsHub';
 import { HealthTracker } from './components/HealthTracker';
+import { MalePartnerHealth } from './components/MalePartnerHealth';
 import { Login } from './components/Login';
 import { LayoutDashboard, Calendar, FileText, Pill, Moon, Sun, Settings, User, Utensils, Syringe, Baby, Wrench, HeartPulse, LogOut, Users, PlusCircle } from 'lucide-react';
 
@@ -456,6 +457,7 @@ export default function App() {
       navItems = [
           { id: TabView.DASHBOARD, icon: Calendar, label: 'Cycle & Plan' },
           { id: TabView.HEALTH, icon: HeartPulse, label: 'Body Ready' },
+          { id: TabView.PARTNER, icon: Users, label: 'Partner' }, // New Partner Tab
           { id: TabView.MEDICINES, icon: Pill, label: 'Meds' },
           { id: TabView.TOOLS, icon: Wrench, label: 'Tools' }
       ];
@@ -504,7 +506,7 @@ export default function App() {
             currentWeek={calcSafe.currentWeek} 
             isPostpartum={isPostpartum} 
             mode={settings.status}
-            comorbidities={settings.comorbidities} // Add this
+            comorbidities={settings.comorbidities}
         />;
       case TabView.DIET: return <DietPlan key={`diet_${profileKey}`} settings={settings} calculations={calcSafe} />;
       case TabView.VACCINATIONS: 
@@ -516,6 +518,7 @@ export default function App() {
         />;
       case TabView.HEALTH: return <HealthTracker key={`health_${profileKey}`} settings={settings} calculations={calcSafe} />;
       case TabView.TOOLS: return <ToolsHub key={`tools_${profileKey}`} />;
+      case TabView.PARTNER: return <MalePartnerHealth key={`partner_${profileKey}`} />; // Render New Component
       case TabView.PROFILE: 
         return <Profile 
             key={`prof_${profileKey}`}

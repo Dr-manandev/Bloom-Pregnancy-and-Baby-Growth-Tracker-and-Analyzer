@@ -5,6 +5,54 @@ export const DEFAULT_CYCLE = 28;
 
 export const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
+// --- MALE PARTNER HEALTH DATA (FOGSI / WHO) ---
+export const MALE_FERTILITY_DATA = {
+    meds: {
+        avoid: [
+            { name: "Testosterone / Anabolic Steroids", reason: "Strictly Avoid. Causes Azoospermia (Zero sperm count) by stopping natural production." },
+            { name: "Finasteride (Propecia)", reason: "Used for hair loss. Can reduce semen volume and sperm count." },
+            { name: "Sulfasalazine", reason: "Used for colitis. Known to cause reversible male infertility." },
+            { name: "Nitrofurantoin", reason: "Antibiotic used for UTI. Immobilizes sperm." },
+            { name: "Calcium Channel Blockers", reason: "BP meds (Nifedipine, Amlodipine) can interfere with sperm's ability to fertilize egg." },
+            { name: "Ketoconazole (Oral)", reason: "Antifungal. Lowers testosterone production." },
+            { name: "Methotrexate", reason: "Used for arthritis/psoriasis. Severe DNA damage to sperm." }
+        ],
+        caution: [
+            { name: "SSRIs (Antidepressants)", reason: "May increase sperm DNA fragmentation. Consult psychiatrist." },
+            { name: "Antihistamines (Long term)", reason: "Chronic use may affect sperm quality." },
+            { name: "Opioids / Tramadol", reason: "Lowers testosterone and LH levels." }
+        ]
+    },
+    lifestyle: {
+        necessary: [
+            { title: "Quit Smoking & Vaping", detail: "Tobacco damages sperm DNA integrity. Passive smoking harms the female partner too." },
+            { title: "Avoid Scrotal Heat", detail: "Stop keeping laptops on lap. Avoid hot baths, saunas, and tight underwear (wear Boxers)." },
+            { title: "Limit Alcohol", detail: "Heavy drinking lowers testosterone and causes erectile dysfunction." },
+            { title: "Treat Infections", detail: "STIs, Urinary Tract Infections, or Prostatitis must be treated with antibiotics." }
+        ],
+        good_to_do: [
+            { title: "Regular Ejaculation", detail: "Every 2-3 days helps keep sperm DNA fresh and reduces oxidative stress." },
+            { title: "Sleep 7-8 Hours", detail: "Melatonin is crucial for sperm protection against oxidative damage." },
+            { title: "Reduce Stress", detail: "High cortisol levels directly lower testosterone." },
+            { title: "Limit Cycling", detail: "More than 5 hours/week on a bicycle saddle can affect blood flow and temperature." }
+        ],
+        avoid: [
+            { title: "Plastic Containers (BPA)", detail: "BPA mimics estrogen. Use glass/steel for food and water." },
+            { title: "Lubricants", detail: "Saliva and standard lubes kill sperm. Use 'Fertility Friendly' lubes or Pre-Seed." },
+            { title: "Soy in Excess", detail: "Contains phytoestrogens. Occasional is fine, but avoid daily high intake." },
+            { title: "Processed Meats", detail: "Linked to lower sperm count." }
+        ]
+    },
+    nutrition: [
+        { nutrient: "Zinc", source: "Pumpkin Seeds, Chickpeas (Chana), Cashews, Eggs", benefit: "Critical for sperm count and motility." },
+        { nutrient: "Folic Acid", source: "Lentils (Dal), Spinach (Palak), Avocado", benefit: "Essential for DNA synthesis (yes, men need it too)." },
+        { nutrient: "CoQ10", source: "Fish, Organ meats, or Supplements (Ubiquinol)", benefit: "Provides energy for sperm motility." },
+        { nutrient: "Vitamin C", source: "Amla, Guava, Oranges, Lemon", benefit: "Antioxidant. Prevents sperm agglutination (clumping)." },
+        { nutrient: "Lycopene", source: "Cooked Tomatoes, Watermelon", benefit: "Improves sperm morphology (shape)." },
+        { nutrient: "Selenium", source: "Brazil Nuts, Chicken, Fish", benefit: "Protects against oxidative damage." }
+    ]
+};
+
 // --- RISK FACTOR GUIDELINES (FOGSI / WHO) ---
 export const MATERNAL_AGE_RISKS = {
     teenage: {
@@ -374,7 +422,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Lactation Aid", safe: ["Fenugreek", "Shatavari (Kalpa)", "Domperidone (Prescription only)", "Metoclopramide"], caution: [], avoid: ["Bromocriptine (Stops milk)"], note: "Hydration is the best galactogogue." },
       { category: "Postpartum Depression", safe: ["Sertraline (Preferred)", "Paroxetine"], caution: ["Fluoxetine (Long half-life)"], avoid: ["Doxepin"], note: "Treating PPD is safer for baby than untreated depression." },
       { category: "Diabetes", safe: ["Insulin", "Metformin", "Glibenclamide"], caution: [], avoid: [], note: "Monitor sugars as requirements drop rapidly after birth." },
-      { category: "Hypertension", safe: ["Enalapril (Safe in lactation)", "Captopril", "Nifedipine", "Labetalol"], caution: ["Atenolol", "Diuretics (Can reduce milk)"], avoid: [], note: "Switch from Methyldopa (Depression risk)." },
+      { category: "Hypertension", safe: ["Enalapril (Safe in lactation)", "Captopril", "Nifedipine", "Labetalol"], caution: ["Atenolol", "Diuretics (Can reduce milk)"], avoid: ["Switch from Methyldopa (Depression risk)"], note: "Enalapril/Captopril are safe." },
       { category: "Cold & Allergy", safe: ["Loratadine", "Cetirizine", "Saline sprays"], caution: ["Diphenhydramine (Can reduce milk supply)"], avoid: ["Pseudoephedrine (Dries up milk)", "Phenylephrine"], note: "Avoid decongestants if supply is low." },
       { category: "Contraception", safe: ["Progestin-only Pill (Mini-pill / Cerazette)", "Copper IUD (Multiload)", "Condoms", "Depo-Provera", "Lactational Amenorrhea"], caution: [], avoid: ["Combined Oral Pills (Estrogen reduces milk supply)"], note: "Safe to start Mini-pill 6 weeks postpartum." },
       { category: "Vitamins", safe: ["Calcium", "Iron", "Postnatal Multivitamins"], caution: [], avoid: [], note: "Continue for 3-6 months to replenish stores." },

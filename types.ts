@@ -249,7 +249,8 @@ export enum TabView {
   PROFILE = 'profile',
   VACCINATIONS = 'vaccinations',
   TOOLS = 'tools',
-  HEALTH = 'health'
+  HEALTH = 'health',
+  PARTNER = 'partner'
 }
 
 // --- PLANNING MODE TYPES ---
