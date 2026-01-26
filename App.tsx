@@ -457,8 +457,7 @@ export default function App() {
       navItems = [
           { id: TabView.DASHBOARD, icon: Calendar, label: 'Cycle & Plan' },
           { id: TabView.HEALTH, icon: HeartPulse, label: 'Body Ready' },
-          { id: TabView.PARTNER, icon: Users, label: 'Partner' }, 
-          { id: TabView.DIET, icon: Utensils, label: 'Fertility Diet' }, // ADDED DIET TAB
+          { id: TabView.PARTNER, icon: Users, label: 'Partner' }, // New Partner Tab
           { id: TabView.MEDICINES, icon: Pill, label: 'Meds' },
           { id: TabView.TOOLS, icon: Wrench, label: 'Tools' }
       ];
@@ -519,7 +518,7 @@ export default function App() {
         />;
       case TabView.HEALTH: return <HealthTracker key={`health_${profileKey}`} settings={settings} calculations={calcSafe} />;
       case TabView.TOOLS: return <ToolsHub key={`tools_${profileKey}`} />;
-      case TabView.PARTNER: return <MalePartnerHealth key={`partner_${profileKey}`} />;
+      case TabView.PARTNER: return <MalePartnerHealth key={`partner_${profileKey}`} />; // Render New Component
       case TabView.PROFILE: 
         return <Profile 
             key={`prof_${profileKey}`}

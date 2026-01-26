@@ -1,19 +1,17 @@
 
 import React, { useState } from 'react';
 import { SAFETY_ITEMS } from '../safetyDatabase';
-import { Search, CheckCircle2, AlertTriangle, XCircle, Filter, Check, X, AlertOctagon } from 'lucide-react';
+import { Search, CheckCircle2, AlertTriangle, XCircle, Filter } from 'lucide-react';
 import { SafetyItem } from '../types';
 
 export const SafetyDictionary: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<'All' | 'Food' | 'Beauty' | 'Activity' | 'Household'>('All');
-  const [activeStatus, setActiveStatus] = useState<'All' | 'Safe' | 'Caution' | 'Avoid'>('All');
 
   const filteredItems = SAFETY_ITEMS.filter(item => {
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-    const matchesStatus = activeStatus === 'All' || item.status === activeStatus;
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesStatus && matchesSearch;
+    return matchesCategory && matchesSearch;
   });
 
   const getStatusColor = (status: SafetyItem['status']) => {
@@ -33,7 +31,6 @@ export const SafetyDictionary: React.FC = () => {
   };
 
   const categories = ['All', 'Food', 'Beauty', 'Activity', 'Household'];
-  const statuses = ['All', 'Safe', 'Caution', 'Avoid'];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -43,7 +40,7 @@ export const SafetyDictionary: React.FC = () => {
          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
             <CheckCircle2 /> Is It Safe?
          </h2>
-         <p className="opacity-90 mb-6">Instantly check safety of 500+ foods, products, and activities.</p>
+         <p className="opacity-90 mb-6">Instantly check safety of foods, products, and activities.</p>
          
          <div className="relative">
             <input 
@@ -57,59 +54,21 @@ export const SafetyDictionary: React.FC = () => {
          </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-          {/* Categories Filter */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-             {categories.map(cat => (
-                <button
-                   key={cat}
-                   onClick={() => setActiveCategory(cat as any)}
-                   className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
-                      activeCategory === cat 
-                        ? 'bg-teal-600 text-white shadow-md' 
-                        : 'bg-white dark:bg-deep-card text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-indigo-900/30 border border-gray-200 dark:border-indigo-800'
-                   }`}
-                >
-                   {cat}
-                </button>
-             ))}
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-             {statuses.map(status => {
-                 let activeClass = 'bg-gray-800 text-white';
-                 let inactiveClass = 'bg-white dark:bg-deep-card text-gray-600 border-gray-200 dark:border-indigo-800';
-                 let icon = null;
-
-                 if (status === 'Safe') {
-                     activeClass = 'bg-green-600 text-white shadow-md';
-                     icon = <Check size={14} className="mr-1" />;
-                 } else if (status === 'Caution') {
-                     activeClass = 'bg-yellow-500 text-white shadow-md';
-                     icon = <AlertTriangle size={14} className="mr-1" />;
-                 } else if (status === 'Avoid') {
-                     activeClass = 'bg-red-600 text-white shadow-md';
-                     icon = <AlertOctagon size={14} className="mr-1" />;
-                 } else {
-                     // All
-                     activeClass = 'bg-indigo-600 text-white shadow-md';
-                     icon = <Filter size={14} className="mr-1" />;
-                 }
-
-                 return (
-                    <button
-                       key={status}
-                       onClick={() => setActiveStatus(status as any)}
-                       className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all flex items-center border ${
-                          activeStatus === status ? activeClass : inactiveClass
-                       }`}
-                    >
-                       {icon} {status}
-                    </button>
-                 );
-             })}
-          </div>
+      {/* Categories */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+         {categories.map(cat => (
+            <button
+               key={cat}
+               onClick={() => setActiveCategory(cat as any)}
+               className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+                  activeCategory === cat 
+                    ? 'bg-teal-600 text-white shadow-md' 
+                    : 'bg-white dark:bg-deep-card text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-indigo-900/30 border border-gray-200 dark:border-indigo-800'
+               }`}
+            >
+               {cat}
+            </button>
+         ))}
       </div>
 
       {/* Grid Results */}
@@ -135,8 +94,8 @@ export const SafetyDictionary: React.FC = () => {
              ))
           ) : (
              <div className="col-span-full text-center py-12 text-gray-400">
-                 <p>No items found matching "{searchTerm}" with current filters.</p>
-                 <p className="text-sm mt-2">Try clearing filters or ask the AI assistant in Dashboard.</p>
+                 <p>No items found matching "{searchTerm}".</p>
+                 <p className="text-sm mt-2">Try checking spelling or ask the AI assistant in Dashboard.</p>
              </div>
           )}
       </div>
