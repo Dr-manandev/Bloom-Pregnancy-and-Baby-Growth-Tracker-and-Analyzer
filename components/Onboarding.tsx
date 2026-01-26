@@ -36,6 +36,7 @@ export const Onboarding: React.FC<Props> = ({ onComplete }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onComplete({ 
+      id: `user_${Date.now()}`,
       name,
       status, 
       lmp: status !== 'postpartum' ? lmp : null, 
@@ -48,7 +49,16 @@ export const Onboarding: React.FC<Props> = ({ onComplete }) => {
       babyGender: status === 'postpartum' ? babyGender : undefined,
       birthDate: status === 'postpartum' ? babyDob : undefined,
       vaccinationsDone: [],
-      periodLog: status !== 'postpartum' && lmp ? [lmp] : []
+      periodLog: status !== 'postpartum' && lmp ? [lmp] : [],
+      obstetricHistory: {
+        gravida: 1,
+        para: 0,
+        abortions: 0,
+        abortionsT1: 0,
+        abortionsT2: 0,
+        living: 0,
+        lastBabyCongenitalDefect: false
+      }
     });
   };
 

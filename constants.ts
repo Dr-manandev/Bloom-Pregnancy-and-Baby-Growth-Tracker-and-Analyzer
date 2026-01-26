@@ -139,7 +139,6 @@ export const PRE_CONCEPTION_CHECKLIST: PreConceptionTask[] = [
     }
 ];
 
-// --- SPECIFIC PRE-CONCEPTION COMORBIDITY GUIDELINES (FOGSI/WHO) ---
 export const PRE_CONCEPTION_COMORBIDITY_GUIDELINES: Record<string, { title: string; target: string; tests: string[]; action: string; risk: string }> = {
     thyroid: {
         title: "Hypothyroidism Planning",
@@ -178,7 +177,6 @@ export const PRE_CONCEPTION_COMORBIDITY_GUIDELINES: Record<string, { title: stri
     }
 };
 
-// --- DAILY TIPS & DID YOU KNOW LIBRARY (INDIAN CONTEXT) ---
 export const TIP_LIBRARY = {
     planning: [
         "Folic Acid isn't just for moms. Men should take Zinc and Vitamin C to improve sperm quality.",
@@ -212,38 +210,7 @@ export const TIP_LIBRARY = {
         "Check for Vitamin B12 deficiency if you are strictly vegetarian/vegan.",
         "If you have irregular cycles (<21 or >35 days), don't rely on apps alone. Use ovulation kits (LH strips)."
     ],
-    pregnancy: [
-        "Left lateral sleeping improves blood flow to the placenta and baby. Use a pillow between legs.",
-        "Iron and Calcium supplements should be taken at different times. Calcium blocks Iron absorption.",
-        "Take Iron pills with Lemon water (Vitamin C) for 3x better absorption.",
-        "Tea/Coffee/Milk contain tannins/calcium that block Iron. Gap of 2 hours required.",
-        "Fetal movements: You should feel at least 10 movements in 2 hours after a meal (after 28 weeks).",
-        "Swelling in feet is normal, but swelling in face/hands with headache is a sign of Preeclampsia.",
-        "Bleeding gums are common due to hormonal changes. Use a soft brush and warm saline gargles.",
-        "Avoid lying flat on your back after 20 weeks to prevent Vena Cava compression (dizziness).",
-        "Itching on palms and soles? Could be Cholestasis (Liver issue). Tell your doctor immediately.",
-        "Heartburn? Eat small, frequent meals and avoid lying down immediately after eating.",
-        "Leg cramps at night? You might need Magnesium or Calcium. Stretch your toes upwards.",
-        "Coconut water is great for amniotic fluid levels and electrolytes.",
-        "Avoid heavy lifting or high-impact cardio. Walking 30 mins daily is the best exercise.",
-        "GTT (Glucose Tolerance Test) at 24-28 weeks is mandatory in India due to high Asian risk of diabetes.",
-        "Tetanus (TT/Td) and Flu shots are safe and necessary. Tdap is given at 27-36 weeks.",
-        "Constipation is common due to Progesterone. Eat heavy fiber (Oats, Daliya) and drink water.",
-        "Braxton Hicks contractions are painless tightening. Real labor pains get stronger and regular.",
-        "If your water breaks, it may not be a gush. It can be a slow trickle. Go to the hospital.",
-        "Do not eat for 2 people. You only need ~300 extra calories (1 roti + 1 bowl dal) in T2/T3.",
-        "Travel is usually safe until 36 weeks. Wear seatbelt below the belly, not across it.",
-        "Hair dyes? Wait until the second trimester and use ammonia-free options.",
-        "Skin pigmentation (Linea Nigra/Melasma) is normal and usually fades after delivery.",
-        "Avoid hot tubs or very hot showers. Raising core body temp >102°F is dangerous for the baby.",
-        "Keep your 'Mamta Card' or medical file handy at all times.",
-        "Pelvic floor exercises (Kegels) now will help in easier delivery and faster recovery.",
-        "Avoid raw sprouts and unpasteurized juices to prevent food-borne infections.",
-        "Shortness of breath is normal as uterus pushes diaphragm. Stand straight and raise arms to breathe.",
-        "Vaginal discharge increases in pregnancy. If it smells bad or causes itching, check for infection.",
-        "Stem Cell Banking decision should be made by the 7th month.",
-        "Pack your hospital bag by Week 36. Don't forget newborn clothes and sanitary pads."
-    ],
+    // Pregnancy Tips handled by WEEKLY_DATA.dailyTips now
     postpartum: [
         "Breastfeeding burns ~500 calories/day. Eat nutrient-dense foods, not just 'Ghee' laden foods.",
         "Lochia (bleeding) can last 4-6 weeks. It changes from Red -> Pink -> White.",
@@ -301,7 +268,6 @@ export const DID_YOU_KNOW_DATA = {
     ]
 };
 
-// --- VACCINATION SCHEDULES ---
 export const MATERNAL_VACCINES: Vaccine[] = [
   { id: "mat_tt1", name: "TT-1 / Td-1 (Tetanus)", description: "First dose. Administer as soon as pregnancy is confirmed.", dueWeekStart: 4, dueWeekEnd: 12, mandatory: true, type: 'maternal' },
   { id: "mat_tt2", name: "TT-2 / Td-2", description: "4 weeks after TT-1. Protection against Tetanus.", dueWeekStart: 12, dueWeekEnd: 16, mandatory: true, type: 'maternal' },
@@ -359,12 +325,369 @@ export const BP_THRESHOLDS = { normal: { sys: 120, dia: 80, label: "Normal", col
 export const GLUCOSE_THRESHOLDS = { fasting: { max: 95, label: "Normal Fasting < 95 mg/dL" }, post_prandial: { max: 120, label: "Normal 2hr PP < 120 mg/dL" }, random: { max: 140, label: "Normal Random < 140 mg/dL" } };
 export const LAB_THRESHOLDS = { tsh: { pregnant_t1: { min: 0.1, max: 2.5, label: "Trimester 1 Target: 0.1 - 2.5 mIU/L" }, pregnant_t2_t3: { min: 0.2, max: 3.0, label: "Trimester 2/3 Target: 0.2 - 3.0 mIU/L" }, general: { min: 0.4, max: 4.0, label: "Normal Range: 0.4 - 4.0 mIU/L" } }, hemoglobin: { pregnant: { min: 11, label: "Target > 11 g/dL (Anemia if < 11)" }, postpartum: { min: 10, label: "Target > 10 g/dL" }, general: { min: 12, label: "Target > 12 g/dL" }, severe: 7 }, hba1c: { pregnant: { max: 6.0, label: "Target < 6.0% (Strict Control)" }, general: { max: 5.7, label: "Normal < 5.7% (Pre-diabetes 5.7-6.4)" } } };
 
-export const FALLBACK_WEEKLY_INFO: WeeklyInfo = { week: 0, babySize: "Unknown", babyWeight: "-", babyLength: "-", description: "Information for this week is loading or unavailable.", symptoms: [], toDo: [], notToDo: [] };
+export const FALLBACK_WEEKLY_INFO: WeeklyInfo = { week: 0, babySize: "Unknown", babyWeight: "-", babyLength: "-", description: "Information for this week is loading or unavailable.", symptoms: [], toDo: [], notToDo: [], dailyTips: [] };
+
+// --- FULL PREGNANCY DATABASE (INDIAN / WHO STANDARDS) ---
 export const WEEKLY_DATA: Record<number, WeeklyInfo> = {
-  1: { week: 1, babySize: "Poppy Seed", babyWeight: "< 1g", babyLength: "< 1mm", description: "You are not actually pregnant yet! This week is your period.", symptoms: ["Cramps", "Fatigue", "Mood Swings"], toDo: ["Start taking Folic Acid (400mcg)", "Avoid Alcohol and Smoking"], notToDo: ["X-Rays without protection", "Self-medication"] },
-  2: { week: 2, babySize: "Poppy Seed", babyWeight: "< 1g", babyLength: "< 1mm", description: "Ovulation happens around the end of this week. This is your fertile window.", symptoms: ["Increased Libido", "Cervical Mucus Changes"], toDo: ["Time intercourse", "Maintain healthy diet"], notToDo: ["Stress", "High Caffeine"] },
-  40: { week: 40, babySize: "Watermelon", babyWeight: "3.5 kg", babyLength: "51 cm", description: "Your baby is fully grown and ready to meet you!", symptoms: ["Contractions", "Back pain", "Water breaking"], toDo: ["Pack hospital bag", "Track movements"], notToDo: ["Heavy lifting", "Travel far from hospital"] }
+  1: {
+    week: 1, babySize: "Not Conceived", babyWeight: "-", babyLength: "-",
+    description: "You are not actually pregnant yet! This week is your period. Your body is shedding the uterine lining.",
+    symptoms: ["Cramps", "Fatigue", "Mood Swings"],
+    toDo: ["Start Folic Acid (400mcg) immediately.", "Avoid Alcohol/Smoking.", "Eat Iron-rich foods (Spinach, Jaggery)."],
+    notToDo: ["X-Rays without protection", "Self-medication (Avoid NSAIDs)", "Stress"],
+    dailyTips: ["Day 1: Start your Folic Acid today.", "Day 2: Hydrate well to manage cramps.", "Day 3: Rest and use a hot water bag for pain.", "Day 4: Avoid caffeine to reduce anxiety.", "Day 5: Eat light, warm meals.", "Day 6: Period ending? Resume normal activity.", "Day 7: Prepare mentally for the fertile window."]
+  },
+  2: {
+    week: 2, babySize: "Egg", babyWeight: "-", babyLength: "-",
+    description: "Ovulation happens around the end of this week. This is your fertile window. Sperm meets egg in the fallopian tube.",
+    symptoms: ["Increased Libido", "Egg-white Cervical Mucus", "Mild Mittelschmerz (Ovulation Pain)"],
+    toDo: ["Time intercourse (every alternate day).", "Maintain healthy diet.", "Stay hydrated."],
+    notToDo: ["High stress (delays ovulation)", "Lubricants that kill sperm", "Smoking"],
+    dailyTips: ["Day 1: Eat antioxidant-rich berries.", "Day 2: Check for cervical mucus changes.", "Day 3: Fertile window begins.", "Day 4: Sperm can live for 5 days inside you.", "Day 5: Peak fertility approaching.", "Day 6: Ovulation day likely (Cycle day 14).", "Day 7: The egg lives for only 12-24 hours."]
+  },
+  3: {
+    week: 3, babySize: "Vanilla Seed", babyWeight: "< 1g", babyLength: "0.1mm",
+    description: "Fertilization has occurred! The blastocyst is traveling down the fallopian tube to the uterus.",
+    symptoms: ["Mild Spotting (Implantation)", "Bloating"],
+    toDo: ["Continue Prenatals.", "Avoid strenuous workouts.", "Eat protein-rich foods."],
+    notToDo: ["Hot baths/Saunas", "Alcohol (Critical time)", "Heavy lifting"],
+    dailyTips: ["Day 1: Fertilization complete.", "Day 2: Cell division starts rapidly.", "Day 3: Traveling to the uterus.", "Day 4: Blastocyst forms.", "Day 5: Avoid papaya and pineapple.", "Day 6: Implantation might begin.", "Day 7: Early pregnancy factor (EPF) produced."]
+  },
+  4: {
+    week: 4, babySize: "Poppy Seed", babyWeight: "< 1g", babyLength: "1mm",
+    biometry: { gs: "2-3 mm" },
+    description: "Implantation is complete. You might miss your period this week. Home pregnancy test may be positive.",
+    symptoms: ["Missed Period", "Breast Tenderness", "Metallic Taste"],
+    toDo: ["Take a Home Pregnancy Test.", "Schedule first Obs/Gynae appointment.", "Stop all unverified meds."],
+    notToDo: ["Smoking/Alcohol", "Raw meat/eggs", "Cat litter handling (Toxoplasmosis)"],
+    dailyTips: ["Day 1: Missed period?", "Day 2: Test with first morning urine.", "Day 3: Positive? Celebrate!", "Day 4: Negative? Wait 48hrs and retest.", "Day 5: Call your doctor.", "Day 6: Fatigue is normal.", "Day 7: The embryo is forming layers."]
+  },
+  5: {
+    week: 5, babySize: "Sesame Seed", babyWeight: "< 1g", babyLength: "2mm",
+    biometry: { gs: "5-6 mm", crl: "1-2 mm" },
+    description: "The neural tube (brain/spine) is forming. The heart begins to beat irregularly.",
+    symptoms: ["Nausea (Morning Sickness)", "Frequent Urination", "Fatigue"],
+    toDo: ["Avoid heat/fevers.", "Eat small frequent meals.", "Drink Ginger tea for nausea."],
+    notToDo: ["Cleaning chemicals", "Retinol creams", "Skipping meals"],
+    dailyTips: ["Day 1: Heart tube forms.", "Day 2: Baby's circulatory system starts.", "Day 3: Morning sickness kicks in?", "Day 4: Eat a cracker before getting up.", "Day 5: Avoid strong smells.", "Day 6: Stay hydrated.", "Day 7: Neural tube closing."]
+  },
+  6: {
+    week: 6, babySize: "Lentil (Masoor Dal)", babyWeight: "< 1g", babyLength: "4-5mm",
+    biometry: { gs: "10-12 mm", crl: "4-6 mm", hr: "90-110 bpm" },
+    description: "Heartbeat is detectable on USG (approx 100-115 bpm). Facial features start forming.",
+    symptoms: ["Strong Nausea", "Food Aversions", "Mood Swings"],
+    toDo: ["Dating Scan (Viability Scan).", "Check Thyroid (TSH).", "Start Vitamin B6 for nausea if prescribed."],
+    notToDo: ["Self-medicating for nausea", "Painting (fumes)", "Fasting"],
+    dailyTips: ["Day 1: Heartbeat usually detectable.", "Day 2: Nose/ears/mouth shaping.", "Day 3: Rest when tired.", "Day 4: Avoid spicy foods.", "Day 5: Lemon water helps nausea.", "Day 6: Partner support is vital.", "Day 7: Mood swings are hormonal."]
+  },
+  7: {
+    week: 7, babySize: "Blueberry", babyWeight: "< 1g", babyLength: "8-10mm",
+    biometry: { gs: "18-20 mm", crl: "10 mm", hr: "120-140 bpm" },
+    description: "Brain is developing rapidly (100 cells/minute). Arm and leg buds appear.",
+    symptoms: ["Acne", "Excess Saliva", "Constipation"],
+    toDo: ["Drink 3L water.", "Eat fiber (Oats/Daliya).", "Avoid standing for too long."],
+    notToDo: ["Laxatives without advice", "Hair dye", "High heels"],
+    dailyTips: ["Day 1: Brain waves detectable.", "Day 2: Arm buds appear.", "Day 3: Kidneys forming.", "Day 4: Constipation common.", "Day 5: Eat fiber-rich fruits.", "Day 6: Avoid raw sprouts.", "Day 7: Baby doubles in size."]
+  },
+  8: {
+    week: 8, babySize: "Raspberry", babyWeight: "1g", babyLength: "16mm",
+    biometry: { gs: "25 mm", crl: "15-18 mm", hr: "140-160 bpm" },
+    description: "Baby is now moving (though you can't feel it). Fingers and toes are webbed.",
+    symptoms: ["Vivid Dreams", "Bloating", "Leucorrhea (White discharge)"],
+    toDo: ["Wear comfortable bra.", "Check Rubella immunity.", "Discuss genetic screening."],
+    notToDo: ["Tight clothes", "Excess caffeine", "Sleeping on stomach (starts to get uncomfy)"],
+    dailyTips: ["Day 1: Webbed fingers forming.", "Day 2: Taste buds developing.", "Day 3: Eyelids cover eyes.", "Day 4: Uterus expanding.", "Day 5: White discharge is normal.", "Day 6: Don't douche.", "Day 7: Baby moves spontaneously."]
+  },
+  9: {
+    week: 9, babySize: "Grape", babyWeight: "2g", babyLength: "23mm",
+    biometry: { crl: "22-25 mm", hr: "155-170 bpm" },
+    description: "Human features are distinct. Heart is fully divided into 4 chambers.",
+    symptoms: ["Fatigue peaks", "Dizziness", "Gas"],
+    toDo: ["Switch to loose clothes.", "Eat iron-rich foods.", "Avoid sudden movements (dizziness)."],
+    notToDo: ["Standing up too fast", "Hot showers", "Skipping breakfast"],
+    dailyTips: ["Day 1: Heart fully 4-chambered.", "Day 2: Tail bone disappears.", "Day 3: Placenta taking over.", "Day 4: Fatigue is high.", "Day 5: Take short naps.", "Day 6: Eat small meals.", "Day 7: Baby is now a 'Fetus'."]
+  },
+  10: {
+    week: 10, babySize: "Prune", babyWeight: "4g", babyLength: "31mm",
+    biometry: { crl: "30-35 mm", hr: "160-170 bpm" },
+    description: "Critical development period ends. Risk of congenital defects decreases significantly.",
+    symptoms: ["Visible Veins", "Round Ligament Pain", "Headaches"],
+    toDo: ["NIPT (Non-Invasive Prenatal Test) if opted.", "Dental hygiene check.", "Increase Calcium."],
+    notToDo: ["X-Rays", "Bleaching teeth", "Ignoring headaches (BP check)"],
+    dailyTips: ["Day 1: Critical period ending.", "Day 2: Vital organs formed.", "Day 3: Tooth buds forming.", "Day 4: Bones hardening.", "Day 5: Round ligament pain?", "Day 6: Move slowly.", "Day 7: Risk of defects drops."]
+  },
+  11: {
+    week: 11, babySize: "Lime", babyWeight: "7g", babyLength: "41mm",
+    biometry: { crl: "40-45 mm", hr: "150-160 bpm" },
+    description: "Fingers and toes separate. NT Scan window opens.",
+    symptoms: ["Nausea might improve", "Hair growth changes", "Leg cramps"],
+    toDo: ["Book NT Scan.", "Book Double Marker Test.", "Start sleeping on side."],
+    notToDo: ["Sleeping flat on back (start practicing side)", "Skipping calcium", "High salt"],
+    dailyTips: ["Day 1: NT Scan window opens.", "Day 2: Fingers separate.", "Day 3: Ovaries/Testes form.", "Day 4: Skin is transparent.", "Day 5: Nausea improving?", "Day 6: Appetite might return.", "Day 7: Eat protein."]
+  },
+  12: {
+    week: 12, babySize: "Plum", babyWeight: "14g", babyLength: "54mm",
+    biometry: { crl: "55-60 mm", bpd: "18-20 mm", hr: "150 bpm" },
+    description: "End of First Trimester! Baby has reflexes. Kidneys produce urine.",
+    symptoms: ["Bloating", "Dizziness", "Showing slightly?"],
+    toDo: ["Announce pregnancy (if comfortable).", "Kegel exercises.", "Review meds with doctor."],
+    notToDo: ["Heavy lifting", "Contact sports", "Ignoring UTI symptoms"],
+    dailyTips: ["Day 1: 1st Trimester ending!", "Day 2: Baby makes urine.", "Day 3: Reflexes developing.", "Day 4: Vocal cords form.", "Day 5: Miscarriage risk drops.", "Day 6: Plan pregnancy announcement.", "Day 7: Celebrate milestone."]
+  },
+  13: {
+    week: 13, babySize: "Lemon", babyWeight: "23g", babyLength: "74mm",
+    biometry: { bpd: "21-24 mm", fl: "9-11 mm", ac: "60-65 mm" },
+    description: "Fingerprints have formed. Placenta fully functional.",
+    symptoms: ["Energy returning", "Libido changes", "Leaky breasts (Colostrum)"],
+    toDo: ["Start 2nd Trimester diet.", "Moisturize belly (stretch marks).", "Join prenatal yoga."],
+    notToDo: ["Retinol", "Scuba diving", "Excess sugar"],
+    dailyTips: ["Day 1: Welcome to Trimester 2!", "Day 2: Fingerprints set.", "Day 3: Placenta fully works.", "Day 4: Energy boost?", "Day 5: Sex drive returns?", "Day 6: Moisturize belly.", "Day 7: Connect with baby."]
+  },
+  14: {
+    week: 14, babySize: "Orange", babyWeight: "43g", babyLength: "87mm",
+    biometry: { bpd: "25-28 mm", fl: "13-15 mm", ac: "75-80 mm", efw: "40-50 g" },
+    description: "Baby can grimace and squint. Lanugo (fine hair) covers body.",
+    symptoms: ["Less nausea", "Round ligament pain", "Bleeding gums"],
+    toDo: ["Dental checkup safe now.", "Eat Vitamin C (gums).", "Iron supplements (start/continue)."],
+    notToDo: ["Whitening strips", "Skipping dental hygiene", "Ignoring fever"],
+    dailyTips: ["Day 1: Baby makes faces.", "Day 2: Lanugo hair grows.", "Day 3: Thyroid active.", "Day 4: Bleeding gums?", "Day 5: Use soft toothbrush.", "Day 6: Iron absorption key.", "Day 7: Eat oranges/guava."]
+  },
+  15: {
+    week: 15, babySize: "Apple", babyWeight: "70g", babyLength: "10.1cm",
+    biometry: { bpd: "30-32 mm", fl: "17-19 mm", ac: "90-95 mm", efw: "70-80 g" },
+    description: "Baby senses light. Legs grow longer than arms.",
+    symptoms: ["Stuffy nose (Rhinitis)", "Indigestion", "Weight gain starts"],
+    toDo: ["Saline spray for nose.", "Eat small dinners.", "Quad Marker (if missed NT)."],
+    notToDo: ["Decongestants without advice", "Lying down after eating", "Tight waistbands"],
+    dailyTips: ["Day 1: Senses light.", "Day 2: Legs growing.", "Day 3: Ears moving to side.", "Day 4: Nose stuffy?", "Day 5: Pregnancy rhinitis common.", "Day 6: Use humidifier.", "Day 7: Don't stress weight."]
+  },
+  16: {
+    week: 16, babySize: "Avocado", babyWeight: "100g", babyLength: "11.6cm",
+    biometry: { bpd: "34-36 mm", fl: "20-22 mm", ac: "100-105 mm", efw: "100-110 g" },
+    description: "Quickening (Flutters) might be felt by some. Heart pumps 25L blood/day.",
+    symptoms: ["Backache", "Glowing skin", "Constipation"],
+    toDo: ["Sleeping on LEFT side is crucial.", "Tetanus (TT) Shot 1.", "Pelvic tilts."],
+    notToDo: ["Sleeping on back", "Heavy lifting", "High heels"],
+    dailyTips: ["Day 1: First flutter (Quickening)?", "Day 2: Heart pumping fast.", "Day 3: Scalp pattern starts.", "Day 4: Sleep on left side.", "Day 5: Avoid back sleeping.", "Day 6: Backache relief yoga.", "Day 7: Drink water."]
+  },
+  17: {
+    week: 17, babySize: "Pomegranate", babyWeight: "140g", babyLength: "13cm",
+    biometry: { bpd: "38-40 mm", fl: "23-25 mm", ac: "115-120 mm", efw: "140-150 g" },
+    description: "Skeleton hardening from cartilage to bone. Fat stores accumulating.",
+    symptoms: ["Crazy dreams", "Itchy belly", "Sweating"],
+    toDo: ["Calcium intake is vital.", "Wear cotton clothes.", "Moisturize."],
+    notToDo: ["Scratching belly (worsens marks)", "Hot baths", "Synthetic fabrics"],
+    dailyTips: ["Day 1: Bones hardening.", "Day 2: Fat accumulating.", "Day 3: Umbilical cord thickens.", "Day 4: Itchy skin?", "Day 5: Oil massage.", "Day 6: Weird dreams normal.", "Day 7: Check Calcium intake."]
+  },
+  18: {
+    week: 18, babySize: "Bell Pepper", babyWeight: "190g", babyLength: "14.2cm",
+    biometry: { bpd: "41-43 mm", fl: "26-28 mm", ac: "125-130 mm", efw: "200-220 g" },
+    description: "Anomaly Scan (Level 2) window opens. Baby can hear sounds.",
+    symptoms: ["Dizziness", "Swollen feet", "Appetite increase"],
+    toDo: ["Book Anomaly Scan.", "Talk/Sing to baby.", "Watch BP."],
+    notToDo: ["Standing long hours", "Salt excess", "Ignoring swelling (face/hands)"],
+    dailyTips: ["Day 1: Anomaly Scan window.", "Day 2: Ears functional.", "Day 3: Sing to baby.", "Day 4: Myelin forming.", "Day 5: Watch blood pressure.", "Day 6: Feet swelling?", "Day 7: Elevate legs."]
+  },
+  19: {
+    week: 19, babySize: "Mango", babyWeight: "240g", babyLength: "15.3cm",
+    biometry: { bpd: "44-46 mm", fl: "29-31 mm", ac: "140-145 mm", efw: "260-280 g" },
+    description: "Vernix (cheese-like coating) covers skin. Sensory development peaks.",
+    symptoms: ["Hip pain", "Leg cramps", "Blurry vision (dry eyes)"],
+    toDo: ["Magnesium for cramps.", "Eye drops if dry.", "Pillow between legs."],
+    notToDo: ["High heels", "Rubbing eyes hard", "Dehydration"],
+    dailyTips: ["Day 1: Vernix coating forms.", "Day 2: Protects skin.", "Day 3: Senses developing.", "Day 4: Hip pain common.", "Day 5: Use pregnancy pillow.", "Day 6: Leg cramps?", "Day 7: Eat bananas/magnesium."]
+  },
+  20: {
+    week: 20, babySize: "Banana", babyWeight: "300g", babyLength: "16.4cm",
+    biometry: { bpd: "47-49 mm", fl: "32-34 mm", ac: "150-155 mm", efw: "320-350 g" },
+    description: "Halfway point! Baby swallows amniotic fluid (practice digestion).",
+    symptoms: ["Heartburn", "Navel popping", "Increased discharge"],
+    toDo: ["Detailed Anomaly Scan (Best time).", "Start iron supplements properly.", "Walk 20 mins."],
+    notToDo: ["Skipping scan", "Lying flat", "Junk food"],
+    dailyTips: ["Day 1: Halfway there!", "Day 2: Practice swallowing.", "Day 3: Meconium forming.", "Day 4: Scan completed?", "Day 5: Check fetal heart.", "Day 6: Belly button pops?", "Day 7: Celebrate 50%."]
+  },
+  21: {
+    week: 21, babySize: "Carrot", babyWeight: "360g", babyLength: "26.7cm",
+    biometry: { bpd: "50-52 mm", fl: "35-37 mm", ac: "160-165 mm", efw: "380-400 g" },
+    description: "Baby's movements become coordinated kicks. Taste buds functional.",
+    symptoms: ["Stretch marks", "Varicose veins", "Anxiety"],
+    toDo: ["Wear compression socks.", "Oil massage.", "Read birth books."],
+    notToDo: ["Crossing legs", "Standing still", "Stress"],
+    dailyTips: ["Day 1: Coordinated kicks.", "Day 2: Taste buds working.", "Day 3: Amniotic fluid taste.", "Day 4: Varicose veins?", "Day 5: Don't cross legs.", "Day 6: Walk to circulate.", "Day 7: Bonding time."]
+  },
+  22: {
+    week: 22, babySize: "Coconut", babyWeight: "430g", babyLength: "27.8cm",
+    biometry: { bpd: "53-55 mm", fl: "38-40 mm", ac: "170-175 mm", efw: "450-480 g" },
+    description: "Eyes formed but iris lacks pigment. Baby sleeps in cycles.",
+    symptoms: ["Braxton Hicks (Mild)", "Protruding belly button", "Hair growth"],
+    toDo: ["Track movements (general awareness).", "Hydrate.", "Discuss Tetanus 2."],
+    notToDo: ["Ignoring contractions", "Touching belly too hard", "Heavy housework"],
+    dailyTips: ["Day 1: Sleep cycles set.", "Day 2: Iris lacks color.", "Day 3: Grip is strong.", "Day 4: Braxton Hicks?", "Day 5: Painless tightening.", "Day 6: Drink water.", "Day 7: TT-2 injection due?"]
+  },
+  23: {
+    week: 23, babySize: "Grapefruit", babyWeight: "500g", babyLength: "28.9cm",
+    biometry: { bpd: "56-58 mm", fl: "41-43 mm", ac: "180-185 mm", efw: "520-550 g" },
+    description: "Lungs developing surfactant (vital for breathing). Viability milestone approaching.",
+    symptoms: ["Swollen ankles", "Back pain", "Red palms"],
+    toDo: ["Elevate feet.", "Watch salt intake.", "Check BP."],
+    notToDo: ["High sodium", "Long travel without breaks", "Ignoring headache"],
+    dailyTips: ["Day 1: Lungs preparing.", "Day 2: Surfactant starts.", "Day 3: Hear loud noises.", "Day 4: Ankle swelling?", "Day 5: Low salt diet.", "Day 6: Check BP.", "Day 7: Red palms normal."]
+  },
+  24: {
+    week: 24, babySize: "Cantaloupe", babyWeight: "600g", babyLength: "30cm",
+    biometry: { bpd: "59-61 mm", fl: "43-45 mm", ac: "190-195 mm", efw: "630-670 g" },
+    description: "Age of Viability (in modern NICU). Glucose Tolerance Test (GTT) time.",
+    symptoms: ["Itchy skin", "Dry eyes", "Constipation"],
+    toDo: ["GTT Test (Mandatory).", "CBC/Urine test.", "Moisturize."],
+    notToDo: ["Skipping sugar test", "Scratching", "Straining"],
+    dailyTips: ["Day 1: Viability milestone.", "Day 2: Rapid weight gain.", "Day 3: GTT Test week.", "Day 4: Fasting sugar check.", "Day 5: Inner ear mature.", "Day 6: Balance improves.", "Day 7: Legal abortion limit (India)."]
+  },
+  25: {
+    week: 25, babySize: "Cauliflower", babyWeight: "660g", babyLength: "34.6cm",
+    biometry: { bpd: "62-64 mm", fl: "46-48 mm", ac: "200-210 mm", efw: "720-780 g" },
+    description: "Capillaries form under skin (pink color). Nostrils open.",
+    symptoms: ["Hemorrhoids", "Gas/Bloating", "Snoring"],
+    toDo: ["Fiber diet.", "Pelvic floor exercises.", "Sleeping on side."],
+    notToDo: ["Straining on toilet", "Spicy food", "Sleeping on back"],
+    dailyTips: ["Day 1: Skin turning pink.", "Day 2: Capillaries filling.", "Day 3: Nostrils open.", "Day 4: Breathing practice.", "Day 5: Hemorrhoids?", "Day 6: Eat fiber/Isabgol.", "Day 7: Snoring? Use pillow."]
+  },
+  26: {
+    week: 26, babySize: "Lettuce", babyWeight: "760g", babyLength: "35.6cm",
+    biometry: { bpd: "65-67 mm", fl: "48-50 mm", ac: "215-220 mm", efw: "850-920 g" },
+    description: "Eyes open! Baby can blink. Brain wave activity increases.",
+    symptoms: ["Rib pain", "Insomnia", "Braxton Hicks"],
+    toDo: ["Stretch arms (rib relief).", "Warm milk before bed.", "Count kicks casually."],
+    notToDo: ["Slouching", "Caffeine late day", "Panic over kicks"],
+    dailyTips: ["Day 1: Eyes open!", "Day 2: Blinking starts.", "Day 3: Blue eyes (for now).", "Day 4: Rib pain?", "Day 5: Stretch upwards.", "Day 6: Insomnia?", "Day 7: Relaxation routine."]
+  },
+  27: {
+    week: 27, babySize: "Cauliflower", babyWeight: "875g", babyLength: "36.6cm",
+    biometry: { bpd: "68-70 mm", fl: "51-53 mm", ac: "225-230 mm", efw: "1000-1100 g" },
+    description: "End of 2nd Trimester. Baby recognizes voices clearly.",
+    symptoms: ["Shortness of breath", "Backache", "Leg cramps"],
+    toDo: ["Tdap Vaccine (Week 27-36).", "Check Hb levels.", "Start Kick Counting."],
+    notToDo: ["Shallow breathing", "Poor posture", "Ignoring low movement"],
+    dailyTips: ["Day 1: 2nd Trimester ends.", "Day 2: Voice recognition.", "Day 3: Dad should talk.", "Day 4: Short breath?", "Day 5: Uterus pushes up.", "Day 6: Tdap vaccine plan.", "Day 7: Check Hemoglobin."]
+  },
+  28: {
+    week: 28, babySize: "Eggplant", babyWeight: "1kg", babyLength: "37.6cm",
+    biometry: { bpd: "71-73 mm", fl: "53-55 mm", ac: "235-245 mm", efw: "1150-1250 g" },
+    description: "Welcome to 3rd Trimester! Baby can dream (REM sleep).",
+    symptoms: ["Sciatica", "Fatigue returns", "Frequent urination"],
+    toDo: ["Kick Counting (Strictly).", "Rh Antibody shot (if Rh-).", "Iron rich diet."],
+    notToDo: ["Ignoring <10 kicks", "Heavy lifting", "Traveling far"],
+    dailyTips: ["Day 1: 3rd Trimester!", "Day 2: REM sleep / Dreams.", "Day 3: Fat layering.", "Day 4: Sciatica pain?", "Day 5: Stretch gently.", "Day 6: Rhogam shot needed?", "Day 7: Count 10 kicks/2hr."]
+  },
+  29: {
+    week: 29, babySize: "Butternut Squash", babyWeight: "1.15kg", babyLength: "38.6cm",
+    biometry: { bpd: "74-76 mm", fl: "55-57 mm", ac: "245-255 mm", efw: "1300-1400 g" },
+    description: "Bones fully developed but soft. Head growing for brain.",
+    symptoms: ["Varicose veins", "Itchy belly", "Heartburn"],
+    toDo: ["Calcium is critical.", "Eat small meals.", "Hospital bag planning."],
+    notToDo: ["Scratching", "Large meals", "Standing too long"],
+    dailyTips: ["Day 1: Brain controlling heat.", "Day 2: Bones distinct.", "Day 3: Head getting big.", "Day 4: Need Calcium.", "Day 5: Heartburn relief.", "Day 6: Cold milk helps.", "Day 7: Plan hospital bag."]
+  },
+  30: {
+    week: 30, babySize: "Cabbage", babyWeight: "1.3kg", babyLength: "39.9cm",
+    biometry: { bpd: "77-79 mm", fl: "57-59 mm", ac: "255-265 mm", efw: "1500-1600 g" },
+    description: "Amniotic fluid peaks. Baby skin smoothing out.",
+    symptoms: ["Breathlessness", "Swelling", "Mood swings"],
+    toDo: ["Check BP (Preeclampsia risk).", "Sleep on side.", "Growth Scan (if advised)."],
+    notToDo: ["Salty food", "Ignoring headache/vision blur", "Stress"],
+    dailyTips: ["Day 1: Fluid volume peak.", "Day 2: Skin smoothing.", "Day 3: Lanugo shedding.", "Day 4: Breathless?", "Day 5: Diaphragm pushed.", "Day 6: Check BP/Swelling.", "Day 7: Preeclampsia watch."]
+  },
+  31: {
+    week: 31, babySize: "Coconut", babyWeight: "1.5kg", babyLength: "41.1cm",
+    biometry: { bpd: "79-81 mm", fl: "59-61 mm", ac: "265-275 mm", efw: "1700-1800 g" },
+    description: "Brain connections firing rapidly. Baby processes information.",
+    symptoms: ["Frequent urination", "Leaky breasts", "Back pain"],
+    toDo: ["Kegels.", "Breast pads.", "Discuss labor signs."],
+    notToDo: ["Holding urine", "Slouching", "Ignoring contractions"],
+    dailyTips: ["Day 1: Brain specificities.", "Day 2: All 5 senses work.", "Day 3: Baby gains fat.", "Day 4: Bladder pressure.", "Day 5: Don't hold pee.", "Day 6: Colostrum leaking?", "Day 7: Discuss labor signs."]
+  },
+  32: {
+    week: 32, babySize: "Kale / Jicama", babyWeight: "1.7kg", babyLength: "42.4cm",
+    biometry: { bpd: "81-83 mm", fl: "61-63 mm", ac: "275-285 mm", efw: "1900-2000 g" },
+    description: "Growth Scan / Color Doppler usually done now. Baby practicing breathing.",
+    symptoms: ["Braxton Hicks increase", "Darker nipples", "Short breath"],
+    toDo: ["Growth Scan.", "Check fluid (AFI).", "Pack bag."],
+    notToDo: ["Missing scan", "Traveling (most airlines stop)", "Overexertion"],
+    dailyTips: ["Day 1: Growth Scan week.", "Day 2: Check placenta.", "Day 3: Check fluid (AFI).", "Day 4: Practice breathing.", "Day 5: Fingernails visible.", "Day 6: Pack hospital bag.", "Day 7: No air travel."]
+  },
+  33: {
+    week: 33, babySize: "Pineapple", babyWeight: "1.9kg", babyLength: "43.7cm",
+    biometry: { bpd: "84-86 mm", fl: "63-65 mm", ac: "285-295 mm", efw: "2100-2200 g" },
+    description: "Immune system developing. Antibodies passing from mom.",
+    symptoms: ["Overheating", "Headaches", "Insomnia"],
+    toDo: ["Stay cool.", "Eat immunity boosters.", "Install car seat (if applicable)."],
+    notToDo: ["Hot environments", "Dehydration", "Sleeping pills"],
+    dailyTips: ["Day 1: Immune system boost.", "Day 2: Antibodies passing.", "Day 3: Bones hardening.", "Day 4: Skull stays soft.", "Day 5: Feeling hot?", "Day 6: Drink fluids.", "Day 7: Rest is key."]
+  },
+  34: {
+    week: 34, babySize: "Cantaloupe", babyWeight: "2.1kg", babyLength: "45cm",
+    biometry: { bpd: "86-88 mm", fl: "65-67 mm", ac: "295-305 mm", efw: "2300-2400 g" },
+    description: "Testicles descend (boys). Central nervous system maturing.",
+    symptoms: [" blurry vision?", "Swelling", "Fatigue"],
+    toDo: ["Watch for Preeclampsia signs.", "Perineal massage.", "Finalize birth plan."],
+    notToDo: ["Ignoring vision changes", "Salt", "Heavy lifting"],
+    dailyTips: ["Day 1: Testicles descend.", "Day 2: CNS mature.", "Day 3: Lungs nearly ready.", "Day 4: Vision blur?", "Day 5: Check BP immediately.", "Day 6: Perineal massage.", "Day 7: Prevents tearing."]
+  },
+  35: {
+    week: 35, babySize: "Honeydew", babyWeight: "2.4kg", babyLength: "46.2cm",
+    biometry: { bpd: "88-90 mm", fl: "67-69 mm", ac: "305-315 mm", efw: "2500-2600 g" },
+    description: "Kidneys fully developed. Liver processing waste. Space is tight.",
+    symptoms: ["Frequent urination", "Pelvic pressure", "Insomnia"],
+    toDo: ["GBS Test (Group B Strep).", "Confirm hospital route.", "Wash baby clothes."],
+    notToDo: ["Ignoring reduced movement", "Stress", "Dirty baby clothes"],
+    dailyTips: ["Day 1: Kidneys/Liver ready.", "Day 2: Baby dropping?", "Day 3: Pelvic pressure.", "Day 4: Frequent pee.", "Day 5: GBS Swab?", "Day 6: Wash baby clothes.", "Day 7: Hospital route check."]
+  },
+  36: {
+    week: 36, babySize: "Papaya", babyWeight: "2.6kg", babyLength: "47.4cm",
+    biometry: { bpd: "90-92 mm", fl: "69-71 mm", ac: "315-325 mm", efw: "2700-2800 g" },
+    description: "Late Pre-term. Lungs are generally ready. Baby drops (Lightening).",
+    symptoms: ["Easier breathing", "Pelvic pain", "Vaginal pressure"],
+    toDo: ["Weekly checkups start.", "Check position (Head down?).", "Pre-delivery labs."],
+    notToDo: ["Travel", "Work stress", "Ignoring fluid leak"],
+    dailyTips: ["Day 1: Late Pre-term.", "Day 2: Lightening (Drop).", "Day 3: Breathing easier.", "Day 4: Pelvic pain.", "Day 5: Weekly checkups.", "Day 6: Head down?", "Day 7: Cervix check."]
+  },
+  37: {
+    week: 37, babySize: "Winter Melon", babyWeight: "2.9kg", babyLength: "48.6cm",
+    biometry: { bpd: "91-93 mm", fl: "70-72 mm", ac: "325-335 mm", efw: "2900-3000 g" },
+    description: "Early Term! Baby is ready. Lanugo mostly gone.",
+    symptoms: ["Mucus Plug loss?", "Contractions", "Nesting instinct"],
+    toDo: ["Watch for labor signs.", "Mucus plug check.", "Rest."],
+    notToDo: ["Inducing labor (self)", "Panic", "Unsafe foods"],
+    dailyTips: ["Day 1: Early Term!", "Day 2: Baby ready.", "Day 3: Lanugo gone.", "Day 4: Mucus plug?", "Day 5: Bloody show?", "Day 6: Nesting instinct.", "Day 7: Don't overwork."]
+  },
+  38: {
+    week: 38, babySize: "Pumpkin", babyWeight: "3.1kg", babyLength: "49.8cm",
+    biometry: { bpd: "93-95 mm", fl: "72-74 mm", ac: "335-345 mm", efw: "3100-3200 g" },
+    description: "Full Term. Organs fully functional. Grip is firm.",
+    symptoms: ["Lightning crotch", "Back pain", "Diarrhea (Labor prep)"],
+    toDo: ["Count kicks.", "Relax.", "Review hospital bag."],
+    notToDo: ["Being alone", "Heavy meals", "Stress"],
+    dailyTips: ["Day 1: Full Term.", "Day 2: Organs ready.", "Day 3: Grip strong.", "Day 4: Diarrhea?", "Day 5: Body clearing out.", "Day 6: Lightning crotch.", "Day 7: Stay calm."]
+  },
+  39: {
+    week: 39, babySize: "Watermelon", babyWeight: "3.3kg", babyLength: "50.7cm",
+    biometry: { bpd: "94-96 mm", fl: "73-75 mm", ac: "340-355 mm", efw: "3200-3400 g" },
+    description: "Full Term. Baby is waiting. Skin is white/pink.",
+    symptoms: ["Contractions", "Water break?", "Impatience"],
+    toDo: ["Time contractions.", "Squats (if comfortable).", "Hydrate."],
+    notToDo: ["Castor oil (unless advised)", "Spicy food excess", "Panic"],
+    dailyTips: ["Day 1: Waiting game.", "Day 2: Skin pigment.", "Day 3: Brain growth.", "Day 4: Water break?", "Day 5: Color/Odor check.", "Day 6: Time pains.", "Day 7: 5-1-1 Rule."]
+  },
+  40: {
+    week: 40, babySize: "Jackfruit", babyWeight: "3.5kg", babyLength: "51.2cm",
+    biometry: { bpd: "95-98 mm", fl: "74-76 mm", ac: "350-365 mm", efw: "3400-3600 g" },
+    description: "Due Date! Only 5% arrive on date. Placenta still working.",
+    symptoms: ["Labor!", "Anxiety", "Pressure"],
+    toDo: ["Go to hospital if labor starts.", "Monitor movements.", "Discuss induction."],
+    notToDo: ["Waiting too long", "Eating heavy", "Stress"],
+    dailyTips: ["Day 1: Due Date!", "Day 2: Don't panic.", "Day 3: Only 5% on time.", "Day 4: Placenta check.", "Day 5: Monitor kicks.", "Day 6: Discuss induction?", "Day 7: Baby coming soon!"]
+  }
 };
+
 export const DAILY_TIPS: Record<string, string> = { "default": "Stay hydrated and rest well.", "1": "Start taking prenatal vitamins now.", "2": "Track your ovulation signs.", "40": "Relax and practice breathing exercises." };
 
 // --- COMPREHENSIVE MEDICINE DATABASE (FOGSI / IAP / FDA STANDARDS) ---

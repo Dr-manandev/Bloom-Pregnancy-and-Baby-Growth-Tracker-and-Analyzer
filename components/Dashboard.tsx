@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { PregnancyCalculations, WeeklyInfo, UserSettings, Medicine } from '../types';
-import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, COMORBIDITY_GUIDELINES, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY } from '../constants';
+import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY } from '../constants';
 import { getPregnancyAdvice } from '../services/geminiService';
 import { Button } from './Button';
-import { Info, Baby, AlertCircle, Bell, Activity, ChevronLeft, ChevronRight, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb, Pill } from 'lucide-react';
+import { Info, Baby, AlertCircle, Bell, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb, Pill, Ruler, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Props {
   calculations: PregnancyCalculations;
@@ -218,9 +217,24 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
   const isFuture = selectedWeek > calculations.currentWeek;
   const isPast = selectedWeek < calculations.currentWeek;
 
-  // NEW: Dynamic Daily Tip Logic
-  const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
-  const currentTip = TIP_LIBRARY.pregnancy[dayOfYear % TIP_LIBRARY.pregnancy.length];
+  // NEW: Dynamic Daily Tip Logic (Day Specific to Week)
+  // If user is in week X, calculate day of week (0-6).
+  // Use day of week index to pick tip from weekly info.
+  // Fallback to day of year if weekly tips missing.
+  let currentTip = "";
+  if (weekInfo.dailyTips && weekInfo.dailyTips.length > 0) {
+      // If we are viewing current week, show tip for current day of week (0-6)
+      // If viewing past/future, just show tip 1 or loop through
+      const dayIndex = selectedWeek === calculations.currentWeek 
+          ? (calculations.currentDay % 7) 
+          : 0; 
+      currentTip = weekInfo.dailyTips[dayIndex] || weekInfo.dailyTips[0];
+  } else {
+      currentTip = "Stay hydrated and rest well. Listen to your body.";
+  }
+
+  // Determine Biometry Availability
+  const hasBiometry = weekInfo.biometry && (Object.keys(weekInfo.biometry).length > 0);
 
   return (
     <div className="space-y-8 animate-fade-in pb-10">
@@ -423,6 +437,56 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
           </div>
       )}
 
+      {/* --- FETAL BIOMETRY REFERENCE (NEW) --- */}
+      {hasBiometry && (
+          <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-3xl border border-indigo-100 dark:border-indigo-800 shadow-sm animate-fade-in">
+              <h3 className="font-bold text-indigo-800 dark:text-indigo-200 flex items-center gap-2 mb-4">
+                  <Ruler size={20} /> Fetal Biometry Reference (Week {weekInfo.week})
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {weekInfo.biometry?.bpd && (
+                      <div className="bg-white dark:bg-indigo-950/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">BPD (Head Width)</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.bpd}</p>
+                      </div>
+                  )}
+                  {weekInfo.biometry?.fl && (
+                      <div className="bg-white dark:bg-indigo-950/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">FL (Femur Length)</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.fl}</p>
+                      </div>
+                  )}
+                  {weekInfo.biometry?.ac && (
+                      <div className="bg-white dark:bg-indigo-900/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">AC (Abdomen)</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.ac}</p>
+                      </div>
+                  )}
+                  {weekInfo.biometry?.efw && (
+                      <div className="bg-white dark:bg-indigo-900/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">Est. Weight</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.efw}</p>
+                      </div>
+                  )}
+                  {weekInfo.biometry?.crl && (
+                      <div className="bg-white dark:bg-indigo-900/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">CRL (Length)</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.crl}</p>
+                      </div>
+                  )}
+                  {weekInfo.biometry?.gs && (
+                      <div className="bg-white dark:bg-indigo-900/50 p-3 rounded-xl border border-indigo-50 dark:border-indigo-900">
+                          <p className="text-xs text-indigo-500 dark:text-indigo-400 uppercase font-bold">Gestational Sac</p>
+                          <p className="text-lg font-bold text-gray-800 dark:text-white">{weekInfo.biometry.gs}</p>
+                      </div>
+                  )}
+              </div>
+              <p className="text-[10px] text-indigo-600 dark:text-indigo-400 mt-3 text-center">
+                  *Reference ranges based on Hadlock/WHO standards. Actual measurements may vary.
+              </p>
+          </div>
+      )}
+
       {/* Alerts Section - Scans, Vaccines, Labs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           
@@ -475,60 +539,6 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
              </div>
           )}
       </div>
-
-      {/* Comorbidities Monitoring Plan (Always visible but contextual) */}
-      {selectedComorbidities.length > 0 && selectedWeek === calculations.currentWeek && (
-        <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-pink-100 dark:border-indigo-800 overflow-hidden">
-           <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
-              <h3 className="text-xl font-bold flex items-center gap-2">
-                 <Activity size={24} /> Personalized Monitoring Plan
-              </h3>
-              <p className="opacity-80 text-sm mt-1">Based on your selected health conditions for THIS week.</p>
-           </div>
-           
-           <div className="p-6 divide-y divide-gray-100 dark:divide-indigo-800">
-              {selectedComorbidities.map(id => {
-                const guide = COMORBIDITY_GUIDELINES[id];
-                if(!guide) return null;
-                return (
-                   <div key={id} className="py-6 first:pt-0 last:pb-0">
-                      <h4 className="font-bold text-lg text-purple-700 dark:text-purple-300 mb-3">{guide.name}</h4>
-                      
-                      <div className="grid md:grid-cols-2 gap-4 mb-4">
-                         <div className="bg-purple-50 dark:bg-purple-900/10 p-4 rounded-xl border border-purple-100 dark:border-purple-900/30">
-                            <p className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase mb-1">Required Tests</p>
-                            <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300">
-                               {guide.tests.map((t, i) => <li key={i}>{t}</li>)}
-                            </ul>
-                            <p className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase mt-3 mb-1">Frequency</p>
-                            <p className="text-sm font-medium text-gray-800 dark:text-white">{guide.frequency}</p>
-                         </div>
-                         
-                         <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
-                             <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase mb-1">How to Monitor</p>
-                             <ul className="space-y-1">
-                                {guide.monitoring.map((m, i) => (
-                                   <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
-                                      <span className="mt-1.5 w-1 h-1 rounded-full bg-blue-400 shrink-0"></span> {m}
-                                   </li>
-                                ))}
-                             </ul>
-                         </div>
-                      </div>
-
-                      <div className="bg-red-50 dark:bg-red-900/10 p-3 rounded-lg border border-red-100 dark:border-red-900/30 flex items-start gap-3">
-                          <AlertCircle size={18} className="text-red-500 shrink-0 mt-0.5" />
-                          <div>
-                             <span className="text-sm font-bold text-red-700 dark:text-red-400">Red Flags (Contact Doctor): </span>
-                             <span className="text-sm text-red-600 dark:text-red-300">{guide.alertSigns.join(', ')}</span>
-                          </div>
-                      </div>
-                   </div>
-                );
-              })}
-           </div>
-        </div>
-      )}
 
       {/* Info Grid - Content updates based on selectedWeek */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -605,11 +615,17 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
         <div className="space-y-6">
             <div className="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-3xl border border-blue-100 dark:border-blue-900/30">
                 <h4 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
-                    <Lightbulb size={18} /> Daily Tip
+                    <Lightbulb size={18} /> Daily Tip ({selectedWeek === calculations.currentWeek ? `Day ${calculations.currentDay + 1}` : 'Week View'})
                 </h4>
                 <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed">
                     {currentTip}
                 </p>
+                <div className="mt-2 flex gap-1">
+                    {/* Visual Day Tracker */}
+                    {[0,1,2,3,4,5,6].map(d => (
+                        <div key={d} className={`h-1 flex-1 rounded-full ${d <= calculations.currentDay ? 'bg-blue-500' : 'bg-blue-200 dark:bg-blue-800'}`}></div>
+                    ))}
+                </div>
             </div>
 
             <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800">

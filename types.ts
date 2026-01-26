@@ -86,6 +86,17 @@ export interface PregnancyCalculations {
   progressPercent: number;
 }
 
+export interface FetalBiometry {
+  crl?: string; // Crown Rump Length
+  gs?: string;  // Gestational Sac
+  bpd?: string; // Biparietal Diameter
+  fl?: string;  // Femur Length
+  ac?: string;  // Abdominal Circumference
+  hc?: string;  // Head Circumference
+  efw?: string; // Estimated Fetal Weight
+  hr?: string;  // Heart Rate
+}
+
 export interface WeeklyInfo {
   week: number;
   babySize: string;
@@ -95,6 +106,8 @@ export interface WeeklyInfo {
   symptoms: string[];
   toDo: string[];
   notToDo: string[];
+  dailyTips: string[]; // Array of 7 tips for the week
+  biometry?: FetalBiometry;
 }
 
 export interface ScanSchedule {
