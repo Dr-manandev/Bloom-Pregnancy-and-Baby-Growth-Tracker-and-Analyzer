@@ -210,7 +210,6 @@ export const TIP_LIBRARY = {
         "Check for Vitamin B12 deficiency if you are strictly vegetarian/vegan.",
         "If you have irregular cycles (<21 or >35 days), don't rely on apps alone. Use ovulation kits (LH strips)."
     ],
-    // Pregnancy Tips handled by WEEKLY_DATA.dailyTips now
     postpartum: [
         "Breastfeeding burns ~500 calories/day. Eat nutrient-dense foods, not just 'Ghee' laden foods.",
         "Lochia (bleeding) can last 4-6 weeks. It changes from Red -> Pink -> White.",
@@ -308,11 +307,146 @@ export const LAB_SCHEDULE: LabTest[] = [
   { id: "lab_anemia_hb", name: "Hemoglobin Check (Monthly)", category: "Special", description: "Frequent monitoring for Anemic mothers. Target Hb > 11 g/dL.", weekStart: 12, weekEnd: 36, mandatory: true, condition: "anemia" }
 ];
 
-export const BABY_MILESTONES = [
-  { ageRange: "0-3 Months", items: [{ id: "m_smile", label: "Social Smile (Smiles at people)", age: "6-8 Weeks" }, { id: "m_neck", label: "Neck Holding (Holds head steady)", age: "3 Months" }, { id: "m_eye", label: "Follows objects with eyes", age: "2 Months" }, { id: "m_coo", label: "Coos and gurgles", age: "2-3 Months" }] },
-  { ageRange: "4-6 Months", items: [{ id: "m_roll", label: "Rolls over (Tummy to back)", age: "4-6 Months" }, { id: "m_laugh", label: "Laughs out loud", age: "4 Months" }, { id: "m_reach", label: "Reaches for objects (Grasp)", age: "5 Months" }, { id: "m_sit_sup", label: "Sits with support", age: "6 Months" }] },
-  { ageRange: "7-9 Months", items: [{ id: "m_sit_no_sup", label: "Sits without support", age: "8 Months" }, { id: "m_crawl", label: "Crawling (Creeping)", age: "9 Months" }, { id: "m_pincer", label: "Pincer Grasp (Thumb-Index finger)", age: "9 Months" }, { id: "m_babble", label: "Babbles (Ma-ma, Da-da nonspecific)", age: "8-9 Months" }] },
-  { ageRange: "10-12 Months", items: [{ id: "m_stand_sup", label: "Stands with support", age: "10 Months" }, { id: "m_wave", label: "Waves Bye-Bye", age: "10-12 Months" }, { id: "m_cruise", label: "Cruising (Walks holding furniture)", age: "11 Months" }, { id: "m_talk", label: "Says Mama/Dada specifically", age: "12 Months" }, { id: "m_stand", label: "Stands alone momentarily", age: "12 Months" }] }
+export const DETAILED_MILESTONES = [
+  {
+    category: "Gross Motor",
+    items: [
+      { id: "gm_1", milestone: "Head and neck control", age: "2-4 months" },
+      { id: "gm_2", milestone: "Feet to mouth in supine position", age: "5 months" },
+      { id: "gm_3", milestone: "Sitting with own support (Tripod position)", age: "5–6 months" },
+      { id: "gm_4", milestone: "Roll over (back to side)", age: "6 months" },
+      { id: "gm_5", milestone: "Roll over (prone to supine)", age: "6 months" },
+      { id: "gm_6", milestone: "Roll over (supine to prone)", age: "7 months" },
+      { id: "gm_7", milestone: "Sitting without support", age: "7 months" },
+      { id: "gm_8", milestone: "Crawling (abdomen touches ground)", age: "8 months" },
+      { id: "gm_9", milestone: "Creeping (abdomen off the ground)", age: "10 months" },
+      { id: "gm_10", milestone: "Standing with support", age: "10 months" },
+      { id: "gm_11", milestone: "True pivoting (rotation in axis)", age: "10–11 months" },
+      { id: "gm_12", milestone: "Cruising (holding furniture)", age: "11 months" },
+      { id: "gm_13", milestone: "Walking with support (bear walking)", age: "12 months" },
+      { id: "gm_14", milestone: "Crawls or creeps upstairs", age: "15 months" },
+      { id: "gm_15", milestone: "Running", age: "18 months" },
+      { id: "gm_16", milestone: "Walking upstairs/downstairs with support", age: "18 months" },
+      { id: "gm_17", milestone: "Walks upstairs and downstairs alone (two feet per step)", age: "2 years" },
+      { id: "gm_18", milestone: "Walks upstairs with alternate steps", age: "3 years" },
+      { id: "gm_19", milestone: "Rides a tricycle", age: "3 years" },
+      { id: "gm_20", milestone: "Walks downstairs with alternate steps", age: "4 years" },
+      { id: "gm_21", milestone: "Hops on one foot", age: "4 years" },
+      { id: "gm_22", milestone: "Skips rope", age: "5 years" }
+    ]
+  },
+  {
+    category: "Fine Motor and Adaptive",
+    items: [
+      { id: "fm_1", milestone: "Mouthing of objects", age: "4 months" },
+      { id: "fm_2", milestone: "Bidextrous grasp (reach with both hands)", age: "4 months" },
+      { id: "fm_3", milestone: "Unidextrous grasp (reach with one hand)", age: "6 months" },
+      { id: "fm_4", milestone: "Transfers objects from hand to hand", age: "6 months" },
+      { id: "fm_5", milestone: "Palmar grasp (ulnar to radial progression)", age: "7 months" },
+      { id: "fm_6", milestone: "Immature pincer grasp", age: "9 months" },
+      { id: "fm_7", milestone: "Mature pincer grasp", age: "12 months" },
+      { id: "fm_8", milestone: "Tower of 2 cubes", age: "15 months" },
+      { id: "fm_9", milestone: "Drinks from cup", age: "15 months" },
+      { id: "fm_10", milestone: "Feeds self with spoon (spills most)", age: "15 months" },
+      { id: "fm_11", milestone: "Feeds self with spoon (spills less)", age: "18 months" },
+      { id: "fm_12", milestone: "Tower of 3 cubes", age: "18 months" },
+      { id: "fm_13", milestone: "Tower of 6–7 cubes", age: "2 years" },
+      { id: "fm_14", milestone: "Train without chimney", age: "2 years" },
+      { id: "fm_15", milestone: "Train with chimney", age: "2.5 years" },
+      { id: "fm_16", milestone: "Handedness established", age: "3 years" },
+      { id: "fm_17", milestone: "Tower of 9–10 cubes", age: "3 years" },
+      { id: "fm_18", milestone: "Bridge of 3 cubes", age: "4 years" },
+      { id: "fm_19", milestone: "Gate of 5 cubes", age: "5 years" }
+    ]
+  },
+  {
+    category: "Language",
+    items: [
+      { id: "lg_1", milestone: "Vocalizing", age: "2 months" },
+      { id: "lg_2", milestone: "Cooing", age: "3 months" },
+      { id: "lg_3", milestone: "Laughs loudly", age: "4 months" },
+      { id: "lg_4", milestone: "Monosyllables / Babbling", age: "6 months" },
+      { id: "lg_5", milestone: "Bisyllables", age: "8–9 months" },
+      { id: "lg_6", milestone: "First real word (2–3 words with meaning)", age: "1 year" },
+      { id: "lg_7", milestone: "Jargon speech (4–6 words)", age: "15 months" },
+      { id: "lg_8", milestone: "Uses 8–10 words", age: "18 months" },
+      { id: "lg_9", milestone: "Uses 50–100 words, says I/Me/You", age: "2 years" },
+      { id: "lg_10", milestone: "Uses ~250 words, counts 3 numbers", age: "3 years" },
+      { id: "lg_11", milestone: "Tells story / song / poem (past tense)", age: "4 years" },
+      { id: "lg_12", milestone: "Uses future tense", age: "5 years" }
+    ]
+  },
+  {
+    category: "Cognitive and Social-Personal",
+    items: [
+      { id: "sp_1", milestone: "Spontaneous smile (smiling without stimulus)", age: "Neonatal period" },
+      { id: "sp_2", milestone: "Social smile (stimulus dependent)", age: "2 months" },
+      { id: "sp_3", milestone: "Recognizes mother / primary caretaker", age: "3 months" },
+      { id: "sp_4", milestone: "Hand regard", age: "3-5 months" },
+      { id: "sp_5", milestone: "Mirror play", age: "6 months" },
+      { id: "sp_6", milestone: "Stranger anxiety and inhibits to 'No' command", age: "7 months" },
+      { id: "sp_7", milestone: "Object permanence / constancy", age: "8 months" },
+      { id: "sp_8", milestone: "Waves bye-bye", age: "9 months" },
+      { id: "sp_9", milestone: "Plays peek-a-boo", age: "10 months" },
+      { id: "sp_10", milestone: "Domestic mimicry, kisses parents when happy", age: "18 months" },
+      { id: "sp_11", milestone: "Separation anxiety / rapprochement", age: "18 months" },
+      { id: "sp_12", milestone: "Dry by day", age: "18 months" },
+      { id: "sp_13", milestone: "Undressing with support", age: "2 years" },
+      { id: "sp_14", milestone: "Dressing with support", age: "3 years" },
+      { id: "sp_15", milestone: "Knows full name, age, gender; shares toys", age: "3 years" },
+      { id: "sp_16", milestone: "Dry by night", age: "3 years" },
+      { id: "sp_17", milestone: "Plays cooperatively in a group", age: "4 years" },
+      { id: "sp_18", milestone: "Dressing and undressing independently (ties shoelaces)", age: "5 years" }
+    ]
+  },
+  {
+    category: "Cognitive / Visuospatial (Copying Images)",
+    items: [
+      { id: "vs_1", milestone: "Imitates vertical line", age: "18 months" },
+      { id: "vs_2", milestone: "Imitates horizontal line", age: "2 years" },
+      { id: "vs_3", milestone: "Copies circle", age: "3 years" },
+      { id: "vs_4", milestone: "Copies cross (+)", age: "4 years" },
+      { id: "vs_5", milestone: "Copies square", age: "4 years" },
+      { id: "vs_6", milestone: "Copies tilted cross (X)", age: "5 years" },
+      { id: "vs_7", milestone: "Copies triangle", age: "5 years" },
+      { id: "vs_8", milestone: "Copies complex human figure (6–7 body parts)", age: "5 years" }
+    ]
+  }
+];
+
+export const BABY_MILESTONES = DETAILED_MILESTONES; // Backward compatibility alias if needed
+
+export const DEVELOPMENTAL_RED_FLAGS = [
+    // GROSS MOTOR
+    { condition: "No head control", limitMonth: 4, suggests: "Cerebral palsy, Hypotonia", linkedMilestoneId: "gm_1" },
+    { condition: "Not sitting without support", limitMonth: 9, suggests: "Motor delay, Cerebral palsy", linkedMilestoneId: "gm_7" },
+    { condition: "Not standing with support", limitMonth: 12, suggests: "Motor delay", linkedMilestoneId: "gm_10" },
+    { condition: "Not walking independently", limitMonth: 18, suggests: "Global developmental delay, Neuromuscular disorder", linkedMilestoneId: "gm_13" }, // Linked to 'Walking with support' as proxy for checking if they walk at all, logic in UI will handle age check
+    
+    // FINE MOTOR
+    { condition: "No transfer of objects hand-to-hand", limitMonth: 7, suggests: "Fine motor delay", linkedMilestoneId: "fm_4" },
+    { condition: "No pincer grasp", limitMonth: 12, suggests: "Fine motor delay, Cognitive delay", linkedMilestoneId: "fm_7" },
+    { condition: "Cannot build tower of 2 cubes", limitMonth: 18, suggests: "Cognitive / fine motor delay", linkedMilestoneId: "fm_8" },
+
+    // LANGUAGE
+    { condition: "No cooing", limitMonth: 3, suggests: "Hearing impairment", linkedMilestoneId: "lg_2" },
+    { condition: "No babbling", limitMonth: 6, suggests: "Hearing loss", linkedMilestoneId: "lg_4" },
+    { condition: "No bisyllables", limitMonth: 10, suggests: "Language delay", linkedMilestoneId: "lg_5" },
+    { condition: "No meaningful words", limitMonth: 18, suggests: "Speech delay, Autism spectrum disorder", linkedMilestoneId: "lg_8" },
+    { condition: "Vocabulary <50 words", limitMonth: 24, suggests: "Language delay", linkedMilestoneId: "lg_9" },
+
+    // COGNITIVE / SOCIAL
+    { condition: "No social smile", limitMonth: 3, suggests: "Visual impairment, Autism", linkedMilestoneId: "sp_2" },
+    { condition: "Does not recognize mother/caregiver", limitMonth: 4, suggests: "Cognitive delay", linkedMilestoneId: "sp_3" },
+    { condition: "No stranger anxiety", limitMonth: 9, suggests: "Autism spectrum disorder", linkedMilestoneId: "sp_6" },
+    { condition: "No object permanence", limitMonth: 12, suggests: "Cognitive delay", linkedMilestoneId: "sp_7" },
+    { condition: "No pretend play / domestic mimicry", limitMonth: 24, suggests: "Autism spectrum disorder", linkedMilestoneId: "sp_10" },
+    { condition: "Not toilet trained by day", limitMonth: 36, suggests: "Developmental delay", linkedMilestoneId: "sp_12" },
+
+    // COPYING
+    { condition: "Cannot copy a circle", limitMonth: 48, suggests: "Cognitive delay", linkedMilestoneId: "vs_3" },
+    { condition: "Cannot copy a cross (+)", limitMonth: 60, suggests: "Visuospatial delay", linkedMilestoneId: "vs_4" },
+    { condition: "Cannot copy square or triangle", limitMonth: 72, suggests: "Intellectual disability", linkedMilestoneId: "vs_5" }
 ];
 
 export const COMORBIDITY_GUIDELINES: Record<string, ComorbidityGuide> = {
@@ -693,7 +827,6 @@ export const WEEKLY_DATA: Record<number, WeeklyInfo> = {
 export const DAILY_TIPS: Record<string, string> = { "default": "Stay hydrated and rest well.", "1": "Start taking prenatal vitamins now.", "2": "Track your ovulation signs.", "40": "Relax and practice breathing exercises." };
 
 // --- COMPREHENSIVE MEDICINE DATABASE (FOGSI / IAP / FDA STANDARDS) ---
-// Key 0: Planning, 1-3: Trimesters, 4: Postpartum/Lactation
 export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
   0: [ // Planning / Pre-Conception
       { category: "Vitamins & Supplements", safe: ["Folic Acid 5mg/400mcg (Folvite)", "Vitamin D3 (Uprise-D3/Calcirol)", "Vitamin B12 (Methylcobalamin)", "Zinc", "CoQ10 (Ubiquinol)", "Omega-3 (Fish Oil)", "Vitamin E (Evion)", "Calcium Citrate", "Inositol (Myo-Inositol - PCOS)"], caution: ["Vitamin C > 1000mg"], avoid: ["Vitamin A (Retinol > 10,000 IU)", "Unverified Herbal Supplements"], note: "Folic Acid is mandatory 3 months prior to conception." },
@@ -707,7 +840,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Skin & Beauty", safe: ["Glycolic Acid", "Vitamin C Serum", "Benzoyl Peroxide (Low %)", "Azelaic Acid"], caution: ["Salicylic Acid (>2%)"], avoid: ["Isotretinoin (Accutane)", "Retinoids (Retin-A/Tretinoin)", "Hydroquinone"], note: "STOP Retinoids/Accutane 1-3 months before trying." },
       { category: "Psychiatry / Mood", safe: ["Sertraline", "Fluoxetine (Prozac)"], caution: ["Benzodiazepines (Alprazolam)"], avoid: ["Lithium", "Valproate (Epival/Valparin)"], note: "Consult psychiatrist for safe alternatives." }
   ],
-  1: [ // First Trimester (0-13 Weeks) - CRITICAL ORGANOGENESIS
+  1: [ // First Trimester
       { category: "Nausea & Vomiting", safe: ["Doxylamine + B6 (Doxinate/Pregidoxin)", "Ginger", "Ondansetron (Ondem/Vomitest) - after 10w"], caution: ["Metoclopramide (Perinorm)"], avoid: ["Domperidone"], note: "Doxinate is the gold standard for morning sickness (NVP)." },
       { category: "Pain & Fever", safe: ["Paracetamol (Dolo/Crocin)"], caution: [], avoid: ["Ibuprofen", "Aspirin (High Dose)", "Diclofenac", "Combiflam", "Mefenamic Acid (Meftal)"], note: "Strictly avoid NSAIDs in T1 (Miscarriage risk)." },
       { category: "Diabetes (GDM)", safe: ["Insulin (Actrapid/Lantus)", "Metformin (Glycomet) - if benefit > risk"], caution: [], avoid: ["Oral Hypoglycemics (Glimepiride/Gliclazide)"], note: "Insulin does not cross the placenta. It is the safest." },
@@ -719,7 +852,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Hormonal Support", safe: ["Progesterone (Susten/Duphaston/Microgest)", "HCG Injections"], caution: [], avoid: ["Estrogen containing pills"], note: "Only take hormonal support if prescribed for threatened abortion." },
       { category: "Vitamins", safe: ["Folic Acid (Folvite)", "Vitamin B6", "Vitamin D3"], caution: ["Iron (Can worsen nausea in T1)"], avoid: ["Vitamin A (Retinol)", "Cod Liver Oil"], note: "Start Iron only after 12 weeks usually." }
   ],
-  2: [ // Second Trimester (14-27 Weeks)
+  2: [ // Second Trimester
       { category: "Vitamins & Minerals", safe: ["Iron (Ferrous Ascorbate/Fumarate)", "Calcium (Shellcal/Cipcal)", "Vitamin D3", "Omega-3 (DHA)", "Protein Powder (Protinex Mama)"], caution: [], avoid: [], note: "Calcium and Iron must be taken at different times (min 2hr gap)." },
       { category: "Pain & Fever", safe: ["Paracetamol"], caution: ["Ibuprofen (Single dose if prescribed - only in T2)"], avoid: ["Aspirin (High dose)", "Tramadol"], note: "Safest period for necessary dental work." },
       { category: "Diabetes (GDM)", safe: ["Insulin"], caution: ["Metformin"], avoid: ["Sulfonylureas"], note: "GTT test is done at 24-28 weeks." },
@@ -730,7 +863,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Deworming", safe: ["Albendazole (400mg single dose) - WHO recommends in T2/T3 for endemic areas"], caution: [], avoid: ["In T1"], note: "Treats hookworm anemia." },
       { category: "Cough & Cold", safe: ["Cetirizine", "Guaifenesin (Expectorant)", "Vicks VapoRub (Topical)"], caution: ["Dextromethorphan"], avoid: [], note: "Steam inhalation is best." }
   ],
-  3: [ // Third Trimester (28-40 Weeks)
+  3: [ // Third Trimester
       { category: "Pain & Fever", safe: ["Paracetamol"], caution: [], avoid: ["Ibuprofen", "Diclofenac", "Aspirin", "Naproxen", "Indomethacin"], note: "CRITICAL: NSAIDs in T3 cause premature closure of Ductus Arteriosus (Heart defect) and low amniotic fluid." },
       { category: "Diabetes (GDM)", safe: ["Insulin"], caution: [], avoid: ["Oral agents"], note: "Strict sugar control to prevent macrosomia (large baby)." },
       { category: "Hypertension", safe: ["Labetalol", "Nifedipine"], caution: [], avoid: ["Diuretics (can reduce amniotic fluid)"], note: "Watch for swelling/headache." },
@@ -741,7 +874,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Itching/Cholestasis", safe: ["Ursodeoxycholic Acid (Udiliv)", "Calamine Lotion", "Emollients"], caution: ["Antihistamines"], avoid: [], note: "Report itching of palms/soles immediately (Obstetric Cholestasis)." },
       { category: "Sleep", safe: ["Warm Milk", "Magnesium"], caution: ["Diphenhydramine"], avoid: ["Benzodiazepines (Alprazolam) - Floppy Baby Syndrome"], note: "Avoid sleeping pills near term." }
   ],
-  4: [ // Postpartum / Lactation (Breastfeeding)
+  4: [ // Postpartum / Lactation
       { category: "Pain & Recovery", safe: ["Paracetamol", "Ibuprofen (Safe for BF)", "Diclofenac (Voveran)", "Aceclofenac"], caution: ["Tramadol (Monitor baby for sedation)", "Codeine"], avoid: ["Aspirin (Reye's Syndrome risk for baby)"], note: "Pain relief is vital for let-down reflex." },
       { category: "Antibiotics", safe: ["Amoxicillin", "Augmentin", "Cephalexin", "Erythromycin"], caution: ["Ciprofloxacin (Safe in short courses)", "Metronidazole (Pump & dump if high dose)"], avoid: ["Chloramphenicol"], note: "Most antibiotics pass in small amounts but are safe." },
       { category: "Lactation Aid", safe: ["Fenugreek", "Shatavari (Kalpa)", "Domperidone (Prescription only)", "Metoclopramide"], caution: [], avoid: ["Bromocriptine (Stops milk)"], note: "Hydration is the best galactogogue." },

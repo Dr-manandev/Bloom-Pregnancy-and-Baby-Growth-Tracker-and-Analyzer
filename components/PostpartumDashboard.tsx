@@ -1,9 +1,10 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { UserSettings } from '../types';
 import { Button } from './Button';
-import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History } from 'lucide-react';
-import { BABY_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA } from '../constants';
+import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History, AlertTriangle, ShieldAlert, Info } from 'lucide-react';
+import { DETAILED_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA, DEVELOPMENTAL_RED_FLAGS } from '../constants';
 
 interface Props {
   settings: UserSettings;
@@ -18,7 +19,7 @@ interface NursingLog {
 }
 
 export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
-  const [babyAge, setBabyAge] = useState<{weeks: number, days: number}>({ weeks: 0, days: 0 });
+  const [babyAge, setBabyAge] = useState<{weeks: number, days: number, totalMonths: number}>({ weeks: 0, days: 0, totalMonths: 0 });
   
   // Breastfeeding Timer State
   const [timer, setTimer] = useState(0); // in seconds
@@ -40,9 +41,15 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - birth.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Calculate months roughly for Red Flag logic
+      const diffMonths = (now.getFullYear() - birth.getFullYear()) * 12 + (now.getMonth() - birth.getMonth());
+      const adjustedMonths = now.getDate() < birth.getDate() ? diffMonths - 1 : diffMonths;
+
       setBabyAge({
         weeks: Math.floor(diffDays / 7),
-        days: diffDays % 7
+        days: diffDays % 7,
+        totalMonths: Math.max(0, adjustedMonths)
       });
     }
 
@@ -126,6 +133,16 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
       localStorage.setItem('bloom_milestones', JSON.stringify(updated));
   };
 
+  // --- RED FLAG CHECKER ---
+  const activeRedFlags = DEVELOPMENTAL_RED_FLAGS.filter(flag => {
+      // If baby is older than the limit for the flag
+      if (babyAge.totalMonths >= flag.limitMonth) {
+          // And the milestone is NOT completed
+          return !completedMilestones.includes(flag.linkedMilestoneId);
+      }
+      return false;
+  });
+
   return (
     <div className="space-y-8 animate-fade-in pb-10">
       
@@ -140,7 +157,7 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
             <div className="text-center md:text-left">
                 <h2 className="text-3xl font-bold">Welcome, {settings.babyName || "Little One"}!</h2>
                 <div className="mt-2 text-xl font-medium opacity-90">
-                    {babyAge.weeks} Weeks, {babyAge.days} Days Old
+                    {babyAge.weeks} Weeks, {babyAge.days} Days Old ({babyAge.totalMonths} months)
                 </div>
                 <p className="text-sm opacity-75 mt-1">Focus: Recovery & Bonding (The 4th Trimester)</p>
             </div>
@@ -272,37 +289,65 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
          </div>
       </div>
 
+      {/* --- DEVELOPMENTAL ALERTS (RED FLAGS) --- */}
+      {activeRedFlags.length > 0 && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-6 rounded-3xl animate-pulse-slow">
+              <h3 className="text-xl font-bold text-red-700 dark:text-red-400 flex items-center gap-2 mb-3">
+                  <ShieldAlert size={24} /> Developmental Red Flags
+              </h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 bg-white/50 dark:bg-black/20 p-3 rounded-xl">
+                  Based on your baby's age ({babyAge.totalMonths} months), the following milestones should typically be achieved. Please consult a pediatrician if these persist.
+              </p>
+              <div className="space-y-3">
+                  {activeRedFlags.map((flag, idx) => (
+                      <div key={idx} className="bg-white dark:bg-deep-card p-4 rounded-xl border border-red-100 dark:border-red-900/50 shadow-sm">
+                          <p className="font-bold text-red-600 dark:text-red-400 text-sm flex items-center gap-2">
+                              <AlertTriangle size={16}/> {flag.condition}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                              <strong>Suggests possible:</strong> {flag.suggests}
+                          </p>
+                          <p className="text-xs text-gray-400 italic mt-1">Expected by {flag.limitMonth} months</p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      )}
+
       {/* Milestone Tracker Section */}
       <div className="bg-white dark:bg-deep-card rounded-3xl shadow-lg border border-gray-100 dark:border-indigo-800 overflow-hidden">
          <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-6 text-white">
              <h3 className="text-xl font-bold flex items-center gap-2">
                  <Star size={24} fill="currentColor" /> Developmental Milestones
              </h3>
-             <p className="text-sm opacity-90 mt-1">Based on Indian Academy of Pediatrics (IAP) Guidelines</p>
+             <p className="text-sm opacity-90 mt-1">Checklist based on Indian Academy of Pediatrics (IAP) Guidelines</p>
          </div>
          
-         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-             {BABY_MILESTONES.map((category, index) => (
+         <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+             {DETAILED_MILESTONES.map((domain, index) => (
                  <div key={index} className="space-y-3">
-                     <h4 className="font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-indigo-800 pb-2">
-                         {category.ageRange}
+                     <h4 className="font-bold text-gray-800 dark:text-white border-b border-gray-200 dark:border-indigo-700 pb-2 mb-3 text-lg flex items-center gap-2">
+                         <span className="w-2 h-6 bg-yellow-500 rounded-full inline-block"></span>
+                         {domain.category}
                      </h4>
                      <ul className="space-y-2">
-                         {category.items.map((milestone) => {
+                         {domain.items.map((milestone) => {
                              const isChecked = completedMilestones.includes(milestone.id);
                              return (
-                                 <li key={milestone.id} className="flex items-start gap-3">
+                                 <li key={milestone.id} className={`flex items-start gap-3 p-2 rounded-lg transition-colors ${isChecked ? 'bg-green-50 dark:bg-green-900/10' : 'hover:bg-gray-50 dark:hover:bg-indigo-900/20'}`}>
                                      <button 
                                          onClick={() => toggleMilestone(milestone.id)}
                                          className={`mt-0.5 shrink-0 transition-colors ${isChecked ? 'text-green-500' : 'text-gray-300 hover:text-green-400'}`}
                                      >
                                          {isChecked ? <CheckSquare size={20} /> : <SquareIcon size={20} />}
                                      </button>
-                                     <div>
-                                         <p className={`text-sm font-medium ${isChecked ? 'text-gray-500 line-through' : 'text-gray-700 dark:text-gray-200'}`}>
-                                             {milestone.label}
+                                     <div className="flex-1">
+                                         <p className={`text-sm font-medium ${isChecked ? 'text-gray-500 line-through' : 'text-gray-800 dark:text-gray-200'}`}>
+                                             {milestone.milestone}
                                          </p>
-                                         <p className="text-xs text-gray-500 dark:text-gray-400">Target: {milestone.age}</p>
+                                         <p className="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5 bg-gray-100 dark:bg-indigo-900/50 inline-block px-2 py-0.5 rounded">
+                                             Target: {milestone.age}
+                                         </p>
                                      </div>
                                  </li>
                              );
@@ -311,8 +356,9 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
                  </div>
              ))}
          </div>
-         <div className="px-6 pb-6 text-xs text-gray-400 italic">
-             Note: Every baby is unique. These are general ranges. Consult your pediatrician if you notice significant delays.
+         <div className="px-6 pb-6 text-xs text-gray-500 dark:text-gray-400 italic border-t border-gray-100 dark:border-indigo-800 pt-4 mt-2">
+             <p className="font-bold flex items-center gap-1 mb-1"><Info size={14}/> Medical Disclaimer:</p>
+             Milestone ages are approximate. Every child develops at their own pace. Minor delays can be normal. If delays are significant, involve multiple areas, or there is loss of previously attained skills, consult a pediatrician early.
          </div>
       </div>
     </div>
