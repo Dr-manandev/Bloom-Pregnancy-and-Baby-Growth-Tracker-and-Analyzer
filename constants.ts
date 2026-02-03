@@ -276,13 +276,15 @@ export const MATERNAL_VACCINES: Vaccine[] = [
 ];
 
 export const BABY_VACCINES: Vaccine[] = [
-  { id: "baby_birth_bcg", name: "BCG (Tuberculosis)", description: "At Birth. Left Upper Arm.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
-  { id: "baby_birth_opv0", name: "OPV-0 (Polio)", description: "At Birth. Oral Drops.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
-  { id: "baby_birth_hepb0", name: "Hep-B 0 (Hepatitis B)", description: "At Birth (within 24 hrs). Thigh.", dueWeekStart: 0, dueWeekEnd: 1, mandatory: true, type: 'baby' },
-  { id: "baby_6w_combo", name: "6 Weeks Immunization", description: "DTwP-1, IPV-1, Hep-B-1, Hib-1, Rotavirus-1, PCV-1.", dueWeekStart: 6, dueWeekEnd: 7, mandatory: true, type: 'baby' },
-  { id: "baby_10w_combo", name: "10 Weeks Immunization", description: "DTwP-2, IPV-2, Hib-2, Rotavirus-2, PCV-2.", dueWeekStart: 10, dueWeekEnd: 11, mandatory: true, type: 'baby' },
-  { id: "baby_14w_combo", name: "14 Weeks Immunization", description: "DTwP-3, IPV-3, Hep-B-2, Hib-3, Rotavirus-3, PCV-3.", dueWeekStart: 14, dueWeekEnd: 15, mandatory: true, type: 'baby' },
-  { id: "baby_6m_flu", name: "Influenza Dose 1", description: "6 Months completed.", dueWeekStart: 26, dueWeekEnd: 28, mandatory: false, type: 'baby' }
+  { id: "uip_birth", name: "At Birth", description: "BCG, OPV-0, Hepatitis B (Birth dose)", dueWeekStart: 0, dueWeekEnd: 2, mandatory: true, type: 'baby' },
+  { id: "uip_6w", name: "6 Weeks", description: "Pentavalent-1, Rotavirus-1, fIPV-1 (Fractional IPV), OPV-1, PCV-1", dueWeekStart: 6, dueWeekEnd: 8, mandatory: true, type: 'baby' },
+  { id: "uip_10w", name: "10 Weeks", description: "Pentavalent-2, Rotavirus-2, OPV-2", dueWeekStart: 10, dueWeekEnd: 12, mandatory: true, type: 'baby' },
+  { id: "uip_14w", name: "14 Weeks", description: "Pentavalent-3, Rotavirus-3, fIPV-2 (Fractional IPV), OPV-3, PCV-2", dueWeekStart: 14, dueWeekEnd: 16, mandatory: true, type: 'baby' },
+  { id: "uip_9_12m", name: "9-12 Months", description: "Measles-Rubella (MR-1), PCV Booster, Vitamin A (1st dose), fIPV-3, JE-1 (in endemic areas only)", dueWeekStart: 39, dueWeekEnd: 52, mandatory: true, type: 'baby' },
+  { id: "uip_16_24m", name: "16-24 Months", description: "DPT Booster-1, OPV Booster, Measles-Rubella (MR-2), JE-2 (in endemic areas only), Vitamin A (2nd dose followed by every 6 months)", dueWeekStart: 69, dueWeekEnd: 104, mandatory: true, type: 'baby' },
+  { id: "uip_5_6y", name: "5-6 Years", description: "DPT Booster-2", dueWeekStart: 260, dueWeekEnd: 312, mandatory: true, type: 'baby' },
+  { id: "uip_10y", name: "10 Years", description: "Td (Tetanus & Diphtheria)", dueWeekStart: 520, dueWeekEnd: 524, mandatory: true, type: 'baby' },
+  { id: "uip_16y", name: "16 Years", description: "Td (Tetanus & Diphtheria)", dueWeekStart: 832, dueWeekEnd: 836, mandatory: true, type: 'baby' }
 ];
 
 export const SCAN_SCHEDULE: ScanSchedule[] = [
@@ -744,7 +746,7 @@ export const MEDICINE_DATABASE: Record<number, MedicineEntry[]> = {
       { category: "Antibiotics", safe: ["Amoxicillin", "Augmentin", "Cephalexin", "Erythromycin"], caution: ["Ciprofloxacin (Safe in short courses)", "Metronidazole (Pump & dump if high dose)"], avoid: ["Chloramphenicol"], note: "Most antibiotics pass in small amounts but are safe." },
       { category: "Lactation Aid", safe: ["Fenugreek", "Shatavari (Kalpa)", "Domperidone (Prescription only)", "Metoclopramide"], caution: [], avoid: ["Bromocriptine (Stops milk)"], note: "Hydration is the best galactogogue." },
       { category: "Postpartum Depression", safe: ["Sertraline (Preferred)", "Paroxetine"], caution: ["Fluoxetine (Long half-life)"], avoid: ["Doxepin"], note: "Treating PPD is safer for baby than untreated depression." },
-      { category: "Diabetes", safe: ["Insulin", "Metformin", "Glibenclamide"], caution: [], avoid: [], note: "Monitor sugars as requirements drop rapidly after birth." },
+      { category: "Diabetes", safe: ["Insulin", "Metformin", "Glibenclamide"], caution: [], avoid: ["Sulfa drugs (Cotrimoxazole) - Avoid near term (Jaundice risk)", "Tetracyclines"], note: "Treat GBS if positive." },
       { category: "Hypertension", safe: ["Enalapril (Safe in lactation)", "Captopril", "Nifedipine", "Labetalol"], caution: ["Atenolol", "Diuretics (Can reduce milk)"], avoid: ["Switch from Methyldopa (Depression risk)"], note: "Enalapril/Captopril are safe." },
       { category: "Cold & Allergy", safe: ["Loratadine", "Cetirizine", "Saline sprays"], caution: ["Diphenhydramine (Can reduce milk supply)"], avoid: ["Pseudoephedrine (Dries up milk)", "Phenylephrine"], note: "Avoid decongestants if supply is low." },
       { category: "Contraception", safe: ["Progestin-only Pill (Mini-pill / Cerazette)", "Copper IUD (Multiload)", "Condoms", "Depo-Provera", "Lactational Amenorrhea"], caution: [], avoid: ["Combined Oral Pills (Estrogen reduces milk supply)"], note: "Safe to start Mini-pill 6 weeks postpartum." },

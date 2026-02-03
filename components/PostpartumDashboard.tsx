@@ -2,11 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { UserSettings } from '../types';
 import { Button } from './Button';
-import { Baby, Clock, Heart, Shield, Activity, TrendingUp, Play, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen } from 'lucide-react';
+import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History } from 'lucide-react';
 import { BABY_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA } from '../constants';
 
 interface Props {
   settings: UserSettings;
+}
+
+interface NursingLog {
+  id: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  side: 'Left' | 'Right';
 }
 
 export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
@@ -16,6 +24,7 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
   const [timer, setTimer] = useState(0); // in seconds
   const [isActive, setIsActive] = useState(false);
   const [activeSide, setActiveSide] = useState<'Left' | 'Right' | null>(null);
+  const [nursingLogs, setNursingLogs] = useState<NursingLog[]>([]);
 
   // Milestones State
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
@@ -40,6 +49,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
     const savedMilestones = localStorage.getItem('bloom_milestones');
     if (savedMilestones) {
         setCompletedMilestones(JSON.parse(savedMilestones));
+    }
+
+    const savedLogs = localStorage.getItem('bloom_nursing_logs');
+    if (savedLogs) {
+        setNursingLogs(JSON.parse(savedLogs));
     }
   }, [settings.birthDate]);
 
@@ -71,7 +85,34 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
 
   const handleStop = () => {
     setIsActive(false);
-    // Ideally save this log to storage here
+    if (activeSide && timer > 0) {
+        const now = new Date();
+        const start = new Date(now.getTime() - timer * 1000);
+        
+        const newLog: NursingLog = {
+            id: Date.now().toString(),
+            startTime: start.toISOString(),
+            endTime: now.toISOString(),
+            duration: timer,
+            side: activeSide
+        };
+        
+        const updatedLogs = [newLog, ...nursingLogs];
+        setNursingLogs(updatedLogs);
+        localStorage.setItem('bloom_nursing_logs', JSON.stringify(updatedLogs));
+        
+        // Reset after save
+        setTimer(0);
+        setActiveSide(null);
+    }
+  };
+
+  const deleteNursingLog = (id: string) => {
+      if(confirm("Delete this log?")) {
+          const updated = nursingLogs.filter(l => l.id !== id);
+          setNursingLogs(updated);
+          localStorage.setItem('bloom_nursing_logs', JSON.stringify(updated));
+      }
   };
 
   const toggleMilestone = (id: string) => {
@@ -133,7 +174,7 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
          
          {/* Breastfeeding Timer */}
-         <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-lg border border-pink-100 dark:border-indigo-800">
+         <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-lg border border-pink-100 dark:border-indigo-800 flex flex-col h-full">
             <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
                 <Clock className="text-pink-500" /> Nursing Timer
             </h3>
@@ -163,12 +204,43 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
                 <div className="flex gap-4 mt-4 w-full">
                     {isActive ? (
                         <Button variant="danger" onClick={handleStop} className="w-full">
-                            <Square size={20} fill="currentColor" /> Stop
+                            <Square size={20} fill="currentColor" /> Stop & Log
                         </Button>
                     ) : (
                        <Button variant="secondary" onClick={() => {setTimer(0); setActiveSide(null);}} disabled={timer === 0} className="w-full">
                             <RotateCcw size={20} /> Reset
                        </Button>
+                    )}
+                </div>
+            </div>
+
+            {/* Logs Section */}
+            <div className="mt-6 pt-6 border-t border-gray-100 dark:border-indigo-800 flex-1">
+                <h4 className="font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2 text-sm uppercase">
+                    <History size={16} /> Recent Logs
+                </h4>
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    {nursingLogs.length === 0 ? (
+                        <p className="text-xs text-gray-400 text-center py-4">No sessions logged yet.</p>
+                    ) : (
+                        nursingLogs.map(log => (
+                            <div key={log.id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-indigo-900/10 rounded-xl border border-gray-100 dark:border-indigo-900/30">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-xs font-bold px-2 py-0.5 rounded ${log.side === 'Left' ? 'bg-pink-100 text-pink-700' : 'bg-blue-100 text-blue-700'}`}>
+                                            {log.side}
+                                        </span>
+                                        <span className="text-sm font-bold text-gray-800 dark:text-white">{formatTime(log.duration)}</span>
+                                    </div>
+                                    <p className="text-[10px] text-gray-500 mt-1">
+                                        {new Date(log.startTime).toLocaleString([], {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})}
+                                    </p>
+                                </div>
+                                <button onClick={() => deleteNursingLog(log.id)} className="text-gray-400 hover:text-red-500">
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        ))
                     )}
                 </div>
             </div>
