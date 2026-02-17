@@ -1,9 +1,8 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { UserSettings } from '../types';
 import { Button } from './Button';
-import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History, AlertTriangle, ShieldAlert, Info } from 'lucide-react';
+import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History, AlertTriangle, ShieldAlert, Info, Filter, X } from 'lucide-react';
 import { DETAILED_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA, DEVELOPMENTAL_RED_FLAGS } from '../constants';
 
 interface Props {
@@ -29,6 +28,9 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
 
   // Milestones State
   const [completedMilestones, setCompletedMilestones] = useState<string[]>([]);
+  
+  // Milestone Filter State
+  const [viewAge, setViewAge] = useState<{year: number | 'all', month: number}>({ year: 'all', month: 0 });
 
   // Daily Tip & Fact Logic
   const dayOfYear = Math.floor((new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
@@ -142,6 +144,37 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
       }
       return false;
   });
+
+  // --- MILESTONE FILTER LOGIC ---
+  const parseAgeToMonths = (ageStr: string) => {
+      if (ageStr.toLowerCase().includes('neonatal')) return 0;
+      // Handle ranges like "5–6 months" (en-dash) or "2-4 months"
+      const normalized = ageStr.replace('–', '-');
+      const matches = normalized.match(/(\d+(\.\d+)?)/g);
+      
+      if (!matches) return 999; // Should not happen with valid data
+      
+      // Use the upper bound for "attained by" logic
+      // e.g. "2-4 months" -> 4 months. If baby is 4 months, they should attain it.
+      let value = parseFloat(matches[matches.length - 1]);
+      
+      if (ageStr.toLowerCase().includes('year')) {
+          value = Math.round(value * 12);
+      }
+      
+      return value;
+  };
+
+  const visibleMilestones = React.useMemo(() => {
+      if (viewAge.year === 'all') return DETAILED_MILESTONES;
+      
+      const targetMonths = (viewAge.year * 12) + viewAge.month;
+      
+      return DETAILED_MILESTONES.map(domain => ({
+          ...domain,
+          items: domain.items.filter(item => parseAgeToMonths(item.age) <= targetMonths)
+      })).filter(domain => domain.items.length > 0);
+  }, [viewAge]);
 
   return (
     <div className="space-y-8 animate-fade-in pb-10">
@@ -323,8 +356,50 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
              <p className="text-sm opacity-90 mt-1">Checklist based on Indian Academy of Pediatrics (IAP) Guidelines</p>
          </div>
          
+         {/* Age Filter UI */}
+         <div className="p-4 bg-gray-50 dark:bg-indigo-950/30 border-b border-gray-100 dark:border-indigo-800 flex flex-col md:flex-row items-start md:items-center gap-4">
+             <div className="flex items-center gap-2 text-sm font-bold text-gray-600 dark:text-gray-300">
+                 <Filter size={16} /> Filter by Age:
+             </div>
+             
+             <div className="flex flex-wrap gap-2">
+                 <select 
+                    value={viewAge.year} 
+                    onChange={(e) => setViewAge({ ...viewAge, year: e.target.value === 'all' ? 'all' : parseInt(e.target.value) })}
+                    className="px-3 py-2 rounded-lg border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-card text-gray-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-yellow-500"
+                 >
+                     <option value="all">All Years</option>
+                     {[0,1,2,3,4,5].map(y => <option key={y} value={y}>{y} Year{y !== 1 ? 's' : ''}</option>)}
+                 </select>
+
+                 <select 
+                    value={viewAge.month} 
+                    onChange={(e) => setViewAge({ ...viewAge, month: parseInt(e.target.value) })}
+                    disabled={viewAge.year === 'all'}
+                    className={`px-3 py-2 rounded-lg border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-card text-gray-800 dark:text-white text-sm outline-none focus:ring-2 focus:ring-yellow-500 ${viewAge.year === 'all' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                 >
+                     {[0,1,2,3,4,5,6,7,8,9,10,11].map(m => <option key={m} value={m}>{m} Month{m !== 1 ? 's' : ''}</option>)}
+                 </select>
+
+                 {viewAge.year !== 'all' && (
+                     <button 
+                        onClick={() => setViewAge({ year: 'all', month: 0 })}
+                        className="px-3 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 text-sm font-bold flex items-center gap-1"
+                     >
+                         <X size={14} /> Clear
+                     </button>
+                 )}
+             </div>
+             
+             {viewAge.year !== 'all' && (
+                 <div className="text-xs text-gray-500 dark:text-gray-400 font-medium ml-auto">
+                     Showing milestones typically attained by <strong>{viewAge.year * 12 + viewAge.month} months</strong>.
+                 </div>
+             )}
+         </div>
+
          <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-             {DETAILED_MILESTONES.map((domain, index) => (
+             {visibleMilestones.length > 0 ? visibleMilestones.map((domain, index) => (
                  <div key={index} className="space-y-3">
                      <h4 className="font-bold text-gray-800 dark:text-white border-b border-gray-200 dark:border-indigo-700 pb-2 mb-3 text-lg flex items-center gap-2">
                          <span className="w-2 h-6 bg-yellow-500 rounded-full inline-block"></span>
@@ -354,7 +429,12 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
                          })}
                      </ul>
                  </div>
-             ))}
+             )) : (
+                 <div className="col-span-full text-center py-10 text-gray-400">
+                     <p>No milestones found for this specific age criteria.</p>
+                     <button onClick={() => setViewAge({ year: 'all', month: 0 })} className="text-yellow-600 underline mt-2 text-sm">View All Milestones</button>
+                 </div>
+             )}
          </div>
          <div className="px-6 pb-6 text-xs text-gray-500 dark:text-gray-400 italic border-t border-gray-100 dark:border-indigo-800 pt-4 mt-2">
              <p className="font-bold flex items-center gap-1 mb-1"><Info size={14}/> Medical Disclaimer:</p>
