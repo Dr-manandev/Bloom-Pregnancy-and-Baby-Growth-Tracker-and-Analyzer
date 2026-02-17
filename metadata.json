@@ -1,5 +1,5 @@
 {
-  "name": "Test Copy of Bloom: Pregnancy Tracker & Analyzer",
+  "name": "Bloom: Pregnancy Tracker & Analyzer final",
   "description": "A medically aligned pregnancy tracker providing week-by-week updates, standard scan schedules, medication tracking, and AI-powered report analysis. Features a modern, colorful UI with light/dark modes.",
   "requestFramePermissions": [
     "camera",

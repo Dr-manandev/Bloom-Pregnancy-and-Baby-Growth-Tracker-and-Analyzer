@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { PregnancyCalculations, WeeklyInfo, UserSettings, Medicine } from '../types';
-import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, TIP_LIBRARY } from '../constants';
+import { WEEKLY_DATA, FALLBACK_WEEKLY_INFO, SCAN_SCHEDULE, LAB_SCHEDULE, MATERNAL_VACCINES, MATERNAL_AGE_RISKS, OBSTETRIC_HISTORY_RISKS, COMORBIDITY_GUIDELINES } from '../constants';
 import { getPregnancyAdvice } from '../services/geminiService';
 import { Button } from './Button';
 import { Info, Baby, AlertCircle, Bell, RotateCcw, Syringe, Sparkles, FlaskConical, ShieldAlert, Key, CheckCircle2, Lightbulb, Pill, Ruler, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -180,7 +181,13 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
       // 4. Comorbidities
       if (selectedComorbidities.length > 0) {
           level = 'High';
-          // Actions handled by existing comorbidity logic in UI
+          selectedComorbidities.forEach(id => {
+              const guide = COMORBIDITY_GUIDELINES[id];
+              if (guide) {
+                  risks.push(guide.name);
+                  actions.push(...guide.monitoring);
+              }
+          });
       }
 
       // 5. Obstetric History

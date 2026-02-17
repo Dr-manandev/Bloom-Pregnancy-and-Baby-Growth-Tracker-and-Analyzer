@@ -498,33 +498,32 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
                     </div>
                 </div>
 
-                {formData.obstetricHistory.gravida > formData.obstetricHistory.para + (formData.status === 'pregnant' ? 1 : 0) && (
-                    <div className="space-y-3">
-                        <p className="text-sm font-bold text-red-600 dark:text-red-400">Abortion / Miscarriage History (Required for Risk Calc)</p>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">1st Trimester (&lt;12 wks)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-bg text-gray-900 dark:text-white"
-                                    value={formData.obstetricHistory.abortionsT1}
-                                    onChange={(e) => updateObstetric('abortionsT1', parseInt(e.target.value))}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">2nd Trimester (12-24 wks)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-bg text-gray-900 dark:text-white"
-                                    value={formData.obstetricHistory.abortionsT2}
-                                    onChange={(e) => updateObstetric('abortionsT2', parseInt(e.target.value))}
-                                />
-                            </div>
+                {/* Abortion History Section - Always Visible */}
+                <div className="space-y-3">
+                    <p className="text-sm font-bold text-red-600 dark:text-red-400">Abortion / Miscarriage History (Required for Risk Calc)</p>
+                    <div className="grid grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">1st Trimester (&lt;12 wks)</label>
+                            <input
+                                type="number"
+                                min="0"
+                                className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-bg text-gray-900 dark:text-white"
+                                value={formData.obstetricHistory.abortionsT1}
+                                onChange={(e) => updateObstetric('abortionsT1', parseInt(e.target.value))}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1">2nd Trimester (12-24 wks)</label>
+                            <input
+                                type="number"
+                                min="0"
+                                className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-indigo-700 bg-white dark:bg-deep-bg text-gray-900 dark:text-white"
+                                value={formData.obstetricHistory.abortionsT2}
+                                onChange={(e) => updateObstetric('abortionsT2', parseInt(e.target.value))}
+                            />
                         </div>
                     </div>
-                )}
+                </div>
 
                 <div className="border-t border-teal-100 dark:border-teal-900/50 pt-3">
                     <label className="flex items-start gap-3 cursor-pointer">
