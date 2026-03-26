@@ -286,7 +286,7 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
         theme: 'grid',
         headStyles: { fillColor: [219, 39, 119], textColor: 255, fontStyle: 'bold' },
         styles: { fontSize: 10, cellPadding: 3 },
-        columnStyles: { 0: { fontStyle: 'bold', width: 40 }, 2: { fontStyle: 'bold', width: 40 } }
+        columnStyles: { 0: { fontStyle: 'bold', cellWidth: 40 }, 2: { fontStyle: 'bold', cellWidth: 40 } }
     });
 
     // @ts-ignore
