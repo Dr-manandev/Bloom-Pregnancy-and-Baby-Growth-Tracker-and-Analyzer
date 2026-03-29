@@ -267,6 +267,14 @@ export const DID_YOU_KNOW_DATA = {
     ]
 };
 
+export const PRE_PREGNANCY_VACCINES: Vaccine[] = [
+  { id: "pre_mmr", name: "MMR (Measles, Mumps, Rubella)", description: "Live vaccine. Must wait at least 1 month before trying to conceive.", dueWeekStart: -12, dueWeekEnd: -4, mandatory: true, type: 'maternal' },
+  { id: "pre_varicella", name: "Varicella (Chickenpox)", description: "Live vaccine. Must wait at least 1 month before trying to conceive.", dueWeekStart: -12, dueWeekEnd: -4, mandatory: true, type: 'maternal' },
+  { id: "pre_hepb", name: "Hepatitis B", description: "Recommended if at risk. Safe during pregnancy, but good to start before.", dueWeekStart: -24, dueWeekEnd: 0, mandatory: false, type: 'maternal' },
+  { id: "pre_hpv", name: "HPV (Human Papillomavirus)", description: "Not recommended during pregnancy. Complete series before conceiving.", dueWeekStart: -24, dueWeekEnd: 0, mandatory: false, type: 'maternal' },
+  { id: "pre_flu", name: "Influenza (Flu Shot)", description: "Recommended annually. Safe before and during pregnancy.", dueWeekStart: -12, dueWeekEnd: 0, mandatory: false, type: 'maternal' }
+];
+
 export const MATERNAL_VACCINES: Vaccine[] = [
   { id: "mat_tt1", name: "TT-1 / Td-1 (Tetanus)", description: "First dose. Administer as soon as pregnancy is confirmed.", dueWeekStart: 4, dueWeekEnd: 12, mandatory: true, type: 'maternal' },
   { id: "mat_tt2", name: "TT-2 / Td-2", description: "4 weeks after TT-1. Protection against Tetanus.", dueWeekStart: 12, dueWeekEnd: 16, mandatory: true, type: 'maternal' },

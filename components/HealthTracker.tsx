@@ -6,6 +6,8 @@ import { Button } from './Button';
 import { Scale, Activity, HeartPulse, Droplet, Plus, Trash2, TrendingUp, AlertCircle, Baby, Ruler, Zap, Info, FileDown, X, Eye, ExternalLink, FileText, FlaskConical } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { syncData } from '../services/syncService';
+import { auth } from '../services/firebase';
 
 interface Props {
   settings: UserSettings;
@@ -42,6 +44,12 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
 
   // PDF Preview State
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string | null>(null);
+
+  const saveData = (key: string, data: any) => {
+    const userId = auth?.currentUser?.uid || null;
+    const profileId = settings.id;
+    syncData(userId, profileId, key, data);
+  };
 
   // Dynamic Storage Keys based on Mode
   const STORAGE_KEYS = {
@@ -117,14 +125,14 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
     };
     const updated = [...weightLogs, log].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     setWeightLogs(updated);
-    localStorage.setItem(STORAGE_KEYS.weight, JSON.stringify(updated));
+    saveData(STORAGE_KEYS.weight, updated);
     setNewWeight('');
   };
 
   const deleteWeightLog = (id: string) => {
       const updated = weightLogs.filter(w => w.id !== id);
       setWeightLogs(updated);
-      localStorage.setItem(STORAGE_KEYS.weight, JSON.stringify(updated));
+      saveData(STORAGE_KEYS.weight, updated);
   };
 
   const addGrowthLog = () => {
@@ -140,14 +148,14 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
       };
       const updated = [...growthLogs, log].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       setGrowthLogs(updated);
-      localStorage.setItem(STORAGE_KEYS.babyGrowth, JSON.stringify(updated));
+      saveData(STORAGE_KEYS.babyGrowth, updated);
       setNewGrowth({ weight: '', height: '', head: '', waist: '' });
   };
 
   const deleteGrowthLog = (id: string) => {
       const updated = growthLogs.filter(g => g.id !== id);
       setGrowthLogs(updated);
-      localStorage.setItem(STORAGE_KEYS.babyGrowth, JSON.stringify(updated));
+      saveData(STORAGE_KEYS.babyGrowth, updated);
   };
 
   const addBP = () => {
@@ -160,7 +168,7 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
     };
     const updated = [log, ...bpLogs];
     setBpLogs(updated);
-    localStorage.setItem(STORAGE_KEYS.bp, JSON.stringify(updated));
+    saveData(STORAGE_KEYS.bp, updated);
     setNewBP({ sys: '', dia: '' });
   };
 
@@ -174,7 +182,7 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
     };
     const updated = [log, ...glucoseLogs];
     setGlucoseLogs(updated);
-    localStorage.setItem(STORAGE_KEYS.glucose, JSON.stringify(updated));
+    saveData(STORAGE_KEYS.glucose, updated);
     setNewGlucose({ ...newGlucose, value: '' });
   };
 
@@ -190,9 +198,9 @@ export const HealthTracker: React.FC<Props> = ({ settings, calculations }) => {
       };
 
       let updated;
-      if (type === 'tsh') { updated = [log, ...tshLogs]; setTshLogs(updated); localStorage.setItem(STORAGE_KEYS.tsh, JSON.stringify(updated)); }
-      if (type === 'hb') { updated = [log, ...hbLogs]; setHbLogs(updated); localStorage.setItem(STORAGE_KEYS.hb, JSON.stringify(updated)); }
-      if (type === 'hba1c') { updated = [log, ...hba1cLogs]; setHba1cLogs(updated); localStorage.setItem(STORAGE_KEYS.hba1c, JSON.stringify(updated)); }
+      if (type === 'tsh') { updated = [log, ...tshLogs]; setTshLogs(updated); saveData(STORAGE_KEYS.tsh, updated); }
+      if (type === 'hb') { updated = [log, ...hbLogs]; setHbLogs(updated); saveData(STORAGE_KEYS.hb, updated); }
+      if (type === 'hba1c') { updated = [log, ...hba1cLogs]; setHba1cLogs(updated); saveData(STORAGE_KEYS.hba1c, updated); }
       
       setNewLab({ ...newLab, [type]: '' });
   };

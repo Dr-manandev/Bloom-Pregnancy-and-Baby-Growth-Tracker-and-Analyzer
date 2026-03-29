@@ -4,6 +4,8 @@ import { UserSettings } from '../types';
 import { Button } from './Button';
 import { Baby, Clock, Activity, TrendingUp, Square, RotateCcw, CheckSquare, Square as SquareIcon, Star, Lightbulb, BookOpen, Trash2, History, AlertTriangle, ShieldAlert, Info, Filter, X } from 'lucide-react';
 import { DETAILED_MILESTONES, TIP_LIBRARY, DID_YOU_KNOW_DATA, DEVELOPMENTAL_RED_FLAGS } from '../constants';
+import { syncData } from '../services/syncService';
+import { auth } from '../services/firebase';
 
 interface Props {
   settings: UserSettings;
@@ -108,7 +110,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
         
         const updatedLogs = [newLog, ...nursingLogs];
         setNursingLogs(updatedLogs);
-        localStorage.setItem('bloom_nursing_logs', JSON.stringify(updatedLogs));
+        
+        const userId = auth?.currentUser?.uid || null;
+        const settingsRaw = localStorage.getItem('bloom_settings');
+        const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+        syncData(userId, profileId, 'bloom_nursing_logs', updatedLogs);
         
         // Reset after save
         setTimer(0);
@@ -120,7 +126,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
       if(confirm("Delete this log?")) {
           const updated = nursingLogs.filter(l => l.id !== id);
           setNursingLogs(updated);
-          localStorage.setItem('bloom_nursing_logs', JSON.stringify(updated));
+          
+          const userId = auth?.currentUser?.uid || null;
+          const settingsRaw = localStorage.getItem('bloom_settings');
+          const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+          syncData(userId, profileId, 'bloom_nursing_logs', updated);
       }
   };
 
@@ -132,7 +142,11 @@ export const PostpartumDashboard: React.FC<Props> = ({ settings }) => {
           updated = [...completedMilestones, id];
       }
       setCompletedMilestones(updated);
-      localStorage.setItem('bloom_milestones', JSON.stringify(updated));
+      
+      const userId = auth?.currentUser?.uid || null;
+      const settingsRaw = localStorage.getItem('bloom_settings');
+      const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+      syncData(userId, profileId, 'bloom_milestones', updated);
   };
 
   // --- RED FLAG CHECKER ---

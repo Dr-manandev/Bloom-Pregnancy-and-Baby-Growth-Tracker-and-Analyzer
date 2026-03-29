@@ -1,17 +1,17 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
-const env = (import.meta as any).env;
 const firebaseConfig = {
-  apiKey: env.VITE_FIREBASE_API_KEY,
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyDT3ngGWaXPbLJv9U2GXkW6w-3O6AaZGN4",
+  authDomain: "pregnancy-tracker-and-an-31f16.firebaseapp.com",
+  projectId: "pregnancy-tracker-and-an-31f16",
+  storageBucket: "pregnancy-tracker-and-an-31f16.firebasestorage.app",
+  messagingSenderId: "348915149405",
+  appId: "1:348915149405:web:8fe6d23d549e9675b5fbb4",
+  measurementId: "G-VHMCRB0GZL"
 };
 
 // Initialize Firebase only if API key exists to prevent crash
@@ -20,5 +20,10 @@ const app = firebaseConfig.apiKey && !getApps().length ? initializeApp(firebaseC
 // Initialize Firebase services
 export const auth = app ? getAuth(app) : null as any;
 export const googleProvider = new GoogleAuthProvider();
-export const db = app ? getFirestore(app) : null as any;
+
+// Initialize Firestore with modern offline persistence (fixes deprecation warning)
+export const db = app ? initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+}) : null as any;
+
 export const storage = app ? getStorage(app) : null as any;

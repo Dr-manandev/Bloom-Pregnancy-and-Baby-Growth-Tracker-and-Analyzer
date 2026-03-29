@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Vaccine, UserSettings } from '../types';
-import { MATERNAL_VACCINES, BABY_VACCINES } from '../constants';
+import { MATERNAL_VACCINES, BABY_VACCINES, PRE_PREGNANCY_VACCINES } from '../constants';
 import { CheckCircle2, Circle, Syringe, Info, AlertTriangle } from 'lucide-react';
 
 interface Props {
@@ -10,13 +10,15 @@ interface Props {
 }
 
 export const VaccinationTracker: React.FC<Props> = ({ settings, currentWeek, onUpdate }) => {
-  const isPostpartum = settings.isPostpartum;
+  const isPostpartum = settings.status === 'postpartum';
+  const isPlanning = settings.status === 'planning';
   
   // Select which vaccine list to show
-  const vaccines = isPostpartum ? BABY_VACCINES : MATERNAL_VACCINES;
+  const vaccines = isPostpartum ? BABY_VACCINES : isPlanning ? PRE_PREGNANCY_VACCINES : MATERNAL_VACCINES;
   
   // For baby, currentWeek is actually Age in Weeks.
   // For mom, currentWeek is Pregnancy Week.
+  // For planning, currentWeek is not strictly applicable, we can just show them all as due or upcoming.
   
   const completed = settings.vaccinationsDone || [];
 
@@ -26,11 +28,13 @@ export const VaccinationTracker: React.FC<Props> = ({ settings, currentWeek, onU
       <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-3xl p-8 text-white shadow-lg">
         <h2 className="text-2xl font-bold mb-2 flex items-center gap-3">
             <Syringe size={28} /> 
-            {isPostpartum ? "Baby's Immunization Tracker" : "Maternal Vaccination Schedule"}
+            {isPostpartum ? "Baby's Immunization Tracker" : isPlanning ? "Pre-Pregnancy Vaccines" : "Maternal Vaccination Schedule"}
         </h2>
         <p className="opacity-90">
             {isPostpartum 
               ? "Follows the Indian Academy of Pediatrics (IAP) & WHO schedule." 
+              : isPlanning 
+              ? "Recommended vaccines before conceiving to ensure a healthy pregnancy."
               : "Standard Obs & Gynae guidelines for a safe pregnancy."}
         </p>
       </div>
@@ -38,9 +42,10 @@ export const VaccinationTracker: React.FC<Props> = ({ settings, currentWeek, onU
       <div className="space-y-4">
          {vaccines.map((vax) => {
             const isCompleted = completed.includes(vax.id);
-            const isDue = !isCompleted && currentWeek >= vax.dueWeekStart && currentWeek <= vax.dueWeekEnd;
-            const isOverdue = !isCompleted && currentWeek > vax.dueWeekEnd;
-            const isUpcoming = !isCompleted && currentWeek < vax.dueWeekStart;
+            // In planning mode, all pre-pregnancy vaccines are considered "Due" if not completed
+            const isDue = isPlanning ? !isCompleted : (!isCompleted && currentWeek >= vax.dueWeekStart && currentWeek <= vax.dueWeekEnd);
+            const isOverdue = isPlanning ? false : (!isCompleted && currentWeek > vax.dueWeekEnd);
+            const isUpcoming = isPlanning ? false : (!isCompleted && currentWeek < vax.dueWeekStart);
 
             return (
                <div 
@@ -79,7 +84,7 @@ export const VaccinationTracker: React.FC<Props> = ({ settings, currentWeek, onU
                         
                         <div className="flex items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
                            <Info size={14} />
-                           <span>Recommended: {isPostpartum ? `Age ${vax.dueWeekStart} - ${vax.dueWeekEnd} weeks` : `Week ${vax.dueWeekStart} - ${vax.dueWeekEnd} of pregnancy`}</span>
+                           <span>Recommended: {isPostpartum ? `Age ${vax.dueWeekStart} - ${vax.dueWeekEnd} weeks` : isPlanning ? `${Math.abs(vax.dueWeekEnd)} to ${Math.abs(vax.dueWeekStart)} weeks before pregnancy` : `Week ${vax.dueWeekStart} - ${vax.dueWeekEnd} of pregnancy`}</span>
                         </div>
                      </div>
                   </div>

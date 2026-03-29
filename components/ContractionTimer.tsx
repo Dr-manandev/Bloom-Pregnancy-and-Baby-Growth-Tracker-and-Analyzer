@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
 import { Contraction } from '../types';
 import { Play, Square, RotateCcw, AlertCircle, Clock, Activity } from 'lucide-react';
+import { syncData } from '../services/syncService';
+import { auth } from '../services/firebase';
 
 export const ContractionTimer: React.FC = () => {
   const [contractions, setContractions] = useState<Contraction[]>([]);
@@ -42,7 +44,12 @@ export const ContractionTimer: React.FC = () => {
         return c;
       });
       setContractions(updated);
-      localStorage.setItem('bloom_contractions', JSON.stringify(updated));
+      
+      const userId = auth?.currentUser?.uid || null;
+      const settingsRaw = localStorage.getItem('bloom_settings');
+      const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+      syncData(userId, profileId, 'bloom_contractions', updated);
+      
       setActiveId(null);
       setTimer(0);
     } else {
@@ -76,7 +83,12 @@ export const ContractionTimer: React.FC = () => {
   const resetAll = () => {
     if (confirm("Delete all contraction history?")) {
       setContractions([]);
-      localStorage.removeItem('bloom_contractions');
+      
+      const userId = auth?.currentUser?.uid || null;
+      const settingsRaw = localStorage.getItem('bloom_settings');
+      const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+      syncData(userId, profileId, 'bloom_contractions', []);
+      
       setActiveId(null);
       setTimer(0);
     }

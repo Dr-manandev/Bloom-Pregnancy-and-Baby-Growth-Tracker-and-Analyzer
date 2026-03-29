@@ -1,5 +1,56 @@
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import { doc, setDoc, getDoc, collection, getDocs, writeBatch } from 'firebase/firestore';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth?.currentUser?.uid,
+      email: auth?.currentUser?.email,
+      emailVerified: auth?.currentUser?.emailVerified,
+      isAnonymous: auth?.currentUser?.isAnonymous,
+      tenantId: auth?.currentUser?.tenantId,
+      providerInfo: auth?.currentUser?.providerData.map((provider: any) => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 // The keys that are specific to a profile (matching App.tsx)
 export const PROFILE_SPECIFIC_KEYS = [
@@ -16,12 +67,41 @@ export const PROFILE_SPECIFIC_KEYS = [
   'bloom_tsh_logs', 'bloom_pp_tsh_logs',
   'bloom_hb_logs', 'bloom_pp_hb_logs',
   'bloom_hba1c_logs', 'bloom_pp_hba1c_logs',
-  'bloom_medicines', 'bloom_pp_medicines'
+  'bloom_medicines', 'bloom_pp_medicines',
+  'bloom_medicines_date', 'bloom_pp_medicines_date'
 ];
 
 /**
  * Saves data to both LocalStorage (for instant UI updates) and Firestore (for cloud sync).
  */
+export const syncAllDataToCloud = async (userId: string) => {
+  try {
+    const batch = writeBatch(db);
+    
+    const allProfilesRaw = localStorage.getItem('bloom_all_profiles');
+    if (allProfilesRaw) {
+      const profiles = JSON.parse(allProfilesRaw);
+      batch.set(doc(db, `users/${userId}/global_settings/meta`), { profiles }, { merge: true });
+
+      const activeSettingsRaw = localStorage.getItem('bloom_settings');
+      if (activeSettingsRaw) {
+        const activeSettings = JSON.parse(activeSettingsRaw);
+        batch.set(doc(db, `users/${userId}/profiles/${activeSettings.id}`), { settings: activeSettings }, { merge: true });
+        
+        PROFILE_SPECIFIC_KEYS.forEach(key => {
+          const logDataRaw = localStorage.getItem(key);
+          if (logDataRaw) {
+            batch.set(doc(db, `users/${userId}/profiles/${activeSettings.id}/logs/${key}`), { data: JSON.parse(logDataRaw) }, { merge: true });
+          }
+        });
+      }
+    }
+    await batch.commit();
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, `users/${userId}/...`);
+  }
+};
+
 export const syncData = async (userId: string | null, profileId: string | null, key: string, data: any) => {
   // 1. Instant Local Update
   localStorage.setItem(key, JSON.stringify(data));
@@ -41,7 +121,7 @@ export const syncData = async (userId: string | null, profileId: string | null, 
       await setDoc(doc(db, `users/${userId}/profiles/${profileId}/logs/${key}`), { data }, { merge: true });
     }
   } catch (error) {
-    console.error(`Error syncing ${key} to cloud:`, error);
+    handleFirestoreError(error, OperationType.WRITE, `users/${userId}/...`);
   }
 };
 
@@ -74,7 +154,7 @@ export const loadCloudData = async (userId: string) => {
       }
     }
   } catch (error) {
-    console.error("Error loading cloud data:", error);
+    handleFirestoreError(error, OperationType.GET, `users/${userId}/...`);
   }
 };
 
@@ -143,6 +223,6 @@ export const migrateLegacyData = async (userId: string) => {
       await setDoc(doc(db, `users/${userId}/global_settings/meta`), { migrated: true }, { merge: true });
     }
   } catch (error) {
-    console.error("Error migrating legacy data:", error);
+    handleFirestoreError(error, OperationType.WRITE, `users/${userId}/...`);
   }
 };

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
 import { KickSession } from '../types';
 import { Play, Square, RotateCcw, History, Footprints } from 'lucide-react';
+import { syncData } from '../services/syncService';
+import { auth } from '../services/firebase';
 
 export const KickCounter: React.FC = () => {
   const [sessions, setSessions] = useState<KickSession[]>([]);
@@ -72,7 +74,13 @@ export const KickCounter: React.FC = () => {
     
     const newHistory = [finalSession, ...sessions];
     setSessions(newHistory);
-    localStorage.setItem('bloom_kicks', JSON.stringify(newHistory));
+    
+    // Use syncData instead of localStorage.setItem
+    const userId = auth?.currentUser?.uid || null;
+    const settingsRaw = localStorage.getItem('bloom_settings');
+    const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+    syncData(userId, profileId, 'bloom_kicks', newHistory);
+    
     setCurrentSession(null);
     setElapsedTime(0);
   };
@@ -85,7 +93,12 @@ export const KickCounter: React.FC = () => {
   const clearHistory = () => {
     if(confirm("Clear all kick history?")) {
         setSessions([]);
-        localStorage.removeItem('bloom_kicks');
+        
+        // Use syncData instead of localStorage.removeItem
+        const userId = auth?.currentUser?.uid || null;
+        const settingsRaw = localStorage.getItem('bloom_settings');
+        const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+        syncData(userId, profileId, 'bloom_kicks', []);
     }
   };
 

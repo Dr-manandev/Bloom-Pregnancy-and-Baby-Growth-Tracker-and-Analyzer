@@ -31,7 +31,7 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
 
   const handleGoogleLogin = async () => {
     if (!auth) {
-      setError("Firebase configuration is missing. Please add your Firebase keys to the environment variables in AI Studio.");
+      setError("Firebase configuration is missing.");
       return;
     }
     
@@ -42,7 +42,13 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
       onLogin();
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err.message || "Failed to sign in with Google.");
+      if (err.code === 'auth/invalid-api-key') {
+        setError("Invalid Firebase API Key. Please check your Firebase Project Settings and ensure the API key is correct.");
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError("This domain is not authorized for OAuth operations. Please add it to the authorized domains in Firebase Console.");
+      } else {
+        setError(err.message || "Failed to sign in with Google.");
+      }
       setIsLoading(false);
     }
   };

@@ -16,6 +16,9 @@ import { HealthTracker } from './components/HealthTracker';
 import { MalePartnerHealth } from './components/MalePartnerHealth';
 import { Login } from './components/Login';
 import { LayoutDashboard, Calendar, FileText, Pill, Moon, Sun, Settings, User, Utensils, Syringe, Baby, Wrench, HeartPulse, LogOut, Users, PlusCircle } from 'lucide-react';
+import { auth } from './services/firebase';
+import { onAuthStateChanged, signOut, User as FirebaseUser } from 'firebase/auth';
+import { syncData, loadCloudData, migrateLegacyData, syncAllDataToCloud } from './services/syncService';
 
 // Keys that store profile-specific data which need to be swapped on profile switch
 const PROFILE_SPECIFIC_KEYS = [
@@ -32,7 +35,8 @@ const PROFILE_SPECIFIC_KEYS = [
   'bloom_tsh_logs', 'bloom_pp_tsh_logs',
   'bloom_hb_logs', 'bloom_pp_hb_logs',
   'bloom_hba1c_logs', 'bloom_pp_hba1c_logs',
-  'bloom_medicines', 'bloom_pp_medicines' // Added Medicine Keys
+  'bloom_medicines', 'bloom_pp_medicines', // Added Medicine Keys
+  'bloom_medicines_date', 'bloom_pp_medicines_date'
 ];
 
 export default function App() {
@@ -45,13 +49,11 @@ export default function App() {
   const [profiles, setProfiles] = useState<ProfileMeta[]>([]);
   const [showProfileSwitcher, setShowProfileSwitcher] = useState(false);
 
-  // Load auth & settings & profile meta
-  useEffect(() => {
-    const auth = localStorage.getItem('bloom_auth');
-    if (auth === 'true') {
-      setIsAuthenticated(true);
-    }
+  // Firebase Auth State
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
+  const loadDataFromLocal = () => {
     const savedSettings = localStorage.getItem('bloom_settings');
     const savedProfiles = localStorage.getItem('bloom_all_profiles');
 
@@ -109,7 +111,43 @@ export default function App() {
           localStorage.setItem('bloom_all_profiles', JSON.stringify([initialProfile]));
       }
     }
+  };
+
+  // Load auth & settings & profile meta
+  useEffect(() => {
+    if (!auth) {
+      setIsAuthReady(true);
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setIsAuthenticated(true);
+        // Migrate any existing local data to cloud
+        await migrateLegacyData(currentUser.uid);
+        
+        // Load latest data from cloud
+        await loadCloudData(currentUser.uid);
+        
+        // Read the freshly synced data from local storage
+        loadDataFromLocal();
+      } else {
+        setIsAuthenticated(false);
+        setSettings(null);
+        setProfiles([]);
+      }
+      setIsAuthReady(true);
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  const triggerSync = () => {
+    if (user) {
+      syncAllDataToCloud(user.uid).catch(console.error);
+    }
+  };
 
   // Request Notification Permission on Mount
   useEffect(() => {
@@ -165,7 +203,7 @@ export default function App() {
 
   // --- Profile Switching Logic ---
 
-  const handleSwitchProfile = (targetProfileId: string) => {
+  const handleSwitchProfile = async (targetProfileId: string) => {
       if (!settings || settings.id === targetProfileId) return;
 
       // 1. Snapshot Current Profile Data
@@ -206,12 +244,13 @@ export default function App() {
           setProfiles(updatedProfiles);
           localStorage.setItem('bloom_all_profiles', JSON.stringify(updatedProfiles));
           
-          // Refresh to ensure all sub-components read new localStorage values
-          window.location.reload(); 
+          if (user) {
+            await syncAllDataToCloud(user.uid);
+          }
       }
   };
 
-  const handleAddProfile = () => {
+  const handleAddProfile = async () => {
       if (!settings) return;
 
       // 1. Snapshot Current Data (Same as switch)
@@ -269,8 +308,29 @@ export default function App() {
       setProfiles(updatedProfiles);
       localStorage.setItem('bloom_all_profiles', JSON.stringify(updatedProfiles));
       
-      // Force reload to apply clean state
-      window.location.reload();
+      if (user) {
+        await syncAllDataToCloud(user.uid);
+      }
+  };
+
+  const handleDeleteProfile = async (targetProfileId: string) => {
+      // Prevent deleting the active profile directly
+      if (settings?.id === targetProfileId) return;
+
+      // 1. Remove from profiles list
+      const updatedProfiles = profiles.filter(p => p.id !== targetProfileId);
+      setProfiles(updatedProfiles);
+      localStorage.setItem('bloom_all_profiles', JSON.stringify(updatedProfiles));
+
+      // 2. Clear all namespaced keys for this profile
+      PROFILE_SPECIFIC_KEYS.forEach(key => {
+          localStorage.removeItem(`${key}_${targetProfileId}`);
+      });
+      localStorage.removeItem(`bloom_settings_${targetProfileId}`);
+
+      if (user) {
+          await syncAllDataToCloud(user.uid);
+      }
   };
 
   const calculations: PregnancyCalculations | null = useMemo(() => {
@@ -348,9 +408,15 @@ export default function App() {
     localStorage.setItem('bloom_auth', 'true');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+    }
     setIsAuthenticated(false);
-    localStorage.removeItem('bloom_auth');
+    
+    // Securely wipe the local cache on logout
+    localStorage.clear();
+    
     setActiveTab(TabView.DASHBOARD);
   };
 
@@ -393,6 +459,7 @@ export default function App() {
     };
     setProfiles([meta]);
     localStorage.setItem('bloom_all_profiles', JSON.stringify([meta]));
+    triggerSync();
   };
 
   const handleUpdateProfile = (data: UserSettings) => {
@@ -412,6 +479,7 @@ export default function App() {
     );
     setProfiles(updatedProfiles);
     localStorage.setItem('bloom_all_profiles', JSON.stringify(updatedProfiles));
+    triggerSync();
   };
 
   const handleVaccineUpdate = (vaxId: string) => {
@@ -426,6 +494,7 @@ export default function App() {
     const newSettings = { ...settings, vaccinationsDone: newDone };
     setSettings(newSettings);
     localStorage.setItem('bloom_settings', JSON.stringify(newSettings));
+    triggerSync();
   };
 
   const handleReset = () => {
@@ -434,6 +503,14 @@ export default function App() {
         window.location.reload();
     }, 50);
   };
+
+  if (!isAuthReady) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-bloom-light dark:bg-deep-bg">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bloom-DEFAULT"></div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) return <Login onLogin={handleLogin} />;
 
@@ -459,6 +536,7 @@ export default function App() {
           { id: TabView.HEALTH, icon: HeartPulse, label: 'Body Ready' },
           { id: TabView.PARTNER, icon: Users, label: 'Partner' }, // New Partner Tab
           { id: TabView.MEDICINES, icon: Pill, label: 'Meds' },
+          { id: TabView.VACCINATIONS, icon: Syringe, label: 'Vaccines' },
           { id: TabView.TOOLS, icon: Wrench, label: 'Tools' }
       ];
   } else if (isPostpartum) {
@@ -528,6 +606,7 @@ export default function App() {
             onReset={handleReset} 
             onAddProfile={handleAddProfile}
             onSwitchProfile={handleSwitchProfile}
+            onDeleteProfile={handleDeleteProfile}
         />;
       default: return null;
     }

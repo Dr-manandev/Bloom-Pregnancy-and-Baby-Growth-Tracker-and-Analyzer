@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserSettings, DietType, AppMode, ProfileMeta } from '../types';
 import { Button } from './Button';
-import { RefreshCw, User, Calendar, Activity, Utensils, Baby, Ruler, Weight, ArrowRightLeft, HeartPulse, Droplet, AlertTriangle, CheckCircle2, FlaskConical, Stethoscope, Info, X, Users, Plus, ChevronRight, FileText, Clock, Sparkles, Key, ExternalLink, Eye, EyeOff } from 'lucide-react';
+import { RefreshCw, User, Calendar, Activity, Utensils, Baby, Ruler, Weight, ArrowRightLeft, HeartPulse, Droplet, AlertTriangle, CheckCircle2, FlaskConical, Stethoscope, Info, X, Users, Plus, ChevronRight, FileText, Clock, Sparkles, Key, ExternalLink, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { COMORBIDITY_GUIDELINES, BLOOD_GROUPS } from '../constants';
 
 interface Props {
@@ -12,15 +12,19 @@ interface Props {
   onReset: () => void;
   onAddProfile?: () => void;
   onSwitchProfile?: (id: string) => void;
+  onDeleteProfile?: (id: string) => void;
 }
 
-export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, onReset, onAddProfile, onSwitchProfile }) => {
+export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, onReset, onAddProfile, onSwitchProfile, onDeleteProfile }) => {
   const [formData, setFormData] = useState<UserSettings>(settings);
   const [saved, setSaved] = useState(false);
   
   // Modals
   const [showBabyModal, setShowBabyModal] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [pendingMode, setPendingMode] = useState<AppMode | null>(null);
+  const [showModeConfirm, setShowModeConfirm] = useState(false);
+  const [profileToDelete, setProfileToDelete] = useState<string | null>(null);
   
   // API Key State
   const [apiKey, setApiKey] = useState('');
@@ -117,12 +121,7 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
     }
   };
 
-  const handleModeChange = (newMode: AppMode) => {
-      if (newMode === 'postpartum') {
-          setShowBabyModal(true);
-          return;
-      }
-
+  const executeModeChange = (newMode: AppMode) => {
       let newLmp = formData.lmp;
 
       if (newMode === 'pregnant') {
@@ -147,8 +146,43 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
           ...formData,
           status: newMode,
           isPostpartum: false,
-          lmp: newLmp
+          lmp: newLmp,
+          babyName: undefined,
+          babyGender: undefined,
+          birthDate: undefined
       });
+      setShowModeConfirm(false);
+      setPendingMode(null);
+  };
+
+  const handleModeChange = (newMode: AppMode) => {
+      if (newMode === 'postpartum') {
+          // Populate existing baby details if any
+          setBabyForm({
+              name: formData.babyName || '',
+              date: formData.birthDate || '',
+              gender: formData.babyGender || 'boy'
+          });
+          setShowBabyModal(true);
+          return;
+      }
+
+      if (newMode === formData.status) return;
+
+      // If switching backwards from postpartum or pregnant to planning, show warning
+      if ((formData.status === 'postpartum' || formData.status === 'pregnant') && newMode === 'planning') {
+          setPendingMode(newMode);
+          setShowModeConfirm(true);
+          return;
+      }
+      
+      if (formData.status === 'postpartum' && newMode === 'pregnant') {
+          setPendingMode(newMode);
+          setShowModeConfirm(true);
+          return;
+      }
+
+      executeModeChange(newMode);
   };
 
   // --- Blood Group Logic ---
@@ -318,7 +352,7 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
               </h3>
               {onAddProfile && (
                   <Button onClick={onAddProfile} variant="secondary" className="text-xs">
-                      <Plus size={16} /> Add Baby
+                      <Plus size={16} /> New Journey
                   </Button>
               )}
           </div>
@@ -357,8 +391,8 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
                               </div>
                               <div>
                                   <p className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                      {p.babyName || (p.status === 'planning' ? 'Future Baby' : 'Baby Profile')}
-                                      {p.status === 'postpartum' && (
+                                      {p.status === 'postpartum' && p.babyName ? p.babyName : (p.status === 'planning' ? 'Planning Journey' : 'Pregnancy Journey')}
+                                      {p.status === 'postpartum' && p.babyGender && (
                                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase ${p.babyGender === 'boy' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>
                                               {p.babyGender}
                                           </span>
@@ -366,7 +400,7 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
                                   </p>
                                   <div className="flex gap-2 text-xs text-gray-500 dark:text-gray-400 items-center">
                                       <span className="capitalize">{p.status}</span>
-                                      {p.birthDate && (
+                                      {p.status === 'postpartum' && p.birthDate && (
                                           <>
                                             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                                             <span className="flex items-center gap-1"><Clock size={10} /> {calculateAge(p.birthDate)}</span>
@@ -377,14 +411,28 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
                               </div>
                           </div>
                           
-                          {!isActive && onSwitchProfile && (
-                              <button 
-                                onClick={() => onSwitchProfile(p.id)}
-                                className="text-sm font-medium text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline"
-                              >
-                                  Switch <ChevronRight size={16} />
-                              </button>
-                          )}
+                          <div className="flex items-center gap-4">
+                              {!isActive && onSwitchProfile && (
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); onSwitchProfile(p.id); }}
+                                    className="text-sm font-medium text-indigo-600 dark:text-indigo-400 flex items-center gap-1 hover:underline"
+                                  >
+                                      Switch <ChevronRight size={16} />
+                                  </button>
+                              )}
+                              {!isActive && onDeleteProfile && (
+                                  <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setProfileToDelete(p.id);
+                                    }}
+                                    className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
+                                    title="Delete Profile"
+                                  >
+                                      <Trash2 size={18} />
+                                  </button>
+                              )}
+                          </div>
                       </div>
                   );
               })}
@@ -796,6 +844,44 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
                       <Button onClick={() => setShowResetConfirm(false)} variant="secondary" className="w-full py-3 justify-center">
                           Cancel
                       </Button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Delete Profile Confirm Modal */}
+      {profileToDelete && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-2xl max-w-sm w-full border border-gray-200 dark:border-indigo-800">
+                  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Delete Profile?</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                      Are you sure you want to delete this profile? This action cannot be undone and all data associated with this profile will be lost.
+                  </p>
+                  <div className="flex gap-4">
+                      <Button variant="secondary" onClick={() => setProfileToDelete(null)} className="flex-1">Cancel</Button>
+                      <Button onClick={() => {
+                          if (onDeleteProfile) onDeleteProfile(profileToDelete);
+                          setProfileToDelete(null);
+                      }} className="flex-1 bg-red-500 hover:bg-red-600 text-white border-none">Delete</Button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Mode Change Confirm Modal */}
+      {showModeConfirm && pendingMode && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
+              <div className="bg-white dark:bg-deep-card p-6 rounded-3xl shadow-2xl max-w-sm w-full border border-gray-200 dark:border-indigo-800">
+                  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">Change Stage?</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                      You are about to change the stage of your <strong>current</strong> profile to {pendingMode === 'planning' ? 'Planning' : 'Pregnant'}. 
+                      This will overwrite your current journey's progress and clear baby details if any.
+                      <br/><br/>
+                      If you are starting a <strong>new pregnancy</strong>, please cancel and use the "New Journey" button in the Family Hub instead.
+                  </p>
+                  <div className="flex gap-4">
+                      <Button variant="secondary" onClick={() => { setShowModeConfirm(false); setPendingMode(null); }} className="flex-1">Cancel</Button>
+                      <Button onClick={() => executeModeChange(pendingMode)} className="flex-1 bg-red-500 hover:bg-red-600 text-white border-none">Change Stage</Button>
                   </div>
               </div>
           </div>

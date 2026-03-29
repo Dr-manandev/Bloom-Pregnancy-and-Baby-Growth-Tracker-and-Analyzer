@@ -4,6 +4,8 @@ import { Medicine, AppMode } from '../types';
 import { Pill, Plus, Trash2, Check, ShieldAlert } from 'lucide-react';
 import { Button } from './Button';
 import { MedicineSafety } from './MedicineSafety';
+import { syncData } from '../services/syncService';
+import { auth } from '../services/firebase';
 
 interface Props {
   currentWeek?: number;
@@ -24,11 +26,21 @@ export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum
   const STORAGE_KEY = isPostpartum ? 'bloom_pp_medicines' : 'bloom_medicines';
   const DATE_KEY = STORAGE_KEY + '_date';
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   // Load from Storage on Mount or Mode Change
   useEffect(() => {
     const loadMedicines = () => {
         const saved = localStorage.getItem(STORAGE_KEY);
-        const lastDate = localStorage.getItem(DATE_KEY);
+        const lastDateRaw = localStorage.getItem(DATE_KEY);
+        let lastDate = null;
+        if (lastDateRaw) {
+            try {
+                lastDate = JSON.parse(lastDateRaw);
+            } catch (e) {
+                lastDate = lastDateRaw; // Fallback for legacy data
+            }
+        }
         const today = new Date().toISOString().split('T')[0];
 
         if (saved) {
@@ -38,8 +50,11 @@ export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum
             if (lastDate !== today) {
                 parsed = parsed.map((m: Medicine) => ({ ...m, taken: false }));
                 // Update storage immediately with reset values
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-                localStorage.setItem(DATE_KEY, today);
+                const userId = auth?.currentUser?.uid || null;
+                const settingsRaw = localStorage.getItem('bloom_settings');
+                const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+                syncData(userId, profileId, STORAGE_KEY, parsed);
+                syncData(userId, profileId, DATE_KEY, today);
             }
             setMedicines(parsed);
         } else {
@@ -53,22 +68,29 @@ export const MedicineTracker: React.FC<Props> = ({ currentWeek = 1, isPostpartum
             ];
             setMedicines(defaults);
             // Save defaults immediately
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-            localStorage.setItem(DATE_KEY, today);
+            const userId = auth?.currentUser?.uid || null;
+            const settingsRaw = localStorage.getItem('bloom_settings');
+            const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+            syncData(userId, profileId, STORAGE_KEY, defaults);
+            syncData(userId, profileId, DATE_KEY, today);
         }
+        setIsLoaded(true);
     };
     loadMedicines();
-  }, [isPostpartum]);
+  }, [isPostpartum, STORAGE_KEY, DATE_KEY]);
 
   // Save to Storage whenever medicines change
   useEffect(() => {
-      // Avoid saving empty array on initial render before load
-      if (medicines.length > 0) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(medicines));
+      // Avoid saving on initial render before load
+      if (isLoaded) {
+          const userId = auth?.currentUser?.uid || null;
+          const settingsRaw = localStorage.getItem('bloom_settings');
+          const profileId = settingsRaw ? JSON.parse(settingsRaw).id : null;
+          syncData(userId, profileId, STORAGE_KEY, medicines);
           // Always update date key to today when saving
-          localStorage.setItem(DATE_KEY, new Date().toISOString().split('T')[0]);
+          syncData(userId, profileId, DATE_KEY, new Date().toISOString().split('T')[0]);
       }
-  }, [medicines, STORAGE_KEY]);
+  }, [medicines, isLoaded, STORAGE_KEY, DATE_KEY]);
 
   const toggleTaken = (id: string) => {
     setMedicines(prev => prev.map(m => m.id === id ? { ...m, taken: !m.taken } : m));

@@ -1,0 +1,90 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: userId
+    // Fields: None directly, used as a container
+    //
+    // Subcollection: global_settings
+    // Document ID: 'meta'
+    // Fields:
+    //   - profiles: list of objects (id, name, type, etc.)
+    //   - migrated: boolean (optional)
+    //
+    // Subcollection: profiles
+    // Document ID: profileId
+    // Fields:
+    //   - settings: object (UserSettings)
+    //
+    // Subcollection: logs
+    // Document ID: logId (e.g., 'bloom_kicks', 'bloom_weight_logs')
+    // Fields:
+    //   - data: any (array or object depending on the log type)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    // Check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the resource (for user-owned documents)
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ===============================================================
+    // Security Rules
+    // ===============================================================
+
+    // Match any document in the 'users' collection
+    match /users/{userId} {
+      // Users cannot read/write the root user document directly, only subcollections
+      allow read, write: if false;
+      
+      // Match global settings
+      match /global_settings/meta {
+        // Allow read/write if the user owns the parent user document
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && 
+          (request.resource.data.keys().hasOnly(['profiles', 'migrated'])) &&
+          (
+            !('profiles' in request.resource.data) || 
+            request.resource.data.profiles is list
+          ) &&
+          (
+            !('migrated' in request.resource.data) || 
+            request.resource.data.migrated is bool
+          );
+        allow delete: if isOwner(userId);
+      }
+
+      // Match profiles
+      match /profiles/{profileId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) && 
+          request.resource.data.keys().hasOnly(['settings']) &&
+          request.resource.data.settings is map;
+        allow delete: if isOwner(userId);
+
+        // Match logs within a profile
+        match /logs/{logId} {
+          allow read: if isOwner(userId);
+          allow create, update: if isOwner(userId) && 
+            request.resource.data.keys().hasOnly(['data']);
+          allow delete: if isOwner(userId);
+        }
+      }
+    }
+  }
+}
