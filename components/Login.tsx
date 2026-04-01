@@ -7,8 +7,9 @@ import {
   Heart, Baby, Calendar, Brain, ShieldCheck, Activity, ArrowRight, Sparkles, 
   CheckCircle2, Star, TrendingUp, Shield, Stethoscope, ChevronDown, 
   MessageCircle, Clock, Ruler, Lock, Users, Zap, FileText, Pill, 
-  Thermometer, Microscope, ShieldAlert, Utensils, Mail, Key
+  Thermometer, Microscope, ShieldAlert, Utensils, Mail, Key, UserPlus, Lightbulb
 } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface Props {
   onLogin: () => void;
@@ -19,7 +20,6 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
   
   // Auth Modes
   const [authMode, setAuthMode] = useState<'login' | 'signup' | 'forgot'>('login');
@@ -134,12 +134,6 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
     document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const FeaturePill = ({ icon: Icon, text }: { icon: any, text: string }) => (
-    <div className="flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-black/40 backdrop-blur-md rounded-full border border-gray-200/50 dark:border-white/10 shadow-sm text-sm font-bold text-gray-700 dark:text-gray-200 transition-transform hover:scale-105 cursor-default">
-      <Icon size={16} className="text-pink-600" /> {text}
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-white dark:bg-deep-bg text-gray-900 dark:text-gray-100 overflow-x-hidden font-sans selection:bg-pink-200 dark:selection:bg-pink-900">
       
@@ -177,12 +171,17 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
           <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] bg-teal-200/40 dark:bg-teal-900/20 rounded-full blur-3xl -z-10 animate-pulse-slow delay-700"></div>
 
           <div className="flex flex-col lg:flex-row items-center gap-16">
-              <div className="flex-1 space-y-8 text-center lg:text-left relative z-10">
+              <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="flex-1 space-y-8 text-center lg:text-left relative z-10"
+              >
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/10 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest border border-gray-200 dark:border-white/20 shadow-sm animate-fade-in">
                       <ShieldCheck size={14} className="text-green-500" /> Medically Approved (FOGSI/WHO)
                   </div>
                   
-                  <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-gray-900 dark:text-white">
+                  <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight text-gray-900 dark:text-white">
                       The Medical Standard for <br/>
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600">
                           Modern Motherhood.
@@ -194,12 +193,12 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-                      <button onClick={scrollToLogin} className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-2xl font-bold text-lg hover:shadow-pink-500/25 hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={scrollToLogin} className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-2xl font-bold text-lg hover:shadow-pink-500/25 hover:shadow-2xl transition-all flex items-center justify-center gap-3">
                           Start Free Profile <ArrowRight size={20} />
-                      </button>
-                      <button onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})} className="px-8 py-4 bg-white dark:bg-white/5 text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                      </motion.button>
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => document.getElementById('features')?.scrollIntoView({behavior:'smooth'})} className="px-8 py-4 bg-white dark:bg-white/5 text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
                           <Activity size={20} className="text-gray-500" /> View Features
-                      </button>
+                      </motion.button>
                   </div>
 
                   <div className="pt-8 border-t border-gray-100 dark:border-gray-800/50">
@@ -210,11 +209,16 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                           <span className="text-lg font-bold flex items-center gap-1"><Baby size={16}/> IAP (Pediatrics)</span>
                       </div>
                   </div>
-              </div>
+              </motion.div>
 
               {/* Interactive App Preview */}
-              <div className="flex-1 relative w-full flex justify-center lg:justify-end">
-                  <div className="relative w-[340px] h-[680px] bg-gray-900 rounded-[3.5rem] shadow-2xl border-8 border-gray-900 ring-1 ring-gray-800/50 overflow-hidden transform rotate-[-3deg] hover:rotate-0 transition-transform duration-700 z-20">
+              <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="flex-1 relative w-full flex justify-center lg:justify-end mt-12 lg:mt-0"
+              >
+                  <div className="relative w-full max-w-[340px] h-[680px] bg-gray-900 rounded-[3.5rem] shadow-2xl border-8 border-gray-900 ring-1 ring-gray-800/50 overflow-hidden transform lg:rotate-[-3deg] hover:rotate-0 transition-transform duration-700 z-20">
                       {/* Fake Screen UI */}
                       <div className="absolute top-0 left-0 w-full h-full bg-white dark:bg-deep-card flex flex-col">
                           {/* Header */}
@@ -298,7 +302,7 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                           </div>
                       </div>
                   </div>
-              </div>
+              </motion.div>
           </div>
       </section>
 
@@ -312,10 +316,22 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                   </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-[350px]">
+              <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6 }}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-[minmax(350px,auto)]"
+              >
                   
                   {/* Card 1: AI Reports */}
-                  <div className="md:col-span-2 bg-white dark:bg-deep-card rounded-[2.5rem] p-10 border border-gray-100 dark:border-indigo-900/50 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className="md:col-span-2 bg-white dark:bg-deep-card rounded-[2.5rem] p-10 border border-gray-100 dark:border-indigo-900/50 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group"
+                  >
                       <div className="absolute top-0 right-0 w-80 h-80 bg-purple-100 dark:bg-purple-900/20 rounded-full blur-3xl -mr-20 -mt-20 group-hover:scale-125 transition-transform duration-700"></div>
                       <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
@@ -333,10 +349,16 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                               <span className="px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700">Thyroid Monitor</span>
                           </div>
                       </div>
-                  </div>
+                  </motion.div>
 
                   {/* Card 2: Risk Engine */}
-                  <div className="bg-white dark:bg-deep-card rounded-[2.5rem] p-10 border border-gray-100 dark:border-indigo-900/50 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="bg-white dark:bg-deep-card rounded-[2.5rem] p-10 border border-gray-100 dark:border-indigo-900/50 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group"
+                  >
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500"></div>
                       <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
@@ -357,10 +379,16 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                               <p className="text-xs text-gray-500 mt-1">High Risk. Consult Doctor.</p>
                           </div>
                       </div>
-                  </div>
+                  </motion.div>
 
                   {/* Card 3: Safety Database */}
-                  <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-[2.5rem] p-10 text-white shadow-lg relative overflow-hidden group">
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-[2.5rem] p-10 text-white shadow-lg relative overflow-hidden group"
+                  >
                       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                       <div className="relative z-10 h-full flex flex-col justify-between">
                           <div>
@@ -381,10 +409,16 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                               </div>
                           </div>
                       </div>
-                  </div>
+                  </motion.div>
 
                   {/* Card 4: Medical Timeline */}
-                  <div className="md:col-span-2 bg-gray-900 dark:bg-black rounded-[2.5rem] p-10 text-white shadow-lg relative overflow-hidden">
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                      className="md:col-span-2 bg-gray-900 dark:bg-black rounded-[2.5rem] p-10 text-white shadow-lg relative overflow-hidden"
+                  >
                       <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 to-transparent pointer-events-none"></div>
                       <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 h-full">
                           <div className="flex-1">
@@ -419,8 +453,72 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                               </div>
                           </div>
                       </div>
-                  </div>
-              </div>
+                  </motion.div>
+
+                  {/* Card 5: Diet & Nutrition */}
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
+                      className="bg-white dark:bg-deep-card rounded-[2.5rem] p-10 border border-gray-100 dark:border-indigo-900/50 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group"
+                  >
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-green-100 dark:bg-green-900/20 rounded-full blur-3xl -mr-20 -mt-20 group-hover:scale-125 transition-transform duration-700"></div>
+                      <div className="relative z-10 h-full flex flex-col justify-between">
+                          <div>
+                              <div className="w-14 h-14 bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300 rounded-2xl flex items-center justify-center mb-6">
+                                  <Utensils size={28} />
+                              </div>
+                              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Trimester-Specific Diet</h3>
+                              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
+                                  Get personalized meal plans tailored to Indian diets. Ensure you're getting the right nutrients like Folic Acid, Iron, and Calcium at the right time.
+                              </p>
+                          </div>
+                          <div className="mt-6">
+                              <div className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
+                                  <div className="w-10 h-10 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center shadow-sm">
+                                      <span className="text-lg">🥬</span>
+                                  </div>
+                                  <div>
+                                      <p className="text-sm font-bold text-gray-900 dark:text-white">Iron-Rich Foods</p>
+                                      <p className="text-xs text-gray-500">Crucial for 2nd Trimester</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </motion.div>
+
+                  {/* Card 6: Smart Health Tools */}
+                  <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.6 }}
+                      className="md:col-span-2 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/10 dark:to-rose-900/10 rounded-[2.5rem] p-10 border border-pink-100 dark:border-pink-900/30 shadow-sm hover:shadow-xl transition-all relative overflow-hidden group"
+                  >
+                      <div className="relative z-10 flex flex-col md:flex-row items-center gap-10 h-full">
+                          <div className="flex-1">
+                              <div className="w-14 h-14 bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-300 rounded-2xl flex items-center justify-center mb-6">
+                                  <Activity size={28} />
+                              </div>
+                              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Smart Health Tools</h3>
+                              <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed">
+                                  Everything you need in one place. Monitor fetal movements with the Kick Counter, time labor with the Contraction Timer, and log daily vitals like weight, blood pressure, and blood sugar.
+                              </p>
+                          </div>
+                          <div className="w-full md:w-1/2 flex justify-center gap-4 flex-wrap">
+                              <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-3 w-full max-w-[200px]">
+                                  <div className="w-10 h-10 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center"><Baby size={20} /></div>
+                                  <span className="font-bold dark:text-white">Kick Counter</span>
+                              </div>
+                              <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-3 w-full max-w-[200px]">
+                                  <div className="w-10 h-10 bg-purple-100 text-purple-500 rounded-full flex items-center justify-center"><Clock size={20} /></div>
+                                  <span className="font-bold dark:text-white">Contractions</span>
+                              </div>
+                          </div>
+                      </div>
+                  </motion.div>
+              </motion.div>
           </div>
       </section>
 
@@ -429,21 +527,27 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
           <div className="max-w-7xl mx-auto px-6 space-y-32">
               
               {/* Planning */}
-              <div className="flex flex-col lg:flex-row items-center gap-16">
+              <motion.div 
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7 }}
+                  className="flex flex-col lg:flex-row items-center gap-16"
+              >
                   <div className="flex-1 lg:order-2">
                       <div className="inline-block mb-6">
                           <span className="text-teal-600 font-extrabold tracking-widest uppercase text-sm">Stage 1</span>
                           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2">Conceive with Science.</h2>
                       </div>
                       <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-                          Bloom analyzes your menstrual health to predict your most fertile window accurately. We also provide a complete "Body Ready" audit to ensure you are physically prepared for pregnancy.
+                          Bloom analyzes your menstrual health to predict your most fertile window accurately. We also provide a complete "Body Ready" audit to ensure you are physically prepared for pregnancy, tracking essential vitamins and identifying potential risks early.
                       </p>
                       <div className="grid sm:grid-cols-2 gap-6">
                           {[
-                              { title: "Ovulation Tracker", desc: "Predicts peak fertility days." },
-                              { title: "Cycle Analysis", desc: "Detects irregular patterns." },
-                              { title: "Pre-conception Audit", desc: "Rubella, Thalassemia checks." },
-                              { title: "Two-Week Wait", desc: "Implantation care guide." }
+                              { title: "Ovulation Tracker", desc: "Predicts peak fertility days using advanced algorithms." },
+                              { title: "Cycle Analysis", desc: "Detects irregular patterns and hormonal imbalances." },
+                              { title: "Pre-conception Audit", desc: "Rubella, Thalassemia, and essential vitamin checks." },
+                              { title: "Two-Week Wait", desc: "Implantation care guide and early symptom tracking." }
                           ].map((item, i) => (
                               <div key={i} className="flex gap-4">
                                   <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 shrink-0">
@@ -486,38 +590,44 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                           </div>
                       </div>
                   </div>
-              </div>
+              </motion.div>
 
               {/* Pregnancy */}
-              <div className="flex flex-col lg:flex-row items-center gap-16">
+              <motion.div 
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7 }}
+                  className="flex flex-col lg:flex-row items-center gap-16"
+              >
                   <div className="flex-1">
                       <div className="inline-block mb-6">
                           <span className="text-pink-600 font-extrabold tracking-widest uppercase text-sm">Stage 2</span>
                           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2">Track Growth, Ensure Safety.</h2>
                       </div>
                       <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-                          Your comprehensive guide through 40 weeks. We combine 3D fetus updates with strict medical tracking for Hypertension, GDM, and growth restriction.
+                          Your comprehensive guide through 40 weeks. We combine 3D fetus updates with strict medical tracking for Hypertension, GDM, and growth restriction, ensuring you and your baby are healthy every step of the way.
                       </p>
                       <div className="space-y-4">
                           <div className="flex gap-4 items-start p-4 rounded-2xl bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/30">
                               <TrendingUp className="text-pink-600 mt-1 shrink-0" />
                               <div>
                                   <h4 className="font-bold text-gray-900 dark:text-white">Weight Gain Analysis</h4>
-                                  <p className="text-sm text-gray-500">Personalized target range based on your pre-pregnancy BMI.</p>
+                                  <p className="text-sm text-gray-500">Personalized target range based on your pre-pregnancy BMI, helping you avoid complications.</p>
                               </div>
                           </div>
                           <div className="flex gap-4 items-start p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
                               <Utensils className="text-blue-600 mt-1 shrink-0" />
                               <div>
                                   <h4 className="font-bold text-gray-900 dark:text-white">Trimester Diet Plans</h4>
-                                  <p className="text-sm text-gray-500">Vegetarian & Non-Veg options focusing on Iron, Calcium, and Folate.</p>
+                                  <p className="text-sm text-gray-500">Vegetarian & Non-Veg options focusing on Iron, Calcium, and Folate, tailored to your specific trimester needs.</p>
                               </div>
                           </div>
                           <div className="flex gap-4 items-start p-4 rounded-2xl bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30">
                               <Clock className="text-purple-600 mt-1 shrink-0" />
                               <div>
                                   <h4 className="font-bold text-gray-900 dark:text-white">Labor Tools</h4>
-                                  <p className="text-sm text-gray-500">Contraction Timer (5-1-1 Rule), Kick Counter, and Hospital Bag Checklist.</p>
+                                  <p className="text-sm text-gray-500">Contraction Timer (5-1-1 Rule), Kick Counter, and Hospital Bag Checklist to prepare you for the big day.</p>
                               </div>
                           </div>
                       </div>
@@ -547,30 +657,36 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                           </div>
                       </div>
                   </div>
-              </div>
+              </motion.div>
 
               {/* Postpartum */}
-              <div className="flex flex-col lg:flex-row items-center gap-16">
+              <motion.div 
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7 }}
+                  className="flex flex-col lg:flex-row items-center gap-16"
+              >
                   <div className="flex-1 lg:order-2">
                       <div className="inline-block mb-6">
                           <span className="text-blue-600 font-extrabold tracking-widest uppercase text-sm">Stage 3</span>
                           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2">The Fourth Trimester.</h2>
                       </div>
                       <p className="text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
-                          Comprehensive care for both mom and baby. Track vaccinations, monitor WHO growth standards, and get support for lactation and recovery.
+                          Comprehensive care for both mom and baby. Track vaccinations, monitor WHO growth standards, and get support for lactation, postpartum depression, and physical recovery.
                       </p>
                       <ul className="space-y-4">
                           <li className="flex items-center gap-4 text-gray-700 dark:text-gray-200">
                               <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600"><Ruler size={20}/></div>
-                              <span><strong>WHO Growth Charts:</strong> Track Height, Weight, and Head Circumference percentile.</span>
+                              <span><strong>WHO Growth Charts:</strong> Track Height, Weight, and Head Circumference percentile to ensure healthy development.</span>
                           </li>
                           <li className="flex items-center gap-4 text-gray-700 dark:text-gray-200">
                               <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600"><Thermometer size={20}/></div>
-                              <span><strong>Vaccination Tracker:</strong> Complete IAP immunization schedule with reminders.</span>
+                              <span><strong>Vaccination Tracker:</strong> Complete IAP immunization schedule with timely reminders so you never miss a dose.</span>
                           </li>
                           <li className="flex items-center gap-4 text-gray-700 dark:text-gray-200">
                               <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600"><Baby size={20}/></div>
-                              <span><strong>Milestones:</strong> Developmental checklist for motor and social skills (0-12 months).</span>
+                              <span><strong>Milestones:</strong> Developmental checklist for motor, cognitive, and social skills (0-12 months).</span>
                           </li>
                       </ul>
                   </div>
@@ -610,39 +726,90 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                           </div>
                       </div>
                   </div>
+              </motion.div>
+          </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-gray-50 dark:bg-black/50 border-y border-gray-100 dark:border-white/5">
+          <div className="max-w-7xl mx-auto px-6">
+              <div className="text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">How Bloom Works</h2>
+                  <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                      A simple, seamless experience designed to give you peace of mind at every step. We guide you from planning to postpartum with clinical precision.
+                  </p>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                  {[
+                      { step: "01", title: "Create Your Unique Profile", desc: "Start by telling us your current stage—whether you are planning to conceive, currently pregnant, or in the postpartum phase. We use this information to customize your entire dashboard. By inputting your Last Menstrual Period (LMP), medical history, and specific health goals, Bloom creates a highly personalized experience tailored just for you.", icon: <UserPlus size={24} /> },
+                      { step: "02", title: "Log Daily Vitals & Symptoms", desc: "Easily input your daily symptoms, weight, and blood pressure. Our advanced Clinical Risk Engine continuously tracks these metrics against established medical baselines. This proactive monitoring helps detect early signs of conditions like Preeclampsia, Gestational Diabetes, and Anemia, ensuring you and your baby stay safe.", icon: <Activity size={24} /> },
+                      { step: "03", title: "AI-Powered Report Analysis", desc: "Simply snap a photo of your medical reports, such as ultrasound (USG) results or blood tests. Our AI, powered by Google Gemini, instantly extracts the text, breaks down complex medical jargon into simple terms, highlights key metrics, and compares them against Indian clinical standards for easy understanding.", icon: <FileText size={24} /> },
+                      { step: "04", title: "Follow the FOGSI Timeline", desc: "Never miss an important milestone. Bloom provides a clear timeline based on your LMP, telling you exactly when to schedule crucial tests like the NT Scan, Anomaly Scan, and Glucose Tolerance Test. Our timeline strictly adheres to Indian medical guidelines (FOGSI) for accurate and relevant care.", icon: <Calendar size={24} /> },
+                      { step: "05", title: "Check the Safety Database", desc: "Have a question about what's safe? Before taking any medication, using cosmetics, or eating certain foods, quickly scan our comprehensive safety database. Get instant safety ratings and detailed information to ensure every choice you make is safe for both you and your developing baby.", icon: <ShieldCheck size={24} /> },
+                      { step: "06", title: "Use Smart Health Tools", desc: "Access essential built-in tools right when you need them. Monitor your baby's movements with the Kick Counter, accurately time your labor with the Contraction Timer, and keep all your vital pregnancy data organized in one secure, easy-to-use application.", icon: <Activity size={24} /> },
+                      { step: "07", title: "Generate Health Reports", desc: "Easily compile all your logged vitals, symptoms, and medical history into a comprehensive, beautifully formatted PDF report. This feature allows you to generate a professional summary of your health data, perfect for sharing with your doctor or keeping for your personal records.", icon: <FileText size={24} /> },
+                      { step: "08", title: "Postpartum & Beyond", desc: "Our care doesn't stop at birth. In the postpartum phase, we shift our focus to your recovery. Track your baby's feeding and lactation, monitor your mental health, and access resources designed to ensure you heal properly and thrive in your new role as a mother.", icon: <Baby size={24} /> }
+                  ].map((item, i) => (
+                      <motion.div 
+                          key={i} 
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          whileHover={{ y: -8 }}
+                          transition={{ duration: 0.5, delay: i * 0.1 }}
+                          className="relative z-10 flex flex-col items-center text-center bg-white dark:bg-deep-card p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-indigo-900/50 transition-shadow hover:shadow-2xl duration-300"
+                      >
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 text-white flex items-center justify-center mb-6 shadow-lg shadow-pink-500/30">
+                              {item.icon}
+                          </div>
+                          <span className="text-sm font-black text-gray-300 dark:text-gray-700 mb-2">{item.step}</span>
+                          <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{item.title}</h4>
+                          <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+                      </motion.div>
+                  ))}
               </div>
           </div>
       </section>
 
-      {/* Partner Section */}
-      <section id="partner" className="py-20 bg-gray-900 text-white overflow-hidden relative">
+      {/* Comprehensive Tracking Section */}
+      <section id="tracking" className="py-20 bg-gray-900 text-white overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-          <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+          <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12"
+          >
               <div className="flex-1">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-full text-xs font-bold uppercase mb-6">
-                      <Users size={16} /> New Feature
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-600 rounded-full text-xs font-bold uppercase mb-6">
+                      <Activity size={16} /> All-In-One Dashboard
                   </div>
-                  <h2 className="text-4xl font-bold mb-4">It Takes Two.</h2>
+                  <h2 className="text-4xl font-bold mb-4">Track Every Vital Sign.</h2>
                   <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                      Male fertility is 50% of the equation. Bloom includes a dedicated module for partners to optimize sperm health, understand lifestyle impacts, and support the pregnancy journey effectively.
+                      Say goodbye to juggling multiple apps. Bloom integrates everything you need into a single, seamless dashboard. Monitor your baby's activity with the Kick Counter, time your labor accurately with the Contraction Timer, and keep a close eye on your own health with the Weight Tracker, Blood Pressure Log, and Blood Sugar Monitor. Plus, easily generate a comprehensive PDF report of all your health data to share with your doctor.
                   </p>
                   <div className="flex flex-wrap gap-4">
                       <div className="bg-gray-800 px-5 py-3 rounded-xl border border-gray-700">
-                          <p className="font-bold text-white mb-1">Meds to Avoid</p>
-                          <p className="text-xs text-gray-400">Database of drugs affecting sperm.</p>
+                          <p className="font-bold text-white mb-1">Kick Counter</p>
+                          <p className="text-xs text-gray-400">Track fetal movement patterns and get alerts for any irregularities.</p>
                       </div>
                       <div className="bg-gray-800 px-5 py-3 rounded-xl border border-gray-700">
-                          <p className="font-bold text-white mb-1">Lifestyle Audit</p>
-                          <p className="text-xs text-gray-400">Habits that boost fertility.</p>
+                          <p className="font-bold text-white mb-1">Contraction Timer</p>
+                          <p className="text-xs text-gray-400">Know exactly when to go to the hospital with the 5-1-1 rule.</p>
+                      </div>
+                      <div className="bg-gray-800 px-5 py-3 rounded-xl border border-gray-700">
+                          <p className="font-bold text-white mb-1">PDF Reports</p>
+                          <p className="text-xs text-gray-400">Generate and share beautiful health summaries with your doctor.</p>
                       </div>
                   </div>
               </div>
               <div className="flex-1 flex justify-center">
-                  <div className="w-64 h-64 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.3)]">
+                  <div className="w-64 h-64 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(236,72,153,0.3)]">
                       <Activity size={80} className="text-white" />
                   </div>
               </div>
-          </div>
+          </motion.div>
       </section>
 
       {/* Why Bloom Grid */}
@@ -653,36 +820,48 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                   <p className="text-gray-500 dark:text-gray-400">Comparing us to standard period trackers.</p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8">
-                  <div className="p-8 rounded-3xl bg-gray-50 dark:bg-deep-card border border-gray-100 dark:border-indigo-900/30">
+              <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.6, staggerChildren: 0.1 }}
+                  className="grid md:grid-cols-3 gap-8"
+              >
+                  <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-gray-50 dark:bg-deep-card border border-gray-100 dark:border-indigo-900/30 transition-shadow hover:shadow-xl">
                       <Lock size={32} className="text-gray-900 dark:text-white mb-4" />
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Private & Secure</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                           Your health data belongs to you. We store data locally on your device or use enterprise-grade encryption. No selling data to advertisers.
                       </p>
-                  </div>
-                  <div className="p-8 rounded-3xl bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/30">
+                  </motion.div>
+                  <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-pink-50 dark:bg-pink-900/10 border border-pink-100 dark:border-pink-900/30 transition-shadow hover:shadow-xl">
                       <Stethoscope size={32} className="text-pink-600 mb-4" />
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Medical Accuracy</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                           Generic apps guess. We use clinical algorithms for ovulation and risk assessment based on FOGSI & WHO protocols.
                       </p>
-                  </div>
-                  <div className="p-8 rounded-3xl bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30">
+                  </motion.div>
+                  <motion.div whileHover={{ y: -5 }} className="p-8 rounded-3xl bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30 transition-shadow hover:shadow-xl">
                       <Brain size={32} className="text-purple-600 mb-4" />
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">AI-Powered</h3>
                       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                           Integrated with Google Gemini to analyze reports, answer complex medical queries, and provide personalized advice instantly.
                       </p>
-                  </div>
-              </div>
+                  </motion.div>
+              </motion.div>
           </div>
       </section>
 
       {/* Login / Sign Up Anchor */}
       <section id="login-section" className="py-24 bg-gray-50 dark:bg-black/20 flex flex-col items-center justify-center border-t border-gray-200 dark:border-indigo-900">
           
-          <div className="max-w-md w-full px-6 pt-8 bg-white dark:bg-deep-card p-10 rounded-3xl shadow-2xl border border-gray-100 dark:border-indigo-800">
+          <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="max-w-md w-full px-6 pt-8 bg-white dark:bg-deep-card p-10 rounded-3xl shadow-2xl border border-gray-100 dark:border-indigo-800"
+          >
               <div className="text-center mb-10">
                   <div className="w-16 h-16 bg-pink-100 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6 text-pink-600">
                       <Heart size={32} fill="currentColor" />
@@ -826,7 +1005,7 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
                       </p>
                   </div>
               </div>
-          </div>
+          </motion.div>
       </section>
 
       {/* Footer */}
