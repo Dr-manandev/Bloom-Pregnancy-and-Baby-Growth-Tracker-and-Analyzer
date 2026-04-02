@@ -73,30 +73,15 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
           };
       }
 
-      // 2. Period Phase (Predicted)
+      // 2. Period Phase (Expected)
       if (currentDay >= 1 && currentDay <= 5) {
           return {
               phase: 'Period_Exp',
-              label: 'Menstruation',
+              label: 'Expected Period',
               subLabel: 'Predicted',
               gradient: 'from-rose-400 to-rose-500',
               shadow: 'shadow-rose-400/30',
               colorClass: 'bg-rose-300 dark:bg-rose-900/60', // Lighter/Distinct
-              textClass: 'text-rose-900 dark:text-rose-100',
-              icon: Droplet,
-              chance: '<1%'
-          };
-      }
-
-      // 2.5 Expected Period (End of cycle)
-      if (currentDay >= cycleLen - 2) {
-          return {
-              phase: 'Period_Exp',
-              label: 'Expected Period',
-              subLabel: 'Upcoming',
-              gradient: 'from-rose-400 to-rose-500',
-              shadow: 'shadow-rose-400/30',
-              colorClass: 'bg-rose-300 dark:bg-rose-900/60',
               textClass: 'text-rose-900 dark:text-rose-100',
               icon: Droplet,
               chance: '<1%'
@@ -181,7 +166,10 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
       // For phase coloring we wrap around cycle length
       const wrappedCycleDay = ((diffDays % settings.cycleLength) + settings.cycleLength) % settings.cycleLength + 1;
       
-      const phase = getCyclePhaseInfo(wrappedCycleDay, settings.cycleLength, todayLog);
+      // If we are within the first 5 days of the CURRENT cycle (not a future expected cycle), it is the actual period.
+      const isActualPeriod = todayLog || (linearCycleDay >= 1 && linearCycleDay <= 5);
+      
+      const phase = getCyclePhaseInfo(wrappedCycleDay, settings.cycleLength, isActualPeriod);
       setConceptionChance(phase.chance);
       
       setDaysUntilPeriod(settings.cycleLength - linearCycleDay + 1);
