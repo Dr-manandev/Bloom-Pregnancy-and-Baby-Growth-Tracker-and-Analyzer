@@ -17,18 +17,35 @@ export const KickCounter: React.FC = () => {
     if (saved) {
       setSessions(JSON.parse(saved));
     }
+    const savedSession = localStorage.getItem('bloom_kicks_current');
+    if (savedSession) {
+      const parsed = JSON.parse(savedSession);
+      setCurrentSession(parsed);
+      const start = new Date(parsed.startTime).getTime();
+      setElapsedTime(Math.floor((Date.now() - start) / 1000));
+    }
   }, []);
+
+  // Save currentSession to local storage whenever it changes
+  useEffect(() => {
+    if (currentSession) {
+      localStorage.setItem('bloom_kicks_current', JSON.stringify(currentSession));
+    } else {
+      localStorage.removeItem('bloom_kicks_current');
+    }
+  }, [currentSession]);
 
   // Timer logic
   useEffect(() => {
     let interval: number;
     if (currentSession && !currentSession.endTime) {
       interval = window.setInterval(() => {
-        setElapsedTime(prev => prev + 1);
+        const start = new Date(currentSession.startTime).getTime();
+        setElapsedTime(Math.floor((Date.now() - start) / 1000));
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [currentSession]);
+  }, [currentSession?.startTime, currentSession?.endTime]);
 
   const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);

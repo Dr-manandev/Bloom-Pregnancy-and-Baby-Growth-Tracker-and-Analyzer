@@ -73,15 +73,30 @@ export const PrePregnancyDashboard: React.FC<Props> = ({ settings, onUpdateSetti
           };
       }
 
-      // 2. Period Phase (Expected)
+      // 2. Period Phase (Predicted)
       if (currentDay >= 1 && currentDay <= 5) {
           return {
               phase: 'Period_Exp',
-              label: 'Expected Period',
+              label: 'Menstruation',
               subLabel: 'Predicted',
               gradient: 'from-rose-400 to-rose-500',
               shadow: 'shadow-rose-400/30',
               colorClass: 'bg-rose-300 dark:bg-rose-900/60', // Lighter/Distinct
+              textClass: 'text-rose-900 dark:text-rose-100',
+              icon: Droplet,
+              chance: '<1%'
+          };
+      }
+
+      // 2.5 Expected Period (End of cycle)
+      if (currentDay >= cycleLen - 2) {
+          return {
+              phase: 'Period_Exp',
+              label: 'Expected Period',
+              subLabel: 'Upcoming',
+              gradient: 'from-rose-400 to-rose-500',
+              shadow: 'shadow-rose-400/30',
+              colorClass: 'bg-rose-300 dark:bg-rose-900/60',
               textClass: 'text-rose-900 dark:text-rose-100',
               icon: Droplet,
               chance: '<1%'

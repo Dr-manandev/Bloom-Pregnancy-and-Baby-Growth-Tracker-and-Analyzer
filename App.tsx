@@ -576,7 +576,12 @@ export default function App() {
         return <Dashboard key={`preg_${profileKey}`} calculations={calcSafe} settings={settings} />;
       
       case TabView.TIMELINE: return <Timeline key={`time_${profileKey}`} calculations={calcSafe} settings={settings} />;
-      case TabView.REPORTS: return <ReportAnalyzer key={`rep_${profileKey}`} />;
+      case TabView.REPORTS: {
+        let timelineStr = "Pre-conception planning phase";
+        if (isPregnant) timelineStr = `Week ${calcSafe.currentWeek} of pregnancy`;
+        if (isPostpartum) timelineStr = `Baby is ${getBabyAgeInWeeks()} weeks old`;
+        return <ReportAnalyzer key={`rep_${profileKey}`} mode={settings.status} timeline={timelineStr} />;
+      }
       case TabView.MEDICINES: 
         // Pass Mode Explicitly
         return <MedicineTracker 
@@ -607,6 +612,7 @@ export default function App() {
             onAddProfile={handleAddProfile}
             onSwitchProfile={handleSwitchProfile}
             onDeleteProfile={handleDeleteProfile}
+            onLogout={handleLogout}
         />;
       default: return null;
     }
@@ -640,6 +646,7 @@ export default function App() {
             {navItems.map(item => (
                <button
                  key={item.id}
+                 id={`tab-${item.id}`}
                  onClick={() => setActiveTab(item.id)}
                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === item.id ? `${activeBg} shadow-lg` : 'text-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5'}`}
                >
@@ -651,6 +658,7 @@ export default function App() {
 
          <div className="p-4 border-t border-gray-200 dark:border-deep-border mt-auto">
             <div 
+              id="tab-profile"
               onClick={() => setActiveTab(TabView.PROFILE)}
               className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-100 dark:bg-slate-800/50 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
             >
@@ -683,6 +691,7 @@ export default function App() {
             ].map(item => (
                <button
                  key={item.id}
+                 id={`tab-mobile-${item.id}`}
                  onClick={() => setActiveTab(item.id)}
                  className={`flex-shrink-0 flex flex-col items-center gap-1 p-2 rounded-xl transition-all min-w-[64px] ${activeTab === item.id ? themeColor : 'text-gray-400'}`}
                >

@@ -29,7 +29,57 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
       if (stored) {
           const parsed: Medicine[] = JSON.parse(stored);
           // Filter for medicines not taken
-          setTodaysMedicines(parsed.filter(m => !m.taken));
+          const dueMeds = parsed.filter(m => !m.taken);
+          setTodaysMedicines(dueMeds);
+          
+          // Trigger notification and alarm if there are due medicines
+          if (dueMeds.length > 0) {
+              const notifiedKey = `bloom_notified_${new Date().toISOString().split('T')[0]}`;
+              if (!sessionStorage.getItem(notifiedKey)) {
+                  sessionStorage.setItem(notifiedKey, 'true');
+                  
+                  // Play alarm sound
+                  try {
+                      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                      const oscillator = audioCtx.createOscillator();
+                      const gainNode = audioCtx.createGain();
+                      
+                      oscillator.type = 'sine';
+                      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+                      oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5); // A4
+                      
+                      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                      
+                      oscillator.connect(gainNode);
+                      gainNode.connect(audioCtx.destination);
+                      
+                      oscillator.start();
+                      oscillator.stop(audioCtx.currentTime + 0.5);
+                  } catch (e) {
+                      console.error("Audio playback failed", e);
+                  }
+
+                  // Browser Notification
+                  if ("Notification" in window) {
+                      if (Notification.permission === "granted") {
+                          new Notification("Bloom Pregnancy Tracker", {
+                              body: `You have ${dueMeds.length} medicine(s) due today.`,
+                              icon: '/icon.png'
+                          });
+                      } else if (Notification.permission !== "denied") {
+                          Notification.requestPermission().then(permission => {
+                              if (permission === "granted") {
+                                  new Notification("Bloom Pregnancy Tracker", {
+                                      body: `You have ${dueMeds.length} medicine(s) due today.`,
+                                      icon: '/icon.png'
+                                  });
+                              }
+                          });
+                      }
+                  }
+              }
+          }
       } else {
           setTodaysMedicines([]);
       }
@@ -393,7 +443,14 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
                   </div>
               </div>
               <button 
-                onClick={() => document.getElementById('tab-medicines')?.click()}
+                onClick={() => {
+                  const desktopTab = document.getElementById('tab-medicines');
+                  if (desktopTab && window.getComputedStyle(desktopTab).display !== 'none') {
+                    desktopTab.click();
+                  } else {
+                    document.getElementById('tab-mobile-medicines')?.click();
+                  }
+                }}
                 className="text-xs font-bold bg-teal-600 text-white px-4 py-2 rounded-xl shadow-md hover:bg-teal-700 transition-colors whitespace-nowrap"
               >
                   Go to Meds
@@ -604,7 +661,14 @@ export const Dashboard: React.FC<Props> = ({ calculations, settings }) => {
                         <Key size={20} />
                         <div>
                             <strong>AI Key Missing:</strong> Please go to your 
-                            <span className="underline cursor-pointer font-bold ml-1" onClick={() => document.getElementById('tab-profile')?.click()}>Profile</span> 
+                            <span className="underline cursor-pointer font-bold ml-1" onClick={() => {
+                              const desktopTab = document.getElementById('tab-profile');
+                              if (desktopTab && window.getComputedStyle(desktopTab).display !== 'none') {
+                                desktopTab.click();
+                              } else {
+                                document.getElementById('tab-mobile-profile')?.click();
+                              }
+                            }}>Profile</span> 
                             to add your free Google Gemini API Key.
                         </div>
                     </div>

@@ -13,9 +13,10 @@ interface Props {
   onAddProfile?: () => void;
   onSwitchProfile?: (id: string) => void;
   onDeleteProfile?: (id: string) => void;
+  onLogout?: () => void;
 }
 
-export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, onReset, onAddProfile, onSwitchProfile, onDeleteProfile }) => {
+export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, onReset, onAddProfile, onSwitchProfile, onDeleteProfile, onLogout }) => {
   const [formData, setFormData] = useState<UserSettings>(settings);
   const [saved, setSaved] = useState(false);
   
@@ -812,9 +813,16 @@ export const Profile: React.FC<Props> = ({ settings, profiles = [], onUpdate, on
             This action will permanently delete all your profiles, logs (weight, period, medical history), and app settings from this device. This cannot be undone.
         </p>
         {/* Changed from window.confirm to state trigger */}
-        <Button variant="danger" onClick={() => setShowResetConfirm(true)}>
-          Reset All Data (All Profiles)
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Button variant="danger" onClick={() => setShowResetConfirm(true)} className="flex-1">
+            Reset All Data (All Profiles)
+          </Button>
+          {onLogout && (
+            <Button variant="secondary" onClick={onLogout} className="flex-1 border-red-200 text-red-600 hover:bg-red-100 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/40">
+              Sign Out
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Custom Reset Confirmation Modal */}

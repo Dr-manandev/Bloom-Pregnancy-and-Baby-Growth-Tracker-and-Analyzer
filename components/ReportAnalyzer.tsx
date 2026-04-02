@@ -5,7 +5,12 @@ import { Button } from './Button';
 import { analyzeMedicalReport } from '../services/geminiService';
 import { ReportAnalysis } from '../types';
 
-export const ReportAnalyzer: React.FC = () => {
+export interface ReportAnalyzerProps {
+  mode: 'planning' | 'pregnant' | 'postpartum';
+  timeline: string;
+}
+
+export const ReportAnalyzer: React.FC<ReportAnalyzerProps> = ({ mode, timeline }) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
@@ -40,7 +45,8 @@ export const ReportAnalyzer: React.FC = () => {
       const base64Data = preview.split(',')[1];
       const mimeType = file.type;
       
-      const result = await analyzeMedicalReport(base64Data, mimeType, "Patient is currently in 2nd Trimester.");
+      const contextString = `Patient is currently in the ${mode} phase. Timeline/Status: ${timeline}.`;
+      const result = await analyzeMedicalReport(base64Data, mimeType, contextString);
       setReport(result);
     } catch (err: any) {
       if (err.message === 'MISSING_API_KEY') {

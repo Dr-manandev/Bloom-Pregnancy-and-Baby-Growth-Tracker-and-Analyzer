@@ -14,21 +14,45 @@ export const ContractionTimer: React.FC = () => {
   // Load history
   useEffect(() => {
     const saved = localStorage.getItem('bloom_contractions');
+    let loadedContractions = [];
     if (saved) {
-      setContractions(JSON.parse(saved));
+      loadedContractions = JSON.parse(saved);
+      setContractions(loadedContractions);
+    }
+    const savedActiveId = localStorage.getItem('bloom_contractions_active');
+    if (savedActiveId) {
+      setActiveId(savedActiveId);
+      const activeContraction = loadedContractions.find((c: Contraction) => c.id === savedActiveId);
+      if (activeContraction) {
+        const start = new Date(activeContraction.startTime).getTime();
+        setTimer(Math.floor((Date.now() - start) / 1000));
+      }
     }
   }, []);
+
+  // Save activeId to local storage whenever it changes
+  useEffect(() => {
+    if (activeId) {
+      localStorage.setItem('bloom_contractions_active', activeId);
+    } else {
+      localStorage.removeItem('bloom_contractions_active');
+    }
+  }, [activeId]);
 
   // Timer
   useEffect(() => {
     let interval: number;
     if (activeId) {
-      interval = window.setInterval(() => {
-        setTimer(prev => prev + 1);
-      }, 1000);
+      const activeContraction = contractions.find(c => c.id === activeId);
+      if (activeContraction) {
+        interval = window.setInterval(() => {
+          const start = new Date(activeContraction.startTime).getTime();
+          setTimer(Math.floor((Date.now() - start) / 1000));
+        }, 1000);
+      }
     }
     return () => clearInterval(interval);
-  }, [activeId]);
+  }, [activeId, contractions]);
 
   const toggleTimer = () => {
     if (activeId) {
@@ -216,7 +240,7 @@ export const ContractionTimer: React.FC = () => {
                                     {new Date(c.startTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
                                 </td>
                                 <td className="p-4 font-bold text-gray-800 dark:text-white">
-                                    {c.endTime || activeId === c.id ? formatDuration(c.durationSeconds) : '...'}
+                                    {activeId === c.id ? formatDuration(timer) : (c.endTime ? formatDuration(c.durationSeconds) : '...')}
                                 </td>
                                 <td className="p-4 text-gray-600 dark:text-gray-300">
                                     {formatFreq(c.frequencySeconds)}
